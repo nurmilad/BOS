@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BOS-NBS · Login</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
+    </script>
+
+    <style>
+        /* ── Reset & Base ── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f6f9fc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            margin: 0;
+            background-image: radial-gradient(ellipse at 20% 50%, rgba(0, 86, 179, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 86, 179, 0.03) 0%, transparent 50%);
+        }
+
+        /* ── Card ── */
+        .login-card {
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 60px -12px rgba(0, 20, 40, 0.12), 0 8px 24px -6px rgba(0, 20, 40, 0.06);
+            padding: 48px 40px 40px;
+            width: 100%;
+            max-width: 420px;
+            transition: box-shadow 0.25s ease;
+        }
+
+        .login-card:hover {
+            box-shadow: 0 28px 72px -14px rgba(0, 20, 40, 0.16), 0 8px 28px -6px rgba(0, 20, 40, 0.06);
+        }
+
+        /* ── Brand ── */
+        .brand {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .brand-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            background: #0a2e5c;
+            border-radius: 18px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 20px -6px rgba(10, 46, 92, 0.25);
+        }
+
+        .brand h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #0a2e5c;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .brand .sub {
+            font-size: 13px;
+            font-weight: 400;
+            color: #7a8fa6;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+        }
+
+        /* ── Form ── */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #1f3a5f;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-weight: 400;
+            font-family: inherit;
+            color: #0a1e33;
+            background: #f2f6fb;
+            border: 1.5px solid transparent;
+            border-radius: 14px;
+            outline: none;
+            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a8fa6' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 44px;
+            cursor: pointer;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            border-color: #0a2e5c;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(10, 46, 92, 0.08);
+        }
+
+        .form-group select:hover,
+        .form-group input:hover {
+            background: #edf2f8;
+        }
+
+        .form-group input::placeholder {
+            color: #a5b9ce;
+        }
+
+        /* ── Password wrapper (no toggle) ── */
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 16px;
+        }
+
+        /* ── Button ── */
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            color: #fff;
+            background: #0a2e5c;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+            margin-top: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-login:hover {
+            background: #123f72;
+            box-shadow: 0 8px 24px -8px rgba(10, 46, 92, 0.30);
+        }
+
+        .btn-login:active {
+            transform: scale(0.97);
+            background: #08244a;
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ── Error / status ── */
+        .message {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            min-height: 22px;
+            color: #b00020;
+            transition: opacity 0.2s ease;
+        }
+
+        .message.success {
+            color: #1a7a3a;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 32px 20px 28px;
+                border-radius: 24px;
+            }
+
+            .brand h1 {
+                font-size: 22px;
+            }
+
+            .brand-icon {
+                width: 54px;
+                height: 54px;
+                font-size: 22px;
+            }
+
+            .form-group select,
+            .form-group input {
+                padding: 11px 14px;
+                font-size: 14px;
+            }
+
+            .btn-login {
+                padding: 13px;
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-card {
+                padding: 24px 16px 20px;
+            }
+
+            .brand h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card" role="main" aria-label="Login panel">
+
+        <!-- Brand -->
+        <div class="brand">
+            <div class="brand-icon">B</div>
+            <h1>BOS-NBS</h1>
+            <div class="sub">Sistem Pelaporan Dana BOS</div>
+        </div>
+
+        <!-- Form -->
+        <form id="loginForm" novalidate autocomplete="off">
+            <!-- Jenjang -->
+            <div class="form-group">
+                <label for="jenjang">Jenjang</label>
+                <select id="jenjang" required>
+                    <option value="SMP">SMP</option>
+                    <option value="SMA">SMA</option>
+                </select>
+            </div>
+
+            <!-- Tahun Anggaran -->
+            <div class="form-group">
+                <label for="tahun">Tahun Anggaran</label>
+                <select id="tahun" required>
+                    <!-- diisi dari JS -->
+                </select>
+            </div>
+
+            <!-- Password (tersembunyi, tanpa instruksi) -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" placeholder=" " required autocomplete="off" />
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login" id="loginBtn">Masuk</button>
+        </form>
+
+        <!-- Pesan status -->
+        <div class="message" id="message">&nbsp;</div>
+    </div>
+
+    <script>
+        // ─────────────────────────────────────────────
+        // 1.  Firebase init
+        // ─────────────────────────────────────────────
+        const firebaseConfig = {
+            apiKey: "AIzaSyD61HLphga_Egy_VTGeqx5D8_XmqgWzMsE",
+            authDomain: "bos-nbs.firebaseapp.com",
+            projectId: "bos-nbs",
+            storageBucket: "bos-nbs.firebasestorage.app",
+            messagingSenderId: "691310998051",
+            appId: "1:691310998051:web:fe576f0c14f37f84c6f796"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ─────────────────────────────────────────────
+        // 2.  Populate tahun anggaran (2024–2034)
+        // ─────────────────────────────────────────────
+        (function populateYears() {
+            const select = document.getElementById('tahun');
+            const currentYear = new Date().getFullYear();
+            const start = 2024;
+            const end = 2034;
+
+            for (let y = start; y <= end; y++) {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                // pilih tahun berjalan jika ada dalam rentang
+                if (y === currentYear) opt.selected = true;
+                select.appendChild(opt);
+            }
+            // jika currentYear di luar rentang, pilih 2024
+            if (currentYear < start || currentYear > end) {
+                select.value = start;
+            }
+        })();
+
+        // ─────────────────────────────────────────────
+        // 3.  Login handler
+        // ─────────────────────────────────────────────
+        const form = document.getElementById('loginForm');
+        const messageEl = document.getElementById('message');
+        const loginBtn = document.getElementById('loginBtn');
+        const passwordInput = document.getElementById('password');
+
+        // Credential
+        const VALID_PASSWORD = 'bosnbs';
+
+        // Hapus placeholder text agar tidak muncul instruksi
+        passwordInput.placeholder = '';
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Reset pesan
+            messageEl.textContent = '\u00A0';
+            messageEl.className = 'message';
+
+            const password = passwordInput.value.trim();
+            const jenjang = document.getElementById('jenjang').value;
+            const tahun = document.getElementById('tahun').value;
+
+            // Validasi sederhana
+            if (!password) {
+                messageEl.textContent = 'Password wajib diisi.';
+                messageEl.className = 'message';
+                return;
+            }
+
+            // Periksa password
+            if (password !== VALID_PASSWORD) {
+                messageEl.textContent = 'Password yang Anda masukkan salah.';
+                messageEl.className = 'message';
+                passwordInput.value = '';
+                passwordInput.focus();
+                return;
+            }
+
+            // ── Password benar: login ke Firebase (Anonymous) ──
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Memproses…';
+
+            try {
+                // Sign in anonymously agar terhubung ke Firebase
+                await auth.signInAnonymously();
+
+                // Simpan data sesi di localStorage (untuk halaman selanjutnya)
+                localStorage.setItem('bosnbs_jenjang', jenjang);
+                localStorage.setItem('bosnbs_tahun', tahun);
+                localStorage.setItem('bosnbs_uid', auth.currentUser ? auth.currentUser.uid : '');
+
+                // Pesan sukses
+                messageEl.textContent = '✓ Berhasil masuk, mengalihkan…';
+                messageEl.className = 'message success';
+
+                // Redirect ke halaman database
+                setTimeout(() => {
+                    window.location.href = 'database.html';
+                }, 600);
+
+            } catch (error) {
+                console.error('Firebase login error:', error);
+                messageEl.textContent = 'Gagal terhubung ke server. Coba lagi.';
+                messageEl.className = 'message';
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Masuk';
+            }
+        });
+
+        // ─────────────────────────────────────────────
+        // 4.  Enter key support (already handled by form)
+        // ─────────────────────────────────────────────
+
+        // Saat halaman dimuat, fokus ke password (karena field lain sudah terisi)
+        window.addEventListener('load', () => {
+            // fokus ke password setelah sedikit delay agar tidak mengganggu render
+            setTimeout(() => passwordInput.focus(), 100);
+        });
+
+        // ─────────────────────────────────────────────
+        // 5.  Cegah caching password (tidak permanen)
+        // ─────────────────────────────────────────────
+        passwordInput.addEventListener('focus', function() {
+            this.select();
+        });
+
+        console.log('🔐 BOS-NBS · login siap');
+        console.log('ℹ️  Password: ' + '•'.repeat(VALID_PASSWORD.length));
+    </script>
+
+</body>
+</html>
