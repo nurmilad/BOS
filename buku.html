@@ -864,24 +864,51 @@
                 .get()
                 .then((snapshot) => {
                     const data = [];
+                    console.log('📊 Total data dari Firestore:', snapshot.size);
                     snapshot.forEach(doc => {
                         const d = doc.data();
                         d._id = doc.id;
+                        console.log('📄 Data:', d);
                         // Filter berdasarkan bulan dari tglPelaksanaan
                         const tgl = d.tglPelaksanaan;
                         if (tgl) {
-                            const dateParts = tgl.split('-');
-                            if (dateParts.length === 3) {
-                                const month = dateParts[1];
-                                const year = dateParts[0];
+                            // Coba parsing dengan berbagai format
+                            let dateParts = null;
+                            // Format YYYY-MM-DD
+                            if (tgl.includes('-')) {
+                                dateParts = tgl.split('-');
+                            } else if (tgl.includes('/')) {
+                                dateParts = tgl.split('/');
+                            }
+                            if (dateParts && dateParts.length === 3) {
+                                // Pastikan urutan: tahun, bulan, tanggal
+                                let year, month, day;
+                                // Jika tahun di posisi 0 (YYYY-MM-DD)
+                                if (dateParts[0].length === 4) {
+                                    year = dateParts[0];
+                                    month = dateParts[1];
+                                } else {
+                                    // Jika format DD/MM/YYYY atau MM/DD/YYYY
+                                    // Asumsikan DD/MM/YYYY
+                                    year = dateParts[2];
+                                    month = dateParts[1];
+                                }
+                                // Pad month with leading zero
+                                month = month.padStart(2, '0');
                                 if (month === bulan && year === tahun) {
                                     data.push(d);
                                 }
+                            } else {
+                                // Jika format tanggal tidak dikenali, lewati
+                                console.warn('⚠️ Format tanggal tidak dikenali:', tgl);
                             }
+                        } else {
+                            console.warn('⚠️ Data tanpa tglPelaksanaan:', d);
                         }
                     });
 
                     allKasData = data;
+                    console.log('✅ Data setelah filter bulan:', data.length);
                     renderKasTable(data);
                     updateClosingStatement(data);
                 })
@@ -921,12 +948,7 @@
                 const rek = item.noRek || '';
                 const bukti = item.noBukti || '';
                 const uraian = item.uraian || '';
-                // Ambil jumlahHarga sebagai nilai transaksi (asumsi semua adalah pengeluaran)
-                // Tapi kita akan tampilkan di kolom penerimaan jika positif, atau pengeluaran jika negatif
-                // Untuk demo, kita tampilkan di kolom penerimaan saja sebagai contoh
                 const nilai = parseFloat(item.jumlahHarga) || 0;
-                // Jika nilai > 0, anggap penerimaan, jika < 0 anggap pengeluaran
-                // Karena data kita semua positif, kita tampilkan di penerimaan
                 const penerimaan = nilai > 0 ? nilai : 0;
                 const pengeluaran = nilai < 0 ? Math.abs(nilai) : 0;
 
