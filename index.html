@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BOS-NBS · Login</title>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK (hanya untuk inisialisasi, tanpa auth) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
     </script>
@@ -208,10 +206,6 @@
             color: #1a7a3a;
         }
 
-        .message.info {
-            color: #0a2e5c;
-        }
-
         /* ── Responsive ── */
         @media (max-width: 480px) {
             .login-card {
@@ -263,7 +257,6 @@
         <!-- Brand dengan logo -->
         <div class="brand">
             <div class="brand-logo" id="logoContainer">
-                <!-- Logo sekolah dari GitHub, fallback via JS jika gagal load -->
                 <img src="logo.png" alt="Logo Sekolah" id="logoImg" />
             </div>
             <h1>BOS-NBS</h1>
@@ -306,7 +299,7 @@
 
     <script>
         // ─────────────────────────────────────────────
-        // 1.  Firebase init
+        // 1.  Firebase init (hanya untuk database nanti)
         // ─────────────────────────────────────────────
         const firebaseConfig = {
             apiKey: "AIzaSyD61HLphga_Egy_VTGeqx5D8_XmqgWzMsE",
@@ -318,8 +311,7 @@
         };
 
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        // Firestore tidak digunakan di login, tapi tetap diinisialisasi agar tidak error
+        // Tidak pakai auth sama sekali, hanya inisialisasi untuk Firestore nanti
 
         // ─────────────────────────────────────────────
         // 2.  Fallback logo jika gambar gagal load
@@ -328,7 +320,6 @@
         const logoContainer = document.getElementById('logoContainer');
 
         logoImg.addEventListener('error', function() {
-            // Ganti dengan fallback teks
             this.style.display = 'none';
             const fallback = document.createElement('div');
             fallback.className = 'fallback-logo';
@@ -358,7 +349,7 @@
         })();
 
         // ─────────────────────────────────────────────
-        // 4.  Login handler dengan error detail
+        // 4.  Login handler (sederhana, tanpa Firebase Auth)
         // ─────────────────────────────────────────────
         const form = document.getElementById('loginForm');
         const messageEl = document.getElementById('message');
@@ -368,17 +359,16 @@
         const VALID_PASSWORD = 'bosnbs';
         passwordInput.placeholder = '';
 
-        // Fungsi untuk menampilkan pesan
         function setMessage(text, type = 'error') {
             messageEl.textContent = text;
             messageEl.className = 'message ' + type;
         }
 
-        form.addEventListener('submit', async (e) => {
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
 
             // Reset pesan
-            setMessage('\u00A0', 'info');
+            setMessage('\u00A0');
 
             const password = passwordInput.value.trim();
             const jenjang = document.getElementById('jenjang').value;
@@ -387,6 +377,7 @@
             // Validasi password
             if (!password) {
                 setMessage('Password wajib diisi.');
+                passwordInput.focus();
                 return;
             }
 
@@ -397,50 +388,19 @@
                 return;
             }
 
-            // ── Password benar: login ke Firebase (Anonymous) ──
+            // ── Password benar: simpan data ke localStorage ──
+            localStorage.setItem('bosnbs_jenjang', jenjang);
+            localStorage.setItem('bosnbs_tahun', tahun);
+
+            // Tampilkan pesan sukses
+            setMessage('✓ Berhasil masuk, mengalihkan…', 'success');
             loginBtn.disabled = true;
             loginBtn.textContent = 'Memproses…';
 
-            try {
-                // Cek koneksi internet sederhana
-                if (!navigator.onLine) {
-                    throw new Error('Tidak ada koneksi internet. Periksa jaringan Anda.');
-                }
-
-                // Sign in anonymously
-                const userCredential = await auth.signInAnonymously();
-
-                // Simpan data sesi
-                localStorage.setItem('bosnbs_jenjang', jenjang);
-                localStorage.setItem('bosnbs_tahun', tahun);
-                localStorage.setItem('bosnbs_uid', userCredential.user.uid);
-
-                setMessage('✓ Berhasil masuk, mengalihkan…', 'success');
-
-                // Redirect ke database.html
-                setTimeout(() => {
-                    window.location.href = 'database.html';
-                }, 600);
-
-            } catch (error) {
-                console.error('Firebase login error detail:', error);
-
-                // Mapping error ke pesan yang mudah dipahami
-                let errorMessage = 'Gagal terhubung ke server. ';
-                if (error.code === 'auth/operation-not-allowed') {
-                    errorMessage += 'Login anonim belum diaktifkan. Aktifkan di Firebase Console → Authentication → Sign-in methods.';
-                } else if (error.code === 'auth/network-request-failed') {
-                    errorMessage += 'Periksa koneksi internet Anda.';
-                } else if (error.message) {
-                    errorMessage += error.message;
-                } else {
-                    errorMessage += 'Coba lagi nanti.';
-                }
-
-                setMessage(errorMessage);
-                loginBtn.disabled = false;
-                loginBtn.textContent = 'Masuk';
-            }
+            // Redirect ke database.html
+            setTimeout(() => {
+                window.location.href = 'database.html';
+            }, 500);
         });
 
         // ─────────────────────────────────────────────
@@ -455,21 +415,16 @@
         });
 
         // ─────────────────────────────────────────────
-        // 6.  Cek status autentikasi (jika sudah login, redirect)
+        // 6.  Jika sudah login (ada data di localStorage), langsung redirect
         // ─────────────────────────────────────────────
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                // Jika sudah login, cek apakah ada session, jika ya redirect ke database
-                const jenjang = localStorage.getItem('bosnbs_jenjang');
-                const tahun = localStorage.getItem('bosnbs_tahun');
-                if (jenjang && tahun) {
-                    // Redirect ke database jika sudah login
-                    window.location.href = 'database.html';
-                }
-            }
-        });
+        const savedJenjang = localStorage.getItem('bosnbs_jenjang');
+        const savedTahun = localStorage.getItem('bosnbs_tahun');
+        if (savedJenjang && savedTahun) {
+            // Langsung redirect ke database
+            window.location.href = 'database.html';
+        }
 
-        console.log('🔐 BOS-NBS · login siap (dengan error handling)');
+        console.log('🔐 BOS-NBS · login siap (sederhana, tanpa autentikasi)');
         console.log('ℹ️  Password: ' + '•'.repeat(VALID_PASSWORD.length));
     </script>
 
