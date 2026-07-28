@@ -851,22 +851,20 @@
         const db = firebase.firestore();
 
         // ─────────────────────────────────────────────
-        // 2.  Session check
+        // 2.  Session check & constants
         // ─────────────────────────────────────────────
-        const jenjang = localStorage.getItem('bosnbs_jenjang');
-        const tahun = localStorage.getItem('bosnbs_tahun');
+        const sessionJenjang = localStorage.getItem('bosnbs_jenjang');
+        const sessionTahun = localStorage.getItem('bosnbs_tahun');
 
-        if (!jenjang || !tahun) {
+        if (!sessionJenjang || !sessionTahun) {
             window.location.href = 'index.html';
         }
-        document.getElementById('userBadge').textContent = `${jenjang} · ${tahun}`;
+        document.getElementById('userBadge').textContent = `${sessionJenjang} · ${sessionTahun}`;
 
         // ─────────────────────────────────────────────
         // 3.  State
         // ─────────────────────────────────────────────
         let allData = [];
-        let filteredData = [];
-        let editingId = null;
         let settingsData = {};
         let hasUnsavedChanges = false;
         let sortKey = null;
@@ -890,7 +888,6 @@
         const menuWrapper = document.getElementById('menuWrapper');
         const menuDropdown = document.getElementById('menuDropdown');
 
-        // Modal
         const settingsModal = document.getElementById('settingsModal');
         const modalCancelBtn = document.getElementById('modalCancelBtn');
         const modalSaveBtn = document.getElementById('modalSaveBtn');
@@ -929,9 +926,6 @@
             return parseFloat(cleaned) || 0;
         }
 
-        // ─────────────────────────────────────────────
-        // 7.  Escape HTML
-        // ─────────────────────────────────────────────
         function escapeHtml(str) {
             if (!str) return '';
             const div = document.createElement('div');
@@ -940,7 +934,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 8.  Column definitions
+        // 7.  Column definitions
         // ─────────────────────────────────────────────
         const COLUMNS = [
             { key: 'noBKU', type: 'text', label: 'No. BKU' },
@@ -993,7 +987,7 @@
         const COLUMN_KEYS = COLUMNS.map(c => c.key);
 
         // ─────────────────────────────────────────────
-        // 9.  Generate empty row data
+        // 8.  Generate empty row data (with jenjang & tahun)
         // ─────────────────────────────────────────────
         function createEmptyRow() {
             const row = {};
@@ -1005,11 +999,14 @@
                 else if (key === 'tahap') row[key] = 'Tahap 1';
                 else row[key] = '';
             });
+            // Tambahkan jenjang dan tahun untuk identifikasi
+            row.jenjang = sessionJenjang;
+            row.tahun = sessionTahun;
             return row;
         }
 
         // ─────────────────────────────────────────────
-        // 10. Auto-calc for jumlahHarga and jmlPajak
+        // 9.  Auto-calc
         // ─────────────────────────────────────────────
         function autoCalcRow(row) {
             const vol = parseFloat(row.vol) || 0;
@@ -1022,105 +1019,15 @@
         }
 
         // ─────────────────────────────────────────────
-        // 11. Render table
-        // ─────────────────────────────────────────────
-        function renderTable() {
-            const data = getDisplayData();
-
-            if (data.length === 0) {
-                tableBody.innerHTML =
-                    `<tr class="empty-row"><td colspan="23">Belum ada data. Klik ➕ untuk menambah baris.</td></tr>`;
-                updateCount();
-                return;
-            }
-
-            let html = '';
-            data.forEach((item, idx) => {
-                const rowNum = idx + 1;
-                html += `<tr data-id="${item._id || ''}" data-rowidx="${idx}">`;
-                html += `<td class="row-num">${rowNum}</td>`;
-
-                COLUMN_KEYS.forEach(key => {
-                    const col = COLUMNS.find(c => c.key === key);
-                    const val = item[key] !== undefined ? item[key] : '';
-                    let displayVal = val;
-
-                    // Format number
-                    if (col && (col.type === 'number' || key === 'harga' || key === 'jumlahHarga' || key ===
-                            'jmlPajak' || key === 'vol' || key === 'persenPajak')) {
-                        if (val !== '' && val !== null && val !== undefined) {
-                            displayVal = formatNumber(val);
-                        } else {
-                            displayVal = '';
-                        }
-                    }
-
-                    // Date
-                    if (key === 'tglPelaksanaan' || key === 'tglPembayaran') {
-                        displayVal = val || '';
-                    }
-
-                    const isEmpty = displayVal === '' || displayVal === null || displayVal === undefined;
-                    const displayText = isEmpty ? '' : escapeHtml(String(displayVal));
-
-                    let cellContent = '';
-                    if (col && col.type === 'select') {
-                        // For select, show the value as text
-                        cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
-                    } else if (col && col.readonly) {
-                        cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
-                    } else {
-                        cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
-                    }
-
-                    html += `<td data-field="${key}" data-rowidx="${idx}" class="editable-cell">${cellContent}</td>`;
-                });
-
-                // Actions
-                const isNew = !item._id || item._id.startsWith('_temp_');
-                html += `<td class="actions-cell">
-                            <button class="btn-delete-row" data-id="${item._id || ''}" data-rowidx="${idx}" title="Hapus baris">✕</button>
-                        </td>`;
-                html += `</tr>`;
-            });
-
-            // Add row button at bottom
-            html += `<tr class="add-row-row">
-                        <td colspan="23" class="add-row-cell">
-                            <button class="btn-add-row" id="addRowBottomBtn">➕ Tambah Baris</button>
-                        </td>
-                    </tr>`;
-
-            tableBody.innerHTML = html;
-
-            // ── Event listeners ──
-            // Double-click to edit
-            document.querySelectorAll('.editable-cell').forEach(cell => {
-                cell.addEventListener('dblclick', () => startEdit(cell));
-            });
-
-            // Delete buttons
-            document.querySelectorAll('.btn-delete-row').forEach(btn => {
-                btn.addEventListener('click', () => deleteRow(btn.dataset.id, parseInt(btn.dataset.rowidx)));
-            });
-
-            // Add row bottom
-            const addBottom = document.getElementById('addRowBottomBtn');
-            if (addBottom) {
-                addBottom.addEventListener('click', () => addRow());
-            }
-
-            updateCount();
-            updateSaveButton();
-        }
-
-        // ─────────────────────────────────────────────
-        // 12. Get display data (filtered + sorted)
+        // 10. Get display data (filtered + sorted + jenjang/tahun)
         // ─────────────────────────────────────────────
         function getDisplayData() {
-            let data = [...allData];
+            // Filter berdasarkan jenjang dan tahun session
+            let data = allData.filter(item =>
+                item.jenjang === sessionJenjang && item.tahun === sessionTahun
+            );
 
-            // Filter
+            // Filter teks
             if (filterText.trim()) {
                 const search = filterText.trim().toLowerCase();
                 data = data.filter(item => {
@@ -1148,7 +1055,90 @@
         }
 
         // ─────────────────────────────────────────────
-        // 13. Start inline edit
+        // 11. Render table
+        // ─────────────────────────────────────────────
+        function renderTable() {
+            const data = getDisplayData();
+
+            if (data.length === 0) {
+                tableBody.innerHTML =
+                    `<tr class="empty-row"><td colspan="23">Tidak ada data untuk ${sessionJenjang} · ${sessionTahun}. Klik ➕ untuk menambah.</td></tr>`;
+                updateCount();
+                return;
+            }
+
+            let html = '';
+            data.forEach((item, idx) => {
+                const rowNum = idx + 1;
+                html += `<tr data-id="${item._id || ''}" data-rowidx="${idx}">`;
+                html += `<td class="row-num">${rowNum}</td>`;
+
+                COLUMN_KEYS.forEach(key => {
+                    const col = COLUMNS.find(c => c.key === key);
+                    const val = item[key] !== undefined ? item[key] : '';
+                    let displayVal = val;
+
+                    if (col && (col.type === 'number' || key === 'harga' || key === 'jumlahHarga' || key ===
+                            'jmlPajak' || key === 'vol' || key === 'persenPajak')) {
+                        if (val !== '' && val !== null && val !== undefined) {
+                            displayVal = formatNumber(val);
+                        } else {
+                            displayVal = '';
+                        }
+                    }
+
+                    if (key === 'tglPelaksanaan' || key === 'tglPembayaran') {
+                        displayVal = val || '';
+                    }
+
+                    const isEmpty = displayVal === '' || displayVal === null || displayVal === undefined;
+                    const displayText = isEmpty ? '' : escapeHtml(String(displayVal));
+
+                    let cellContent = '';
+                    if (col && col.type === 'select') {
+                        cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
+                    } else if (col && col.readonly) {
+                        cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
+                    } else {
+                        cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
+                    }
+
+                    html += `<td data-field="${key}" data-rowidx="${idx}" class="editable-cell">${cellContent}</td>`;
+                });
+
+                html += `<td class="actions-cell">
+                            <button class="btn-delete-row" data-id="${item._id || ''}" data-rowidx="${idx}" title="Hapus baris">✕</button>
+                        </td>`;
+                html += `</tr>`;
+            });
+
+            html += `<tr class="add-row-row">
+                        <td colspan="23" class="add-row-cell">
+                            <button class="btn-add-row" id="addRowBottomBtn">➕ Tambah Baris</button>
+                        </td>
+                    </tr>`;
+
+            tableBody.innerHTML = html;
+
+            document.querySelectorAll('.editable-cell').forEach(cell => {
+                cell.addEventListener('dblclick', () => startEdit(cell));
+            });
+
+            document.querySelectorAll('.btn-delete-row').forEach(btn => {
+                btn.addEventListener('click', () => deleteRow(btn.dataset.id, parseInt(btn.dataset.rowidx)));
+            });
+
+            const addBottom = document.getElementById('addRowBottomBtn');
+            if (addBottom) {
+                addBottom.addEventListener('click', () => addRow());
+            }
+
+            updateCount();
+            updateSaveButton();
+        }
+
+        // ─────────────────────────────────────────────
+        // 12. Start inline edit (sama seperti sebelumnya)
         // ─────────────────────────────────────────────
         function startEdit(cell) {
             const field = cell.dataset.field;
@@ -1158,18 +1148,14 @@
 
             const item = data[rowIdx];
             const col = COLUMNS.find(c => c.key === field);
-            if (!col) return;
-            if (col.readonly) return;
+            if (!col || col.readonly) return;
 
             const currentVal = item[field] !== undefined ? item[field] : '';
 
-            // Prevent double edit
             if (cell.classList.contains('editing')) return;
-
             cell.classList.add('editing');
 
             let input;
-
             if (col.type === 'select') {
                 input = document.createElement('select');
                 col.options.forEach(opt => {
@@ -1204,14 +1190,11 @@
             input.style.background = '#fff';
             input.style.outline = 'none';
 
-            // Replace content
             cell.innerHTML = '';
             cell.appendChild(input);
-
             input.focus();
             if (input.select) input.select();
 
-            // Save on blur
             const saveEdit = () => {
                 let newVal = input.value.trim();
                 if (col.type === 'number') {
@@ -1219,23 +1202,17 @@
                 } else if (col.type === 'date') {
                     newVal = newVal || '';
                 }
-                // For select, value is already correct
 
-                // Update data
                 const displayData = getDisplayData();
                 if (rowIdx < displayData.length) {
                     const target = displayData[rowIdx];
-                    // Find the actual item in allData
                     const realIdx = allData.findIndex(d => d._id === target._id);
                     if (realIdx !== -1) {
                         allData[realIdx][field] = newVal;
-                        // Auto-calc
                         allData[realIdx] = autoCalcRow(allData[realIdx]);
                         markUnsaved();
                         renderTable();
-                        // Re-edit the same cell if user wants to continue? No, just close.
                     } else {
-                        // If not found, just re-render
                         renderTable();
                     }
                 } else {
@@ -1245,13 +1222,10 @@
 
             input.addEventListener('blur', saveEdit);
             input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    input.blur();
-                }
+                if (e.key === 'Enter') { e.preventDefault();
+                    input.blur(); }
                 if (e.key === 'Escape') {
                     e.preventDefault();
-                    // Cancel - restore previous value
                     const displayData = getDisplayData();
                     if (rowIdx < displayData.length) {
                         const target = displayData[rowIdx];
@@ -1264,20 +1238,15 @@
                 }
             });
 
-            // For select, blur on change
             if (col.type === 'select') {
-                input.addEventListener('change', () => {
-                    // Small delay to let the change register
-                    setTimeout(() => input.blur(), 50);
-                });
+                input.addEventListener('change', () => setTimeout(() => input.blur(), 50));
             }
 
-            // Store current value for escape
             cell.dataset.prevValue = currentVal;
         }
 
         // ─────────────────────────────────────────────
-        // 14. Add row
+        // 13. Add row
         // ─────────────────────────────────────────────
         function addRow() {
             const newRow = createEmptyRow();
@@ -1285,7 +1254,6 @@
             allData.push(newRow);
             markUnsaved();
             renderTable();
-            // Scroll to bottom
             setTimeout(() => {
                 const lastRow = tableBody.querySelector('tr:last-child');
                 if (lastRow) lastRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1293,7 +1261,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 15. Delete row
+        // 14. Delete row
         // ─────────────────────────────────────────────
         function deleteRow(id, rowIdx) {
             const displayData = getDisplayData();
@@ -1306,14 +1274,9 @@
             const realIdx = allData.findIndex(d => d._id === item._id);
             if (realIdx !== -1) {
                 if (item._id && !item._id.startsWith('_temp_')) {
-                    // Real item - delete from Firestore
                     db.collection(COLLECTION).doc(item._id).delete()
-                        .then(() => {
-                            showToast('Data berhasil dihapus.', 'success');
-                        })
-                        .catch(err => {
-                            showToast('Gagal hapus: ' + err.message, 'error');
-                        });
+                        .then(() => showToast('Data berhasil dihapus.', 'success'))
+                        .catch(err => showToast('Gagal hapus: ' + err.message, 'error'));
                 }
                 allData.splice(realIdx, 1);
                 markUnsaved();
@@ -1322,7 +1285,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 16. Mark unsaved / saved
+        // 15. Save / unsaved state
         // ─────────────────────────────────────────────
         function markUnsaved() {
             hasUnsavedChanges = true;
@@ -1347,7 +1310,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 17. Save all to Firestore
+        // 16. Save all to Firestore (with jenjang & tahun)
         // ─────────────────────────────────────────────
         async function saveAll() {
             if (!hasUnsavedChanges) return;
@@ -1360,7 +1323,9 @@
                 let savedCount = 0;
 
                 for (const item of allData) {
-                    // Skip empty rows (all fields empty)
+                    // Hanya simpan data yang sesuai dengan session
+                    if (item.jenjang !== sessionJenjang || item.tahun !== sessionTahun) continue;
+
                     const hasData = COLUMN_KEYS.some(key => {
                         const val = item[key];
                         return val !== '' && val !== null && val !== undefined;
@@ -1371,19 +1336,18 @@
                     COLUMN_KEYS.forEach(key => {
                         dataToSave[key] = item[key] !== undefined ? item[key] : '';
                     });
+                    dataToSave.jenjang = sessionJenjang;
+                    dataToSave.tahun = sessionTahun;
                     dataToSave.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
 
                     if (item._id && !item._id.startsWith('_temp_')) {
-                        // Update existing
                         promises.push(db.collection(COLLECTION).doc(item._id).update(dataToSave));
                         savedCount++;
                     } else {
-                        // New item
                         dataToSave.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                         const docRef = db.collection(COLLECTION).doc();
                         dataToSave._id = docRef.id;
                         promises.push(docRef.set(dataToSave));
-                        // Update the item with real id
                         item._id = docRef.id;
                         savedCount++;
                     }
@@ -1392,8 +1356,7 @@
                 await Promise.all(promises);
                 showToast(`✅ ${savedCount} data berhasil disimpan!`, 'success');
                 markSaved();
-                // Reload data from server
-                loadData();
+                loadData(); // refresh
             } catch (error) {
                 console.error('Save error:', error);
                 showToast('❌ Gagal menyimpan: ' + error.message, 'error');
@@ -1403,7 +1366,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 18. Load data from Firestore
+        // 17. Load data from Firestore
         // ─────────────────────────────────────────────
         function loadData() {
             db.collection(COLLECTION)
@@ -1413,14 +1376,18 @@
                     snapshot.forEach(doc => {
                         const data = doc.data();
                         data._id = doc.id;
-                        // Ensure all fields exist
                         COLUMN_KEYS.forEach(key => {
                             if (data[key] === undefined) data[key] = '';
                         });
+                        // Pastikan ada field jenjang dan tahun, jika tidak, set default (agar tidak tampil)
+                        if (!data.jenjang) data.jenjang = '';
+                        if (!data.tahun) data.tahun = '';
                         loaded.push(data);
                     });
-                    // Preserve any unsaved temp rows
-                    const tempRows = allData.filter(d => d._id && d._id.startsWith('_temp_'));
+
+                    // Pertahankan data sementara yang belum tersimpan
+                    const tempRows = allData.filter(d => d._id && d._id.startsWith('_temp_') &&
+                        d.jenjang === sessionJenjang && d.tahun === sessionTahun);
                     allData = [...loaded, ...tempRows];
                     markSaved();
                     renderTable();
@@ -1432,7 +1399,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 19. Load settings
+        // 18. Load settings
         // ─────────────────────────────────────────────
         function loadSettings() {
             db.collection(SETTINGS_COLLECTION).doc('main')
@@ -1452,7 +1419,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 20. Update count
+        // 19. Update count
         // ─────────────────────────────────────────────
         function updateCount() {
             const data = getDisplayData();
@@ -1460,7 +1427,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 21. Filter
+        // 20. Filter
         // ─────────────────────────────────────────────
         filterInput.addEventListener('input', () => {
             filterText = filterInput.value;
@@ -1468,7 +1435,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 22. Sort
+        // 21. Sort
         // ─────────────────────────────────────────────
         document.querySelectorAll('thead th[data-sort]').forEach(th => {
             th.addEventListener('click', () => {
@@ -1479,7 +1446,6 @@
                     sortKey = key;
                     sortAsc = true;
                 }
-                // Update sort indicators
                 document.querySelectorAll('thead th[data-sort]').forEach(h => {
                     h.classList.remove('sorted');
                     const icon = h.querySelector('.sort-icon');
@@ -1498,30 +1464,15 @@
         });
 
         // ─────────────────────────────────────────────
-        // 23. Add row button
+        // 22. Event listeners
         // ─────────────────────────────────────────────
         addRowBtn.addEventListener('click', addRow);
-
-        // ─────────────────────────────────────────────
-        // 24. Save button
-        // ─────────────────────────────────────────────
         saveBtn.addEventListener('click', saveAll);
 
-        // ─────────────────────────────────────────────
-        // 25. Settings modal
-        // ─────────────────────────────────────────────
-        function openSettings() {
-            settingsModal.classList.add('active');
-        }
-
-        function closeSettings() {
-            settingsModal.classList.remove('active');
-        }
-
-        settingsBtn.addEventListener('click', openSettings);
-        modalCancelBtn.addEventListener('click', closeSettings);
+        settingsBtn.addEventListener('click', () => settingsModal.classList.add('active'));
+        modalCancelBtn.addEventListener('click', () => settingsModal.classList.remove('active'));
         settingsModal.addEventListener('click', (e) => {
-            if (e.target === settingsModal) closeSettings();
+            if (e.target === settingsModal) settingsModal.classList.remove('active');
         });
 
         modalSaveBtn.addEventListener('click', async () => {
@@ -1539,24 +1490,18 @@
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
                 showToast('Pengaturan berhasil disimpan!', 'success');
-                closeSettings();
+                settingsModal.classList.remove('active');
             } catch (error) {
                 showToast('Gagal menyimpan: ' + error.message, 'error');
             }
         });
 
-        // ─────────────────────────────────────────────
-        // 26. Menu dropdown
-        // ─────────────────────────────────────────────
+        // Menu dropdown
         menuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             menuWrapper.classList.toggle('active');
         });
-
-        document.addEventListener('click', () => {
-            menuWrapper.classList.remove('active');
-        });
-
+        document.addEventListener('click', () => menuWrapper.classList.remove('active'));
         menuDropdown.querySelectorAll('a').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -1566,9 +1511,7 @@
             });
         });
 
-        // ─────────────────────────────────────────────
-        // 27. Logout
-        // ─────────────────────────────────────────────
+        // Logout
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('bosnbs_jenjang');
             localStorage.removeItem('bosnbs_tahun');
@@ -1576,9 +1519,8 @@
         });
 
         // ─────────────────────────────────────────────
-        // 28. Init
+        // 23. Init
         // ─────────────────────────────────────────────
-        // Add sort icons to headers
         document.querySelectorAll('thead th[data-sort]').forEach(th => {
             const icon = document.createElement('span');
             icon.className = 'sort-icon';
@@ -1588,8 +1530,8 @@
 
         loadData();
 
-        console.log('📋 BOS-NBS · Database siap (inline edit, sort, filter)');
-        console.log('ℹ️  Double-klik sel untuk edit, klik header untuk sortir');
+        console.log('📋 BOS-NBS · Database siap (multi-jenjang & multi-tahun)');
+        console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
 </body>
