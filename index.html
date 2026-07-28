@@ -57,20 +57,20 @@
             margin-bottom: 36px;
         }
 
-        .brand-icon {
-            display: inline-flex;
-            align-items: center;
+        .brand-logo {
+            display: flex;
             justify-content: center;
-            width: 64px;
-            height: 64px;
-            background: #0a2e5c;
-            border-radius: 18px;
-            color: #fff;
-            font-weight: 700;
-            font-size: 28px;
-            letter-spacing: -0.02em;
             margin-bottom: 12px;
-            box-shadow: 0 8px 20px -6px rgba(10, 46, 92, 0.25);
+        }
+
+        .brand-logo img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 16px;
+            background: #f0f4fa;
+            padding: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         }
 
         .brand h1 {
@@ -145,7 +145,7 @@
             color: #a5b9ce;
         }
 
-        /* ── Password wrapper (no toggle) ── */
+        /* ── Password wrapper ── */
         .password-wrapper {
             position: relative;
         }
@@ -214,10 +214,10 @@
                 font-size: 22px;
             }
 
-            .brand-icon {
-                width: 54px;
-                height: 54px;
-                font-size: 22px;
+            .brand-logo img {
+                width: 64px;
+                height: 64px;
+                padding: 6px;
             }
 
             .form-group select,
@@ -247,9 +247,12 @@
 
     <div class="login-card" role="main" aria-label="Login panel">
 
-        <!-- Brand -->
+        <!-- Brand dengan logo -->
         <div class="brand">
-            <div class="brand-icon">B</div>
+            <div class="brand-logo">
+                <!-- Logo sekolah dari GitHub -->
+                <img src="logo.png" alt="Logo Sekolah" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'brand-icon\' style=\'display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;background:#0a2e5c;border-radius:18px;color:#fff;font-weight:700;font-size:28px;letter-spacing:-0.02em;box-shadow:0 8px 20px -6px rgba(10,46,92,0.25);\'>B</div>';" />
+            </div>
             <h1>BOS-NBS</h1>
             <div class="sub">Sistem Pelaporan Dana BOS</div>
         </div>
@@ -273,7 +276,7 @@
                 </select>
             </div>
 
-            <!-- Password (tersembunyi, tanpa instruksi) -->
+            <!-- Password -->
             <div class="form-group">
                 <label for="password">Password</label>
                 <div class="password-wrapper">
@@ -303,7 +306,6 @@
 
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const db = firebase.firestore();
 
         // ─────────────────────────────────────────────
         // 2.  Populate tahun anggaran (2024–2034)
@@ -318,11 +320,9 @@
                 const opt = document.createElement('option');
                 opt.value = y;
                 opt.textContent = y;
-                // pilih tahun berjalan jika ada dalam rentang
                 if (y === currentYear) opt.selected = true;
                 select.appendChild(opt);
             }
-            // jika currentYear di luar rentang, pilih 2024
             if (currentYear < start || currentYear > end) {
                 select.value = start;
             }
@@ -336,16 +336,12 @@
         const loginBtn = document.getElementById('loginBtn');
         const passwordInput = document.getElementById('password');
 
-        // Credential
         const VALID_PASSWORD = 'bosnbs';
-
-        // Hapus placeholder text agar tidak muncul instruksi
         passwordInput.placeholder = '';
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Reset pesan
             messageEl.textContent = '\u00A0';
             messageEl.className = 'message';
 
@@ -353,14 +349,12 @@
             const jenjang = document.getElementById('jenjang').value;
             const tahun = document.getElementById('tahun').value;
 
-            // Validasi sederhana
             if (!password) {
                 messageEl.textContent = 'Password wajib diisi.';
                 messageEl.className = 'message';
                 return;
             }
 
-            // Periksa password
             if (password !== VALID_PASSWORD) {
                 messageEl.textContent = 'Password yang Anda masukkan salah.';
                 messageEl.className = 'message';
@@ -369,24 +363,19 @@
                 return;
             }
 
-            // ── Password benar: login ke Firebase (Anonymous) ──
             loginBtn.disabled = true;
             loginBtn.textContent = 'Memproses…';
 
             try {
-                // Sign in anonymously agar terhubung ke Firebase
                 await auth.signInAnonymously();
 
-                // Simpan data sesi di localStorage (untuk halaman selanjutnya)
                 localStorage.setItem('bosnbs_jenjang', jenjang);
                 localStorage.setItem('bosnbs_tahun', tahun);
                 localStorage.setItem('bosnbs_uid', auth.currentUser ? auth.currentUser.uid : '');
 
-                // Pesan sukses
                 messageEl.textContent = '✓ Berhasil masuk, mengalihkan…';
                 messageEl.className = 'message success';
 
-                // Redirect ke halaman database
                 setTimeout(() => {
                     window.location.href = 'database.html';
                 }, 600);
@@ -401,18 +390,12 @@
         });
 
         // ─────────────────────────────────────────────
-        // 4.  Enter key support (already handled by form)
+        // 4.  Fokus ke password setelah load
         // ─────────────────────────────────────────────
-
-        // Saat halaman dimuat, fokus ke password (karena field lain sudah terisi)
         window.addEventListener('load', () => {
-            // fokus ke password setelah sedikit delay agar tidak mengganggu render
             setTimeout(() => passwordInput.focus(), 100);
         });
 
-        // ─────────────────────────────────────────────
-        // 5.  Cegah caching password (tidak permanen)
-        // ─────────────────────────────────────────────
         passwordInput.addEventListener('focus', function() {
             this.select();
         });
