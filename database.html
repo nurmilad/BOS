@@ -319,6 +319,7 @@
             box-shadow: 0 2px 12px rgba(0, 20, 40, 0.06);
             overflow: hidden;
             padding: 0 0 4px 0;
+            margin-bottom: 20px;
         }
 
         .table-wrapper {
@@ -331,8 +332,8 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
-            table-layout: auto; /* kolom menyesuaikan konten */
-            min-width: 700px; /* agar tetap nyaman di layar kecil */
+            table-layout: auto;
+            min-width: 700px;
         }
 
         /* ── Borders ── */
@@ -483,20 +484,21 @@
         /* ── Add row ── */
         .add-row-cell {
             text-align: center;
-            padding: 4px !important;
+            padding: 2px 4px !important;
         }
 
         .btn-add-row {
             background: transparent;
             border: 1.5px dashed #b0c4d8;
-            border-radius: 6px;
-            padding: 4px 12px;
-            font-size: 18px;
+            border-radius: 4px;
+            padding: 2px 10px;
+            font-size: 13px;
             cursor: pointer;
             color: #5a7a9a;
             transition: all 0.2s ease;
             width: 100%;
             font-family: inherit;
+            display: inline-block;
         }
 
         .btn-add-row:hover {
@@ -694,6 +696,71 @@
             background: #dce6f0;
         }
 
+        /* ── Summary Card ── */
+        .summary-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 20, 40, 0.06);
+            padding: 18px 24px;
+            margin-bottom: 20px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .summary-item .label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #7a8fa6;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .summary-item .value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0a2e5c;
+            margin-top: 2px;
+        }
+
+        .summary-item .value.anggaran {
+            color: #1a7a3a;
+        }
+        .summary-item .value.teranggarkan {
+            color: #0a2e5c;
+        }
+        .summary-item .value.belum {
+            color: #b00020;
+        }
+        .summary-item .value.total {
+            color: #0a2e5c;
+            font-size: 20px;
+        }
+
+        .summary-item.highlight {
+            grid-column: span 2;
+            background: #f2f7fc;
+            border-radius: 8px;
+            padding: 6px 12px;
+        }
+
+        @media (max-width: 600px) {
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .summary-item.highlight {
+                grid-column: span 1;
+            }
+        }
+
         /* ── Responsive ── */
         @media (max-width: 768px) {
             body {
@@ -742,6 +809,9 @@
             .btn-save {
                 font-size: 12px;
                 padding: 6px 14px;
+            }
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
@@ -872,6 +942,40 @@
         </div>
     </div>
 
+    <!-- ─── Summary Anggaran ─── -->
+    <div class="summary-card">
+        <div class="summary-grid">
+            <div class="summary-item">
+                <span class="label">Anggaran Tahap 1</span>
+                <span class="value anggaran" id="sumAnggaran1">Rp 0</span>
+            </div>
+            <div class="summary-item">
+                <span class="label">Teranggarkan Tahap 1</span>
+                <span class="value teranggarkan" id="sumTeranggarkan1">Rp 0</span>
+            </div>
+            <div class="summary-item">
+                <span class="label">Belum Teranggarkan Tahap 1</span>
+                <span class="value belum" id="sumBelum1">Rp 0</span>
+            </div>
+            <div class="summary-item">
+                <span class="label">Anggaran Tahap 2</span>
+                <span class="value anggaran" id="sumAnggaran2">Rp 0</span>
+            </div>
+            <div class="summary-item">
+                <span class="label">Teranggarkan Tahap 2</span>
+                <span class="value teranggarkan" id="sumTeranggarkan2">Rp 0</span>
+            </div>
+            <div class="summary-item">
+                <span class="label">Belum Teranggarkan Tahap 2</span>
+                <span class="value belum" id="sumBelum2">Rp 0</span>
+            </div>
+            <div class="summary-item highlight">
+                <span class="label">Total Anggaran</span>
+                <span class="value total" id="sumTotal">Rp 0</span>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ─────────────────────────────────────────────
         // 1.  Firebase init
@@ -935,6 +1039,15 @@
         const modalBendahara = document.getElementById('modalBendahara');
         const modalAnggaran1 = document.getElementById('modalAnggaran1');
         const modalAnggaran2 = document.getElementById('modalAnggaran2');
+
+        // Summary elements
+        const sumAnggaran1 = document.getElementById('sumAnggaran1');
+        const sumAnggaran2 = document.getElementById('sumAnggaran2');
+        const sumTeranggarkan1 = document.getElementById('sumTeranggarkan1');
+        const sumTeranggarkan2 = document.getElementById('sumTeranggarkan2');
+        const sumBelum1 = document.getElementById('sumBelum1');
+        const sumBelum2 = document.getElementById('sumBelum2');
+        const sumTotal = document.getElementById('sumTotal');
 
         // ─────────────────────────────────────────────
         // 5.  Column Resizer
@@ -1037,6 +1150,13 @@
             const num = parseFloat(val);
             if (isNaN(num)) return '';
             return num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        function formatRupiah(val) {
+            if (val === undefined || val === null || val === '') return 'Rp 0';
+            const num = parseFloat(val);
+            if (isNaN(num) || num === 0) return 'Rp 0';
+            return 'Rp ' + num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 
         function parseNumber(str) {
@@ -1180,6 +1300,7 @@
                 tableBody.innerHTML =
                     `<tr class="empty-row"><td colspan="24">Tidak ada data untuk ${sessionJenjang} · ${sessionTahun}. Klik ➕ untuk menambah.</td></tr>`;
                 updateCount();
+                updateSummary();
                 return;
             }
 
@@ -1253,6 +1374,7 @@
 
             updateCount();
             updateSaveButton();
+            updateSummary();
         }
 
         // ─────────────────────────────────────────────
@@ -1528,6 +1650,7 @@
                     modalBendahara.value = settingsData.bendahara || '';
                     modalAnggaran1.value = settingsData.anggaran1 || 0;
                     modalAnggaran2.value = settingsData.anggaran2 || 0;
+                    updateSummary();
                 }, (error) => {
                     console.error('Settings read error:', error);
                 });
@@ -1542,7 +1665,38 @@
         }
 
         // ─────────────────────────────────────────────
-        // 21. Filter
+        // 21. Update Summary
+        // ─────────────────────────────────────────────
+        function updateSummary() {
+            const data = getDisplayData();
+
+            // Hitung total per tahap dari data
+            let total1 = 0,
+                total2 = 0;
+            data.forEach(item => {
+                const jml = parseFloat(item.jumlahHarga) || 0;
+                if (item.tahap === 'Tahap 1') total1 += jml;
+                else if (item.tahap === 'Tahap 2') total2 += jml;
+            });
+
+            const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
+            const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
+
+            const belum1 = Math.max(0, anggaran1 - total1);
+            const belum2 = Math.max(0, anggaran2 - total2);
+            const totalAnggaran = anggaran1 + anggaran2;
+
+            sumAnggaran1.textContent = formatRupiah(anggaran1);
+            sumAnggaran2.textContent = formatRupiah(anggaran2);
+            sumTeranggarkan1.textContent = formatRupiah(total1);
+            sumTeranggarkan2.textContent = formatRupiah(total2);
+            sumBelum1.textContent = formatRupiah(belum1);
+            sumBelum2.textContent = formatRupiah(belum2);
+            sumTotal.textContent = formatRupiah(totalAnggaran);
+        }
+
+        // ─────────────────────────────────────────────
+        // 22. Filter
         // ─────────────────────────────────────────────
         filterInput.addEventListener('input', () => {
             filterText = filterInput.value;
@@ -1550,7 +1704,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 22. Sort
+        // 23. Sort
         // ─────────────────────────────────────────────
         document.querySelectorAll('thead th[data-sort]').forEach(th => {
             th.addEventListener('click', () => {
@@ -1579,7 +1733,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 23. Event listeners
+        // 24. Event listeners
         // ─────────────────────────────────────────────
         addRowBtn.addEventListener('click', addRow);
         saveBtn.addEventListener('click', saveAll);
@@ -1606,6 +1760,7 @@
                 }, { merge: true });
                 showToast('Pengaturan berhasil disimpan!', 'success');
                 settingsModal.classList.remove('active');
+                updateSummary();
             } catch (error) {
                 showToast('Gagal menyimpan: ' + error.message, 'error');
             }
@@ -1634,7 +1789,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 24. Init
+        // 25. Init
         // ─────────────────────────────────────────────
         // Tambahkan sort icon
         document.querySelectorAll('thead th[data-sort]').forEach(th => {
@@ -1655,7 +1810,7 @@
 
         loadData();
 
-        console.log('📋 BOS-NBS · Database siap (No. Bukti + Kode Kegiatan, lebar fleksibel)');
+        console.log('📋 BOS-NBS · Database siap (dengan ringkasan anggaran)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
         console.log('ℹ️  Drag border kolom untuk mengatur lebar, tersimpan otomatis di browser');
     </script>
