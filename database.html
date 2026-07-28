@@ -1101,7 +1101,7 @@
         document.getElementById('modalSessionLabel').textContent = `${sessionJenjang} · ${sessionTahun}`;
 
         // ─────────────────────────────────────────────
-        // 3.  Mapping STANDAR & KOMPONEN
+        // 3.  Mapping STANDAR & KOMPONEN (sesuai ketentuan)
         // ─────────────────────────────────────────────
         const STANDAR_MAP = {
             '01': 'Pengembangan Kompetensi Lulusan',
@@ -1133,13 +1133,22 @@
         // 4.  Fungsi otomatis Standar & Komponen dari Kode Kegiatan
         // ─────────────────────────────────────────────
         function parseKodeKegiatan(kode) {
-            if (!kode) return { standar: '', komponen: '' };
-            const parts = kode.split('.');
+            if (!kode || typeof kode !== 'string') return { standar: '', komponen: '' };
+
+            // Bersihkan spasi
+            const clean = kode.trim();
+            const parts = clean.split('.');
             if (parts.length < 2) return { standar: '', komponen: '' };
+
+            // Bagian pertama = Standar (2 digit), bagian kedua = Komponen (2 digit)
             const standarCode = parts[0].padStart(2, '0');
             const komponenCode = parts[1].padStart(2, '0');
+
             const standar = STANDAR_MAP[standarCode] || '';
             const komponen = KOMPONEN_MAP[komponenCode] || '';
+
+            console.log(`🔍 Parse Kode: "${clean}" → Standar: ${standarCode} (${standar}), Komponen: ${komponenCode} (${komponen})`);
+
             return { standar, komponen };
         }
 
@@ -1268,14 +1277,8 @@
                 }
             });
 
-            // Terapkan ke body cells
             const rows = tableBody.querySelectorAll('tr');
             rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                // cells index: 0 = no, 1 = noBukti, 2 = kodeKegiatan, ..., terakhir actions
-                // kita mapping berdasarkan urutan COLUMN_DEFS
-                // Lebih mudah: gunakan data-field atau data-col
-                // Karena kita menggunakan data-field di td, kita bisa filter
                 const tdList = row.querySelectorAll('td[data-field]');
                 tdList.forEach(td => {
                     const field = td.dataset.field;
@@ -1285,14 +1288,12 @@
                         td.classList.remove('hidden-col');
                     }
                 });
-                // Actions column
                 const actionsTd = row.querySelector('td.actions-cell');
                 if (actionsTd && hiddenColumns.has('actions')) {
                     actionsTd.classList.add('hidden-col');
                 } else if (actionsTd) {
                     actionsTd.classList.remove('hidden-col');
                 }
-                // Row number
                 const rowNumTd = row.querySelector('td.row-num');
                 if (rowNumTd && hiddenColumns.has('no')) {
                     rowNumTd.classList.add('hidden-col');
@@ -1320,14 +1321,12 @@
             });
             colMenuDropdown.innerHTML = html;
 
-            // Event listener untuk checkbox
             colMenuDropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
                 cb.addEventListener('change', (e) => {
                     const col = e.target.dataset.col;
                     if (e.target.checked) {
                         hiddenColumns.delete(col);
                     } else {
-                        // Cek apakah kolom required
                         const def = COLUMN_DEFS.find(c => c.key === col);
                         if (def && def.required) {
                             e.target.checked = true;
@@ -1337,7 +1336,6 @@
                     }
                     saveHiddenColumns();
                     applyHiddenColumns();
-                    // Re-render table untuk memastikan konsistensi
                     renderTable();
                 });
             });
@@ -1753,6 +1751,7 @@
                             const parsed = parseKodeKegiatan(newVal);
                             allData[realIdx]['standar'] = parsed.standar;
                             allData[realIdx]['komponen'] = parsed.komponen;
+                            console.log(`✅ Otomatis: Standar="${parsed.standar}", Komponen="${parsed.komponen}"`);
                         }
 
                         allData[realIdx] = autoCalcRow(allData[realIdx]);
@@ -2104,7 +2103,6 @@
         // ─────────────────────────────────────────────
         // 32. Init
         // ─────────────────────────────────────────────
-        // Tambahkan icon sortir di setiap header
         document.querySelectorAll('thead th[data-sort]').forEach(th => {
             const icon = document.createElement('span');
             icon.className = 'sort-icon';
@@ -2128,6 +2126,7 @@
         console.log('📋 BOS-NBS · Database siap (otomatis Standar & Komponen dari Kode Kegiatan)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
         console.log('ℹ️  Klik header untuk sortir, klik "Kolom" untuk hide/unhide');
+        console.log('ℹ️  Format Kode Kegiatan: XX.YY.ZZ (XX=Standar, YY=Komponen)');
     </script>
 
 </body>
