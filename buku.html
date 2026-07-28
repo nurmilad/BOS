@@ -848,31 +848,26 @@
         }
 
         // ─────────────────────────────────────────────
-        // 9.  Load data for Buku Kas
+        // 9.  Load data for Buku Kas (tanpa orderBy untuk menghindari index)
         // ─────────────────────────────────────────────
         function loadKasData() {
             const bulan = bulanSelect.value;
             const tahun = tahunSelect.value;
 
-            // Update display
             displayBulan.textContent = getMonthName(bulan);
             displayTahun.textContent = tahun;
 
-            // Filter data berdasarkan bulan & tahun
-            // Data dari Firestore sudah di-load di allKasData (dari database.html)
-            // Tapi kita akan ambil dari Firestore langsung untuk kemudahan
+            // Ambil semua data untuk jenjang & tahun ini (tanpa orderBy)
             db.collection(COLLECTION)
                 .where('jenjang', '==', sessionJenjang)
                 .where('tahun', '==', sessionTahun)
-                .orderBy('createdAt', 'desc')
                 .get()
                 .then((snapshot) => {
                     const data = [];
                     snapshot.forEach(doc => {
                         const d = doc.data();
                         d._id = doc.id;
-                        // Filter berdasarkan bulan dari tglPelaksanaan atau tglPembayaran
-                        // Kita gunakan tglPelaksanaan sebagai acuan
+                        // Filter berdasarkan bulan dari tglPelaksanaan
                         const tgl = d.tglPelaksanaan;
                         if (tgl) {
                             const dateParts = tgl.split('-');
@@ -913,7 +908,7 @@
 
             let saldo = 0;
             let html = '';
-            // Urutkan berdasarkan tanggal
+            // Urutkan berdasarkan tanggal (client-side)
             const sorted = [...data].sort((a, b) => {
                 const tglA = a.tglPelaksanaan || '9999-99-99';
                 const tglB = b.tglPelaksanaan || '9999-99-99';
@@ -926,17 +921,16 @@
                 const rek = item.noRek || '';
                 const bukti = item.noBukti || '';
                 const uraian = item.uraian || '';
-                const penerimaan = parseFloat(item.jumlahHarga) || 0;
-                const pengeluaran = parseFloat(item.jumlahHarga) || 0;
+                // Ambil jumlahHarga sebagai nilai transaksi (asumsi semua adalah pengeluaran)
+                // Tapi kita akan tampilkan di kolom penerimaan jika positif, atau pengeluaran jika negatif
+                // Untuk demo, kita tampilkan di kolom penerimaan saja sebagai contoh
+                const nilai = parseFloat(item.jumlahHarga) || 0;
+                // Jika nilai > 0, anggap penerimaan, jika < 0 anggap pengeluaran
+                // Karena data kita semua positif, kita tampilkan di penerimaan
+                const penerimaan = nilai > 0 ? nilai : 0;
+                const pengeluaran = nilai < 0 ? Math.abs(nilai) : 0;
 
-                // Untuk demo, kita asumsikan jika nilai positif itu penerimaan, negatif pengeluaran
-                // Tapi di data kita, jumlahHarga selalu positif
-                // Kita gunakan logika sederhana: jika ada nilai, anggap pengeluaran
-                // Untuk demo, kita tampilkan data apa adanya
-                const penerimaanDisplay = penerimaan > 0 ? formatRupiah(penerimaan) : '';
-                const pengeluaranDisplay = penerimaan > 0 ? '' : formatRupiah(penerimaan);
-
-                saldo += penerimaan;
+                saldo += penerimaan - pengeluaran;
 
                 html += `
                             <tr>
@@ -945,16 +939,19 @@
                                 <td>${rek}</td>
                                 <td>${bukti}</td>
                                 <td class="left">${uraian}</td>
-                                <td class="right">${penerimaanDisplay}</td>
-                                <td class="right">${pengeluaranDisplay}</td>
+                                <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                                <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
                                 <td class="right">${formatRupiah(saldo)}</td>
                             </tr>
                         `;
             });
 
             // Total baris
-            const totalPenerimaan = sorted.reduce((sum, item) => sum + (parseFloat(item.jumlahHarga) || 0), 0);
-            const totalPengeluaran = 0; // untuk demo
+            const totalPenerimaan = sorted.reduce((sum, item) => sum + (parseFloat(item.jumlahHarga) > 0 ? parseFloat(item
+                .jumlahHarga) : 0), 0);
+            const totalPengeluaran = sorted.reduce((sum, item) => sum + (parseFloat(item.jumlahHarga) < 0 ? Math.abs(parseFloat(
+                item.jumlahHarga)) : 0), 0);
+
             html += `
                         <tr class="total-row">
                             <td colspan="5" style="text-align:right;font-weight:600;">TOTAL</td>
