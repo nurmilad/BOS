@@ -13,9 +13,7 @@
 
     <style>
         /* ── Reset & Base ── */
-        *,
-        *::before,
-        *::after {
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -25,7 +23,7 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f4f8fc;
             color: #0a1e33;
-            padding: 24px;
+            padding: 16px 24px 40px;
             min-height: 100vh;
         }
 
@@ -35,24 +33,24 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 16px;
-            max-width: 1600px;
-            margin: 0 auto 28px;
-            padding-bottom: 16px;
+            gap: 12px;
+            max-width: 100%;
+            margin: 0 auto 20px;
+            padding-bottom: 12px;
             border-bottom: 2px solid #e2edf6;
         }
 
         .app-header .brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .app-header .brand img {
-            height: 44px;
-            width: 44px;
+            height: 38px;
+            width: 38px;
             object-fit: contain;
-            border-radius: 10px;
+            border-radius: 8px;
             background: #f0f4fa;
             padding: 4px;
         }
@@ -61,24 +59,23 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
+            width: 38px;
+            height: 38px;
             background: #0a2e5c;
-            border-radius: 12px;
+            border-radius: 10px;
             color: #fff;
             font-weight: 700;
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .app-header h1 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             color: #0a2e5c;
-            letter-spacing: -0.02em;
         }
 
         .app-header .sub {
-            font-size: 13px;
+            font-size: 12px;
             color: #7a8fa6;
             font-weight: 400;
         }
@@ -86,33 +83,33 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
         .header-actions .user-badge {
-            font-size: 13px;
+            font-size: 12px;
             color: #1f3a5f;
             background: #e9f0f7;
-            padding: 6px 16px;
-            border-radius: 20px;
+            padding: 5px 14px;
+            border-radius: 16px;
             font-weight: 500;
         }
 
         .btn-outline {
             background: transparent;
             border: 1.5px solid #d0dde9;
-            padding: 8px 18px;
-            border-radius: 12px;
+            padding: 6px 14px;
+            border-radius: 10px;
             font-weight: 500;
-            font-size: 13px;
+            font-size: 12px;
             color: #1f3a5f;
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: inherit;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
 
         .btn-outline:hover {
@@ -123,10 +120,10 @@
         .btn-logout {
             background: transparent;
             border: 1.5px solid #d0dde9;
-            padding: 8px 20px;
-            border-radius: 12px;
+            padding: 6px 16px;
+            border-radius: 10px;
             font-weight: 500;
-            font-size: 13px;
+            font-size: 12px;
             color: #1f3a5f;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -138,250 +135,248 @@
             border-color: #b0c4d8;
         }
 
-        /* ── Container ── */
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        /* ── Form Card ── */
-        .form-card {
+        /* ── Toolbar ── */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
             background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 20, 40, 0.06);
-            padding: 24px 28px 28px;
-            margin-bottom: 28px;
-            transition: box-shadow 0.2s ease;
+            border-radius: 14px;
+            padding: 12px 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 20, 40, 0.06);
         }
 
-        .form-card:hover {
-            box-shadow: 0 8px 32px rgba(0, 20, 40, 0.08);
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        .form-card .form-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #0a2e5c;
-            margin-bottom: 18px;
+        .toolbar-right {
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-            gap: 14px 16px;
+        .toolbar .filter-input {
+            padding: 6px 12px;
+            font-size: 13px;
+            border: 1.5px solid #dce6ef;
+            border-radius: 8px;
+            outline: none;
+            font-family: inherit;
+            background: #fafcfe;
+            min-width: 180px;
+            transition: border-color 0.2s;
         }
 
-        .form-grid .full-width {
-            grid-column: 1 / -1;
+        .toolbar .filter-input:focus {
+            border-color: #0a2e5c;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-size: 12px;
-            font-weight: 500;
-            color: #2f4a6a;
-            margin-bottom: 4px;
-            letter-spacing: 0.2px;
-        }
-
-        .form-group input,
-        .form-group select {
-            padding: 9px 12px;
+        .btn-save {
+            padding: 7px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
             font-size: 13px;
             font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #fff;
+        }
+
+        .btn-save.saved {
+            background: #1a7a3a;
+        }
+
+        .btn-save.saved:hover {
+            background: #146b30;
+        }
+
+        .btn-save.unsaved {
+            background: #b00020;
+            animation: pulse-red 1.2s ease-in-out infinite;
+        }
+
+        .btn-save.unsaved:hover {
+            background: #8a0018;
+        }
+
+        @keyframes pulse-red {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(176, 0, 32, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 0 6px rgba(176, 0, 32, 0.1);
+            }
+        }
+
+        .btn-save:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            animation: none;
+        }
+
+        .btn-icon {
+            background: transparent;
             border: 1.5px solid #dce6ef;
-            border-radius: 10px;
-            background: #fafcfe;
-            color: #0a1e33;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            outline: none;
-            width: 100%;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            color: #1f3a5f;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #0a2e5c;
-            box-shadow: 0 0 0 3px rgba(10, 46, 92, 0.08);
-            background: #ffffff;
+        .btn-icon:hover {
+            background: #f0f4fa;
+            border-color: #b0c4d8;
         }
 
-        .form-group input::placeholder {
-            color: #b0c4d8;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 18px;
-            flex-wrap: wrap;
-            padding-top: 16px;
-            border-top: 1px solid #eef4f9;
-        }
-
-        .btn-primary {
+        .btn-icon .badge {
             background: #0a2e5c;
             color: #fff;
-            border: none;
-            padding: 10px 32px;
-            border-radius: 12px;
+            font-size: 10px;
+            border-radius: 50%;
+            padding: 0 6px;
+            min-width: 18px;
+            text-align: center;
+            line-height: 18px;
             font-weight: 600;
-            font-size: 14px;
-            font-family: inherit;
-            cursor: pointer;
-            transition: background 0.2s ease, transform 0.15s ease;
         }
 
-        .btn-primary:hover {
-            background: #123f72;
-        }
-        .btn-primary:active {
-            transform: scale(0.97);
+        /* ── Dropdown Menu ── */
+        .menu-wrapper {
+            position: relative;
+            display: inline-block;
         }
 
-        .btn-secondary {
-            background: #e9f0f7;
-            color: #1f3a5f;
-            border: none;
-            padding: 10px 28px;
+        .menu-dropdown {
+            position: absolute;
+            top: 110%;
+            right: 0;
+            background: #fff;
             border-radius: 12px;
-            font-weight: 500;
-            font-size: 14px;
-            font-family: inherit;
+            box-shadow: 0 12px 40px rgba(0, 20, 40, 0.15);
+            min-width: 180px;
+            padding: 6px 0;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-6px);
+            transition: all 0.2s ease;
+            border: 1px solid #eef4f9;
+        }
+
+        .menu-wrapper.active .menu-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .menu-dropdown a {
+            display: block;
+            padding: 8px 18px;
+            font-size: 13px;
+            color: #1f3a5f;
+            text-decoration: none;
+            transition: background 0.15s ease;
             cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .btn-secondary:hover {
-            background: #dce6f0;
-        }
-
-        .btn-danger {
-            background: #e74c3c;
-            color: #fff;
+            font-family: inherit;
             border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 12px;
-            font-family: inherit;
-            cursor: pointer;
-            transition: background 0.2s ease;
+            background: transparent;
+            width: 100%;
+            text-align: left;
         }
 
-        .btn-danger:hover {
-            background: #c0392b;
+        .menu-dropdown a:hover {
+            background: #f2f7fc;
         }
 
-        .btn-edit {
-            background: #f1c40f;
-            color: #1f2a3a;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 12px;
-            font-family: inherit;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .btn-edit:hover {
-            background: #d4ac0d;
-        }
-
-        .btn-delete {
-            background: #e74c3c;
-            color: #fff;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 12px;
-            font-family: inherit;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .btn-delete:hover {
-            background: #c0392b;
+        .menu-dropdown .divider {
+            height: 1px;
+            background: #eef4f9;
+            margin: 4px 12px;
         }
 
         /* ── Table Card ── */
         .table-card {
             background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 20, 40, 0.06);
-            padding: 20px 0 4px 0;
-            overflow: hidden;
-            margin-bottom: 28px;
-        }
-
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 24px 16px 24px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .table-header h2 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #0a2e5c;
-        }
-
-        .table-header .badge-count {
-            font-size: 13px;
-            color: #5a7a9a;
-            background: #e9f0f7;
-            padding: 2px 14px;
             border-radius: 16px;
-            font-weight: 500;
+            box-shadow: 0 2px 12px rgba(0, 20, 40, 0.06);
+            overflow: hidden;
+            padding: 0 0 4px 0;
         }
 
         .table-wrapper {
             overflow-x: auto;
-            padding: 0 4px 4px 4px;
+            padding: 0 2px 2px 2px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
-            min-width: 1500px;
+            min-width: 1400px;
+        }
+
+        /* ── Borders ── */
+        table,
+        th,
+        td {
+            border: 1px solid #dce6ef;
         }
 
         thead {
             background: #f2f7fc;
-            border-bottom: 2px solid #dce6ef;
         }
 
         thead th {
-            padding: 10px 8px;
+            padding: 8px 8px;
             text-align: left;
             font-weight: 600;
             color: #1f3a5f;
-            white-space: nowrap;
             font-size: 11px;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
             text-transform: uppercase;
             position: sticky;
             top: 0;
-            z-index: 2;
+            z-index: 5;
             background: #f2f7fc;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        thead th:hover {
+            background: #e8eff6;
+        }
+
+        thead th .sort-icon {
+            display: inline-block;
+            margin-left: 4px;
+            font-size: 10px;
+            opacity: 0.4;
+        }
+
+        thead th.sorted .sort-icon {
+            opacity: 1;
         }
 
         tbody tr {
-            border-bottom: 1px solid #eef4f9;
-            transition: background 0.15s ease;
+            transition: background 0.1s ease;
         }
 
         tbody tr:hover {
@@ -389,24 +384,122 @@
         }
 
         tbody td {
-            padding: 8px 8px;
+            padding: 4px 6px;
             vertical-align: middle;
             color: #1a3048;
-            max-width: 180px;
+            max-width: 160px;
             word-break: break-word;
+            line-height: 1.4;
+            max-height: 2.8em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: table-cell;
         }
 
-        tbody td .actions {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
+        /* ── Inline editing ── */
+        .editable-cell {
+            cursor: text;
+            min-height: 28px;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: background 0.15s ease;
         }
 
-        .text-muted {
-            color: #8aa0b8;
+        .editable-cell:hover {
+            background: #f0f6fe;
+        }
+
+        .editable-cell.editing {
+            background: #fff;
+            padding: 0;
+        }
+
+        .editable-cell.editing input,
+        .editable-cell.editing select {
+            width: 100%;
+            border: 2px solid #0a2e5c;
+            border-radius: 4px;
+            padding: 2px 4px;
+            font-size: 12px;
+            font-family: inherit;
+            background: #fff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(10, 46, 92, 0.1);
+        }
+
+        .editable-cell.editing select {
+            padding: 2px 2px;
+        }
+
+        .editable-cell .cell-value {
+            display: block;
+            padding: 2px 2px;
+        }
+
+        .editable-cell .cell-value.empty {
+            color: #b0c4d8;
             font-style: italic;
         }
 
+        /* ── Row number ── */
+        .row-num {
+            text-align: center;
+            font-weight: 500;
+            color: #5a7a9a;
+            font-size: 11px;
+            width: 32px;
+            min-width: 32px;
+        }
+
+        /* ── Add row ── */
+        .add-row-cell {
+            text-align: center;
+            padding: 4px !important;
+        }
+
+        .btn-add-row {
+            background: transparent;
+            border: 1.5px dashed #b0c4d8;
+            border-radius: 6px;
+            padding: 4px 12px;
+            font-size: 18px;
+            cursor: pointer;
+            color: #5a7a9a;
+            transition: all 0.2s ease;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .btn-add-row:hover {
+            border-color: #0a2e5c;
+            color: #0a2e5c;
+            background: #f2f7fc;
+        }
+
+        /* ── Actions column ── */
+        .actions-cell {
+            text-align: center;
+            white-space: nowrap;
+            min-width: 60px;
+        }
+
+        .btn-delete-row {
+            background: transparent;
+            border: none;
+            color: #b00020;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: background 0.15s ease;
+            font-family: inherit;
+        }
+
+        .btn-delete-row:hover {
+            background: #fee8e8;
+        }
+
+        /* ── Empty row ── */
         .empty-row td {
             padding: 40px 8px;
             text-align: center;
@@ -414,54 +507,36 @@
             font-size: 14px;
         }
 
-        /* ── Summary Card ── */
-        .summary-card {
-            background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 20, 40, 0.06);
-            padding: 20px 28px;
-            margin-bottom: 28px;
-        }
-
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 18px 24px;
-        }
-
-        .summary-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .summary-item .label {
-            font-size: 12px;
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0a2e5c;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
             font-weight: 500;
-            color: #5a7a9a;
-            letter-spacing: 0.2px;
+            font-size: 13px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.16);
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
         }
 
-        .summary-item .value {
-            font-size: 18px;
-            font-weight: 600;
-            color: #0a2e5c;
-            margin-top: 2px;
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
         }
 
-        .summary-item .value.anggaran {
-            color: #1a7a3a;
+        .toast.success {
+            background: #1a7a3a;
         }
-        .summary-item .value.teranggarkan {
-            color: #0a2e5c;
-        }
-        .summary-item .value.belum {
-            color: #b00020;
-        }
-
-        .summary-divider {
-            border: none;
-            border-top: 1px solid #e2edf6;
-            margin: 16px 0 12px 0;
+        .toast.error {
+            background: #b00020;
         }
 
         /* ── Modal ── */
@@ -489,9 +564,9 @@
 
         .modal {
             background: #ffffff;
-            border-radius: 28px;
-            padding: 32px 36px 28px;
-            max-width: 520px;
+            border-radius: 24px;
+            padding: 28px 32px 24px;
+            max-width: 480px;
             width: 100%;
             box-shadow: 0 32px 80px rgba(0, 20, 40, 0.2);
             transform: scale(0.95);
@@ -503,148 +578,141 @@
         }
 
         .modal h2 {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #0a2e5c;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .modal .sub {
             font-size: 13px;
             color: #7a8fa6;
-            margin-bottom: 22px;
+            margin-bottom: 18px;
         }
 
         .modal .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .modal .form-group label {
             font-size: 13px;
             font-weight: 500;
             color: #1f3a5f;
+            display: block;
             margin-bottom: 4px;
         }
 
         .modal .form-group input {
-            padding: 10px 14px;
+            width: 100%;
+            padding: 9px 14px;
             font-size: 14px;
-            border-radius: 12px;
+            border: 1.5px solid #dce6ef;
+            border-radius: 10px;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .modal .form-group input:focus {
+            border-color: #0a2e5c;
         }
 
         .modal-actions {
             display: flex;
-            gap: 12px;
-            margin-top: 22px;
+            gap: 10px;
+            margin-top: 18px;
             justify-content: flex-end;
         }
 
         .modal-actions .btn-primary {
-            padding: 10px 28px;
+            padding: 9px 24px;
         }
         .modal-actions .btn-secondary {
-            padding: 10px 24px;
+            padding: 9px 20px;
         }
 
-        /* ── Toast ── */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
+        .btn-primary {
             background: #0a2e5c;
             color: #fff;
-            padding: 14px 28px;
-            border-radius: 14px;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: #123f72;
+        }
+
+        .btn-secondary {
+            background: #e9f0f7;
+            color: #1f3a5f;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 10px;
             font-weight: 500;
-            font-size: 14px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.16);
-            z-index: 999;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            pointer-events: none;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s ease;
         }
 
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        .toast.success {
-            background: #1a7a3a;
-        }
-        .toast.error {
-            background: #b00020;
+        .btn-secondary:hover {
+            background: #dce6f0;
         }
 
         /* ── Responsive ── */
-        @media (max-width: 900px) {
-            .form-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             body {
-                padding: 12px;
+                padding: 12px 12px 30px;
             }
-            .form-grid {
-                grid-template-columns: 1fr;
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
             }
-            .form-card {
-                padding: 16px;
+
+            .toolbar-left,
+            .toolbar-right {
+                flex-wrap: wrap;
             }
+
+            .toolbar .filter-input {
+                min-width: 120px;
+                flex: 1;
+            }
+
             .app-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
+
             .header-actions {
                 width: 100%;
                 justify-content: flex-start;
             }
-            .table-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+
             .modal {
-                padding: 24px 20px;
                 margin: 16px;
-            }
-            .summary-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .btn-primary,
-            .btn-secondary {
-                width: 100%;
-                justify-content: center;
-                text-align: center;
-            }
-            .form-actions {
-                flex-direction: column;
-            }
-            .form-actions .btn-primary,
-            .form-actions .btn-secondary {
-                width: 100%;
-            }
-            .modal-actions {
-                flex-direction: column;
-            }
-            .modal-actions .btn-primary,
-            .modal-actions .btn-secondary {
-                width: 100%;
+                padding: 20px;
             }
         }
 
         @media (max-width: 480px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
             .app-header h1 {
-                font-size: 18px;
+                font-size: 17px;
             }
-            .summary-grid {
-                grid-template-columns: 1fr;
+            .toolbar .filter-input {
+                min-width: 100px;
+                font-size: 12px;
+            }
+            .btn-save {
+                font-size: 12px;
+                padding: 6px 14px;
             }
         }
     </style>
@@ -658,7 +726,7 @@
     <div class="modal-overlay" id="settingsModal">
         <div class="modal">
             <h2>⚙️ Pengaturan Sekolah</h2>
-            <div class="sub">Isi data kepala sekolah, bendahara, dan anggaran per tahap.</div>
+            <div class="sub">Data kepala sekolah, bendahara, dan anggaran per tahap.</div>
 
             <div class="form-group">
                 <label for="modalKepalaSekolah">Nama Kepala Sekolah</label>
@@ -687,7 +755,7 @@
     <!-- ─── Header ─── -->
     <header class="app-header">
         <div class="brand">
-            <img src="logo.png" alt="Logo Sekolah" id="logoImg" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='inline-flex';" />
+            <img src="logo.png" alt="Logo" id="logoImg" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='inline-flex';" />
             <span class="fallback-icon" style="display:none;">B</span>
             <div>
                 <h1>BOS-NBS</h1>
@@ -695,267 +763,80 @@
             </div>
         </div>
         <div class="header-actions">
-            <button class="btn-outline" id="settingsBtn">⚙️ Menu</button>
             <span class="user-badge" id="userBadge">SMP · 2025</span>
             <button class="btn-logout" id="logoutBtn">Keluar</button>
         </div>
     </header>
 
-    <!-- ─── Container ─── -->
-    <div class="container">
-
-        <!-- Form -->
-        <div class="form-card" id="formCard">
-            <div class="form-title">
-                <span id="formTitle">+ Tambah Data</span>
-            </div>
-
-            <form id="dataForm" autocomplete="off">
-                <div class="form-grid">
-                    <!-- No -->
-                    <div class="form-group">
-                        <label for="f_no">No</label>
-                        <input type="text" id="f_no" placeholder="1" />
-                    </div>
-                    <!-- No. BKU -->
-                    <div class="form-group">
-                        <label for="f_noBKU">No. BKU</label>
-                        <input type="text" id="f_noBKU" placeholder="BKU-001" />
-                    </div>
-                    <!-- No. Rek -->
-                    <div class="form-group">
-                        <label for="f_noRek">No. Rek</label>
-                        <input type="text" id="f_noRek" placeholder="4.1.2.3" />
-                    </div>
-                    <!-- Siplah -->
-                    <div class="form-group">
-                        <label for="f_siplah">Siplah</label>
-                        <select id="f_siplah">
-                            <option value="Siplah">Siplah</option>
-                            <option value="Non Siplah">Non Siplah</option>
-                        </select>
-                    </div>
-
-                    <!-- Jenis Kegiatan -->
-                    <div class="form-group">
-                        <label for="f_jenisKegiatan">Jenis Kegiatan</label>
-                        <input type="text" id="f_jenisKegiatan" placeholder="Kegiatan ..." />
-                    </div>
-                    <!-- Uraian -->
-                    <div class="form-group">
-                        <label for="f_uraian">Uraian</label>
-                        <input type="text" id="f_uraian" placeholder="Uraian kegiatan" />
-                    </div>
-
-                    <!-- Komponen -->
-                    <div class="form-group">
-                        <label for="f_komponen">Komponen</label>
-                        <select id="f_komponen">
-                            <option value="penerimaan Peserta Didik baru">penerimaan Peserta Didik baru</option>
-                            <option value="pengembangan perpustakaan">pengembangan perpustakaan</option>
-                            <option value="pelaksanaan kegiatan pembelajaran dan ekstrakurikuler">pelaksanaan kegiatan pembelajaran dan ekstrakurikuler</option>
-                            <option value="pelaksanaan kegiatan asesmen dan evaluasi pembelajaran">pelaksanaan kegiatan asesmen dan evaluasi pembelajaran</option>
-                            <option value="pelaksanaan administrasi kegiatan sekolah">pelaksanaan administrasi kegiatan sekolah</option>
-                            <option value="pengembangan profesi guru dan tenaga kependidikan">pengembangan profesi guru dan tenaga kependidikan</option>
-                            <option value="pembiayaan langganan daya dan jasa">pembiayaan langganan daya dan jasa</option>
-                            <option value="pemeliharaan sarana dan prasarana sekolah">pemeliharaan sarana dan prasarana sekolah</option>
-                            <option value="penyediaan alat multimedia pembelajaran">penyediaan alat multimedia pembelajaran</option>
-                            <option value="penyelenggaraan kegiatan peningkatan kompetensi keahlian">penyelenggaraan kegiatan peningkatan kompetensi keahlian</option>
-                            <option value="penyelenggaraan kegiatan dalam mendukung keterserapan lulusan">penyelenggaraan kegiatan dalam mendukung keterserapan lulusan</option>
-                            <option value="pembayaran honor">pembayaran honor</option>
-                        </select>
-                    </div>
-
-                    <!-- Standar -->
-                    <div class="form-group">
-                        <label for="f_standar">Standar</label>
-                        <select id="f_standar">
-                            <option value="Pengembangan Kompetensi Lulusan">Pengembangan Kompetensi Lulusan</option>
-                            <option value="Pengembangan standar isi">Pengembangan standar isi</option>
-                            <option value="Pengembangan standar proses">Pengembangan standar proses</option>
-                            <option value="Pengembangan pendidik dan tenaga kependidikan">Pengembangan pendidik dan tenaga kependidikan</option>
-                            <option value="Pengembangan sarana dan prasarana sekolah">Pengembangan sarana dan prasarana sekolah</option>
-                            <option value="Pengembangan standar pengelolaan">Pengembangan standar pengelolaan</option>
-                            <option value="Pengembangan standar pembiayaan">Pengembangan standar pembiayaan</option>
-                            <option value="Pengembangan dan implementasi sistem penilaian">Pengembangan dan implementasi sistem penilaian</option>
-                        </select>
-                    </div>
-
-                    <!-- Jenis Belanja -->
-                    <div class="form-group">
-                        <label for="f_jenisBelanja">Jenis Belanja</label>
-                        <select id="f_jenisBelanja">
-                            <option value="Pegawai">Pegawai</option>
-                            <option value="Barang dan Jasa">Barang dan Jasa</option>
-                            <option value="Peralatan dan Mesin">Peralatan dan Mesin</option>
-                            <option value="Aset tetap lainnya">Aset tetap lainnya</option>
-                        </select>
-                    </div>
-
-                    <!-- Tahap (baru) -->
-                    <div class="form-group">
-                        <label for="f_tahap">Tahap</label>
-                        <select id="f_tahap">
-                            <option value="Tahap 1">Tahap 1</option>
-                            <option value="Tahap 2">Tahap 2</option>
-                        </select>
-                    </div>
-
-                    <!-- Vol -->
-                    <div class="form-group">
-                        <label for="f_vol">Vol</label>
-                        <input type="number" id="f_vol" placeholder="1" step="0.01" />
-                    </div>
-                    <!-- Satuan -->
-                    <div class="form-group">
-                        <label for="f_satuan">Satuan</label>
-                        <input type="text" id="f_satuan" placeholder="Unit" />
-                    </div>
-                    <!-- Harga -->
-                    <div class="form-group">
-                        <label for="f_harga">Harga</label>
-                        <input type="number" id="f_harga" placeholder="0" step="0.01" />
-                    </div>
-                    <!-- Jumlah Harga -->
-                    <div class="form-group">
-                        <label for="f_jumlahHarga">Jumlah Harga</label>
-                        <input type="number" id="f_jumlahHarga" placeholder="auto" step="0.01" readonly style="background:#f2f6fb;cursor:default;" />
-                    </div>
-
-                    <!-- Tgl Pelaksanaan -->
-                    <div class="form-group">
-                        <label for="f_tglPelaksanaan">Tgl Pelaksanaan</label>
-                        <input type="date" id="f_tglPelaksanaan" />
-                    </div>
-                    <!-- Tgl Pembayaran -->
-                    <div class="form-group">
-                        <label for="f_tglPembayaran">Tgl Pembayaran</label>
-                        <input type="date" id="f_tglPembayaran" />
-                    </div>
-
-                    <!-- Jenis Pajak -->
-                    <div class="form-group">
-                        <label for="f_jenisPajak">Jenis Pajak</label>
-                        <input type="text" id="f_jenisPajak" placeholder="PPN / PPh" />
-                    </div>
-                    <!-- % Pajak -->
-                    <div class="form-group">
-                        <label for="f_persenPajak">% Pajak</label>
-                        <input type="number" id="f_persenPajak" placeholder="0" step="0.01" />
-                    </div>
-                    <!-- Jml Pajak -->
-                    <div class="form-group">
-                        <label for="f_jmlPajak">Jml Pajak</label>
-                        <input type="number" id="f_jmlPajak" placeholder="auto" step="0.01" readonly style="background:#f2f6fb;cursor:default;" />
-                    </div>
-
-                    <!-- Toko / Personal -->
-                    <div class="form-group">
-                        <label for="f_toko">Toko / Personal</label>
-                        <input type="text" id="f_toko" placeholder="Nama toko / personal" />
-                    </div>
-                    <!-- Alamat Toko/Personal -->
-                    <div class="form-group">
-                        <label for="f_alamatToko">Alamat</label>
-                        <input type="text" id="f_alamatToko" placeholder="Alamat" />
-                    </div>
-                    <!-- Telp -->
-                    <div class="form-group">
-                        <label for="f_telp">Telp.</label>
-                        <input type="text" id="f_telp" placeholder="0812..." />
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn-primary" id="submitBtn">Simpan</button>
-                    <button type="reset" class="btn-secondary" id="resetBtn">Reset</button>
-                    <button type="button" class="btn-secondary" id="cancelEditBtn" style="display:none;">Batal Edit</button>
-                </div>
-            </form>
+    <!-- ─── Toolbar ─── -->
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <input type="text" class="filter-input" id="filterInput" placeholder="🔍 Filter data..." />
+            <span style="font-size:12px;color:#7a8fa6;" id="recordCount">0 data</span>
         </div>
-
-        <!-- Table -->
-        <div class="table-card">
-            <div class="table-header">
-                <h2>Daftar Data BOS</h2>
-                <span class="badge-count" id="recordCount">0 data</span>
-            </div>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>No. BKU</th>
-                            <th>No. Rek</th>
-                            <th>Siplah</th>
-                            <th>Jenis Keg.</th>
-                            <th>Uraian</th>
-                            <th>Komponen</th>
-                            <th>Standar</th>
-                            <th>Jenis Belanja</th>
-                            <th>Tahap</th>
-                            <th>Vol</th>
-                            <th>Satuan</th>
-                            <th>Harga</th>
-                            <th>Jml Harga</th>
-                            <th>Tgl Pelaks.</th>
-                            <th>Tgl Bayar</th>
-                            <th>Jenis Pajak</th>
-                            <th>% Pajak</th>
-                            <th>Jml Pajak</th>
-                            <th>Toko/Personal</th>
-                            <th>Alamat</th>
-                            <th>Telp.</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <tr class="empty-row">
-                            <td colspan="23">Belum ada data. Silakan tambahkan data baru.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- ─── Summary ─── -->
-        <div class="summary-card" id="summaryCard">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
-                <h3 style="font-size:16px; font-weight:600; color:#0a2e5c;">📊 Ringkasan Anggaran</h3>
-                <span style="font-size:12px; color:#7a8fa6;" id="summarySchoolInfo">Kepsek: - | Bendahara: -</span>
-            </div>
-            <div class="summary-grid">
-                <div class="summary-item">
-                    <span class="label">Anggaran Tahap 1</span>
-                    <span class="value anggaran" id="sumAnggaran1">Rp 0</span>
-                </div>
-                <div class="summary-item">
-                    <span class="label">Anggaran Tahap 2</span>
-                    <span class="value anggaran" id="sumAnggaran2">Rp 0</span>
-                </div>
-                <div class="summary-item">
-                    <span class="label">Teranggarkan Tahap 1</span>
-                    <span class="value teranggarkan" id="sumTeranggarkan1">Rp 0</span>
-                </div>
-                <div class="summary-item">
-                    <span class="label">Teranggarkan Tahap 2</span>
-                    <span class="value teranggarkan" id="sumTeranggarkan2">Rp 0</span>
-                </div>
-                <div class="summary-item">
-                    <span class="label">Belum Teranggarkan Tahap 1</span>
-                    <span class="value belum" id="sumBelum1">Rp 0</span>
-                </div>
-                <div class="summary-item">
-                    <span class="label">Belum Teranggarkan Tahap 2</span>
-                    <span class="value belum" id="sumBelum2">Rp 0</span>
+        <div class="toolbar-right">
+            <button class="btn-save saved" id="saveBtn" disabled>✓ Tersimpan</button>
+            <button class="btn-icon" id="addRowBtn" title="Tambah baris">➕</button>
+            <button class="btn-icon" id="settingsBtn" title="Pengaturan">⚙️</button>
+            <div class="menu-wrapper" id="menuWrapper">
+                <button class="btn-icon" id="menuBtn">📋 <span class="badge">7</span></button>
+                <div class="menu-dropdown" id="menuDropdown">
+                    <a data-menu="BKU">📒 BKU</a>
+                    <a data-menu="BPT">📕 BPT</a>
+                    <a data-menu="BPB">📗 BPB</a>
+                    <a data-menu="BPP">📘 BPP</a>
+                    <a data-menu="BPU">📙 BPU</a>
+                    <a data-menu="ROB">📄 ROB</a>
+                    <div class="divider"></div>
+                    <a data-menu="Kwitansi">🧾 Kwitansi</a>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ─── Table ─── -->
+    <div class="table-card">
+        <div class="table-wrapper">
+            <table id="mainTable">
+                <thead>
+                    <tr>
+                        <th style="width:32px;min-width:32px;text-align:center;">No</th>
+                        <th data-sort="noBKU">No. BKU</th>
+                        <th data-sort="noRek">No. Rek</th>
+                        <th data-sort="siplah">Siplah</th>
+                        <th data-sort="jenisKegiatan">Jenis Keg.</th>
+                        <th data-sort="uraian">Uraian</th>
+                        <th data-sort="komponen">Komponen</th>
+                        <th data-sort="standar">Standar</th>
+                        <th data-sort="jenisBelanja">Jenis Belanja</th>
+                        <th data-sort="tahap">Tahap</th>
+                        <th data-sort="vol">Vol</th>
+                        <th data-sort="satuan">Satuan</th>
+                        <th data-sort="harga">Harga</th>
+                        <th data-sort="jumlahHarga">Jml Harga</th>
+                        <th data-sort="tglPelaksanaan">Tgl Pelaks.</th>
+                        <th data-sort="tglPembayaran">Tgl Bayar</th>
+                        <th data-sort="jenisPajak">Jenis Pajak</th>
+                        <th data-sort="persenPajak">% Pajak</th>
+                        <th data-sort="jmlPajak">Jml Pajak</th>
+                        <th data-sort="toko">Toko/Personal</th>
+                        <th data-sort="alamatToko">Alamat</th>
+                        <th data-sort="telp">Telp.</th>
+                        <th style="width:50px;min-width:50px;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr class="empty-row">
+                        <td colspan="23">Belum ada data. Klik ➕ untuk menambah baris.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <script>
         // ─────────────────────────────────────────────
-        // 1.  Firebase init (hanya Firestore)
+        // 1.  Firebase init
         // ─────────────────────────────────────────────
         const firebaseConfig = {
             apiKey: "AIzaSyD61HLphga_Egy_VTGeqx5D8_XmqgWzMsE",
@@ -970,22 +851,27 @@
         const db = firebase.firestore();
 
         // ─────────────────────────────────────────────
-        // 2.  Cek session login
+        // 2.  Session check
         // ─────────────────────────────────────────────
         const jenjang = localStorage.getItem('bosnbs_jenjang');
         const tahun = localStorage.getItem('bosnbs_tahun');
 
         if (!jenjang || !tahun) {
-            // Jika tidak ada session, redirect ke login
             window.location.href = 'index.html';
         }
+        document.getElementById('userBadge').textContent = `${jenjang} · ${tahun}`;
 
         // ─────────────────────────────────────────────
         // 3.  State
         // ─────────────────────────────────────────────
         let allData = [];
+        let filteredData = [];
         let editingId = null;
         let settingsData = {};
+        let hasUnsavedChanges = false;
+        let sortKey = null;
+        let sortAsc = true;
+        let filterText = '';
 
         const COLLECTION = 'data_bos';
         const SETTINGS_COLLECTION = 'settings_bos';
@@ -993,26 +879,19 @@
         // ─────────────────────────────────────────────
         // 4.  DOM refs
         // ─────────────────────────────────────────────
-        const form = document.getElementById('dataForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const cancelEditBtn = document.getElementById('cancelEditBtn');
         const tableBody = document.getElementById('tableBody');
         const recordCount = document.getElementById('recordCount');
         const toast = document.getElementById('toast');
-        const formTitle = document.getElementById('formTitle');
-        const userBadge = document.getElementById('userBadge');
-
-        const sumAnggaran1 = document.getElementById('sumAnggaran1');
-        const sumAnggaran2 = document.getElementById('sumAnggaran2');
-        const sumTeranggarkan1 = document.getElementById('sumTeranggarkan1');
-        const sumTeranggarkan2 = document.getElementById('sumTeranggarkan2');
-        const sumBelum1 = document.getElementById('sumBelum1');
-        const sumBelum2 = document.getElementById('sumBelum2');
-        const summarySchoolInfo = document.getElementById('summarySchoolInfo');
-
-        const settingsModal = document.getElementById('settingsModal');
+        const filterInput = document.getElementById('filterInput');
+        const saveBtn = document.getElementById('saveBtn');
+        const addRowBtn = document.getElementById('addRowBtn');
         const settingsBtn = document.getElementById('settingsBtn');
+        const menuBtn = document.getElementById('menuBtn');
+        const menuWrapper = document.getElementById('menuWrapper');
+        const menuDropdown = document.getElementById('menuDropdown');
+
+        // Modal
+        const settingsModal = document.getElementById('settingsModal');
         const modalCancelBtn = document.getElementById('modalCancelBtn');
         const modalSaveBtn = document.getElementById('modalSaveBtn');
         const modalKepalaSekolah = document.getElementById('modalKepalaSekolah');
@@ -1020,37 +899,8 @@
         const modalAnggaran1 = document.getElementById('modalAnggaran1');
         const modalAnggaran2 = document.getElementById('modalAnggaran2');
 
-        // ─── Form fields ───
-        const f_no = document.getElementById('f_no');
-        const f_noBKU = document.getElementById('f_noBKU');
-        const f_noRek = document.getElementById('f_noRek');
-        const f_siplah = document.getElementById('f_siplah');
-        const f_jenisKegiatan = document.getElementById('f_jenisKegiatan');
-        const f_uraian = document.getElementById('f_uraian');
-        const f_komponen = document.getElementById('f_komponen');
-        const f_standar = document.getElementById('f_standar');
-        const f_jenisBelanja = document.getElementById('f_jenisBelanja');
-        const f_tahap = document.getElementById('f_tahap');
-        const f_vol = document.getElementById('f_vol');
-        const f_satuan = document.getElementById('f_satuan');
-        const f_harga = document.getElementById('f_harga');
-        const f_jumlahHarga = document.getElementById('f_jumlahHarga');
-        const f_tglPelaksanaan = document.getElementById('f_tglPelaksanaan');
-        const f_tglPembayaran = document.getElementById('f_tglPembayaran');
-        const f_jenisPajak = document.getElementById('f_jenisPajak');
-        const f_persenPajak = document.getElementById('f_persenPajak');
-        const f_jmlPajak = document.getElementById('f_jmlPajak');
-        const f_toko = document.getElementById('f_toko');
-        const f_alamatToko = document.getElementById('f_alamatToko');
-        const f_telp = document.getElementById('f_telp');
-
         // ─────────────────────────────────────────────
-        // 5.  Tampilkan user badge
-        // ─────────────────────────────────────────────
-        userBadge.textContent = `${jenjang} · ${tahun}`;
-
-        // ─────────────────────────────────────────────
-        // 6.  Toast helper
+        // 5.  Toast
         // ─────────────────────────────────────────────
         let toastTimer = null;
 
@@ -1060,48 +910,530 @@
             clearTimeout(toastTimer);
             toastTimer = setTimeout(() => {
                 toast.className = 'toast';
-            }, 3500);
+            }, 3000);
         }
 
         // ─────────────────────────────────────────────
-        // 7.  Auto-calc
+        // 6.  Format number with dots
         // ─────────────────────────────────────────────
-        function autoCalc() {
-            const vol = parseFloat(f_vol.value) || 0;
-            const harga = parseFloat(f_harga.value) || 0;
-            const pajak = parseFloat(f_persenPajak.value) || 0;
+        function formatNumber(val) {
+            if (val === undefined || val === null || val === '') return '';
+            const num = parseFloat(val);
+            if (isNaN(num)) return '';
+            return num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
 
+        function parseNumber(str) {
+            if (!str) return 0;
+            const cleaned = str.replace(/\./g, '').replace(/,/g, '');
+            return parseFloat(cleaned) || 0;
+        }
+
+        // ─────────────────────────────────────────────
+        // 7.  Escape HTML
+        // ─────────────────────────────────────────────
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // ─────────────────────────────────────────────
+        // 8.  Column definitions
+        // ─────────────────────────────────────────────
+        const COLUMNS = [
+            { key: 'noBKU', type: 'text', label: 'No. BKU' },
+            { key: 'noRek', type: 'text', label: 'No. Rek' },
+            { key: 'siplah', type: 'select', options: ['Siplah', 'Non Siplah'] },
+            { key: 'jenisKegiatan', type: 'text', label: 'Jenis Kegiatan' },
+            { key: 'uraian', type: 'text', label: 'Uraian' },
+            { key: 'komponen', type: 'select', options: [
+                    'penerimaan Peserta Didik baru',
+                    'pengembangan perpustakaan',
+                    'pelaksanaan kegiatan pembelajaran dan ekstrakurikuler',
+                    'pelaksanaan kegiatan asesmen dan evaluasi pembelajaran',
+                    'pelaksanaan administrasi kegiatan sekolah',
+                    'pengembangan profesi guru dan tenaga kependidikan',
+                    'pembiayaan langganan daya dan jasa',
+                    'pemeliharaan sarana dan prasarana sekolah',
+                    'penyediaan alat multimedia pembelajaran',
+                    'penyelenggaraan kegiatan peningkatan kompetensi keahlian',
+                    'penyelenggaraan kegiatan dalam mendukung keterserapan lulusan',
+                    'pembayaran honor'
+                ] },
+            { key: 'standar', type: 'select', options: [
+                    'Pengembangan Kompetensi Lulusan',
+                    'Pengembangan standar isi',
+                    'Pengembangan standar proses',
+                    'Pengembangan pendidik dan tenaga kependidikan',
+                    'Pengembangan sarana dan prasarana sekolah',
+                    'Pengembangan standar pengelolaan',
+                    'Pengembangan standar pembiayaan',
+                    'Pengembangan dan implementasi sistem penilaian'
+                ] },
+            { key: 'jenisBelanja', type: 'select', options: ['Pegawai', 'Barang dan Jasa', 'Peralatan dan Mesin',
+                    'Aset tetap lainnya'
+                ] },
+            { key: 'tahap', type: 'select', options: ['Tahap 1', 'Tahap 2'] },
+            { key: 'vol', type: 'number', label: 'Vol' },
+            { key: 'satuan', type: 'text', label: 'Satuan' },
+            { key: 'harga', type: 'number', label: 'Harga' },
+            { key: 'jumlahHarga', type: 'number', label: 'Jml Harga', readonly: true },
+            { key: 'tglPelaksanaan', type: 'date', label: 'Tgl Pelaksanaan' },
+            { key: 'tglPembayaran', type: 'date', label: 'Tgl Bayar' },
+            { key: 'jenisPajak', type: 'text', label: 'Jenis Pajak' },
+            { key: 'persenPajak', type: 'number', label: '% Pajak' },
+            { key: 'jmlPajak', type: 'number', label: 'Jml Pajak', readonly: true },
+            { key: 'toko', type: 'text', label: 'Toko/Personal' },
+            { key: 'alamatToko', type: 'text', label: 'Alamat' },
+            { key: 'telp', type: 'text', label: 'Telp.' }
+        ];
+
+        const COLUMN_KEYS = COLUMNS.map(c => c.key);
+
+        // ─────────────────────────────────────────────
+        // 9.  Generate empty row data
+        // ─────────────────────────────────────────────
+        function createEmptyRow() {
+            const row = {};
+            COLUMN_KEYS.forEach(key => {
+                if (key === 'siplah') row[key] = 'Siplah';
+                else if (key === 'komponen') row[key] = 'penerimaan Peserta Didik baru';
+                else if (key === 'standar') row[key] = 'Pengembangan Kompetensi Lulusan';
+                else if (key === 'jenisBelanja') row[key] = 'Pegawai';
+                else if (key === 'tahap') row[key] = 'Tahap 1';
+                else row[key] = '';
+            });
+            return row;
+        }
+
+        // ─────────────────────────────────────────────
+        // 10. Auto-calc for jumlahHarga and jmlPajak
+        // ─────────────────────────────────────────────
+        function autoCalcRow(row) {
+            const vol = parseFloat(row.vol) || 0;
+            const harga = parseFloat(row.harga) || 0;
+            const persenPajak = parseFloat(row.persenPajak) || 0;
             const jml = vol * harga;
-            f_jumlahHarga.value = jml.toFixed(2);
-
-            const jmlPajak = jml * (pajak / 100);
-            f_jmlPajak.value = jmlPajak.toFixed(2);
+            row.jumlahHarga = jml;
+            row.jmlPajak = jml * (persenPajak / 100);
+            return row;
         }
 
-        [f_vol, f_harga, f_persenPajak].forEach(el => {
-            el.addEventListener('input', autoCalc);
-        });
+        // ─────────────────────────────────────────────
+        // 11. Render table
+        // ─────────────────────────────────────────────
+        function renderTable() {
+            const data = getDisplayData();
+
+            if (data.length === 0) {
+                tableBody.innerHTML =
+                    `<tr class="empty-row"><td colspan="23">Belum ada data. Klik ➕ untuk menambah baris.</td></tr>`;
+                updateCount();
+                return;
+            }
+
+            let html = '';
+            data.forEach((item, idx) => {
+                const rowNum = idx + 1;
+                html += `<tr data-id="${item._id || ''}" data-rowidx="${idx}">`;
+                html += `<td class="row-num">${rowNum}</td>`;
+
+                COLUMN_KEYS.forEach(key => {
+                    const col = COLUMNS.find(c => c.key === key);
+                    const val = item[key] !== undefined ? item[key] : '';
+                    let displayVal = val;
+
+                    // Format number
+                    if (col && (col.type === 'number' || key === 'harga' || key === 'jumlahHarga' || key ===
+                            'jmlPajak' || key === 'vol' || key === 'persenPajak')) {
+                        if (val !== '' && val !== null && val !== undefined) {
+                            displayVal = formatNumber(val);
+                        } else {
+                            displayVal = '';
+                        }
+                    }
+
+                    // Date
+                    if (key === 'tglPelaksanaan' || key === 'tglPembayaran') {
+                        displayVal = val || '';
+                    }
+
+                    const isEmpty = displayVal === '' || displayVal === null || displayVal === undefined;
+                    const displayText = isEmpty ? '' : escapeHtml(String(displayVal));
+
+                    let cellContent = '';
+                    if (col && col.type === 'select') {
+                        // For select, show the value as text
+                        cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
+                    } else if (col && col.readonly) {
+                        cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
+                    } else {
+                        cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
+                    }
+
+                    html += `<td data-field="${key}" data-rowidx="${idx}" class="editable-cell">${cellContent}</td>`;
+                });
+
+                // Actions
+                const isNew = !item._id || item._id.startsWith('_temp_');
+                html += `<td class="actions-cell">
+                            <button class="btn-delete-row" data-id="${item._id || ''}" data-rowidx="${idx}" title="Hapus baris">✕</button>
+                        </td>`;
+                html += `</tr>`;
+            });
+
+            // Add row button at bottom
+            html += `<tr class="add-row-row">
+                        <td colspan="23" class="add-row-cell">
+                            <button class="btn-add-row" id="addRowBottomBtn">➕ Tambah Baris</button>
+                        </td>
+                    </tr>`;
+
+            tableBody.innerHTML = html;
+
+            // ── Event listeners ──
+            // Double-click to edit
+            document.querySelectorAll('.editable-cell').forEach(cell => {
+                cell.addEventListener('dblclick', () => startEdit(cell));
+            });
+
+            // Delete buttons
+            document.querySelectorAll('.btn-delete-row').forEach(btn => {
+                btn.addEventListener('click', () => deleteRow(btn.dataset.id, parseInt(btn.dataset.rowidx)));
+            });
+
+            // Add row bottom
+            const addBottom = document.getElementById('addRowBottomBtn');
+            if (addBottom) {
+                addBottom.addEventListener('click', () => addRow());
+            }
+
+            updateCount();
+            updateSaveButton();
+        }
 
         // ─────────────────────────────────────────────
-        // 8.  CRUD: Read data & settings
+        // 12. Get display data (filtered + sorted)
+        // ─────────────────────────────────────────────
+        function getDisplayData() {
+            let data = [...allData];
+
+            // Filter
+            if (filterText.trim()) {
+                const search = filterText.trim().toLowerCase();
+                data = data.filter(item => {
+                    return COLUMN_KEYS.some(key => {
+                        const val = item[key] !== undefined ? String(item[key]) : '';
+                        return val.toLowerCase().includes(search);
+                    });
+                });
+            }
+
+            // Sort
+            if (sortKey) {
+                data.sort((a, b) => {
+                    let va = a[sortKey] !== undefined ? a[sortKey] : '';
+                    let vb = b[sortKey] !== undefined ? b[sortKey] : '';
+                    if (typeof va === 'string') va = va.toLowerCase();
+                    if (typeof vb === 'string') vb = vb.toLowerCase();
+                    if (va < vb) return sortAsc ? -1 : 1;
+                    if (va > vb) return sortAsc ? 1 : -1;
+                    return 0;
+                });
+            }
+
+            return data;
+        }
+
+        // ─────────────────────────────────────────────
+        // 13. Start inline edit
+        // ─────────────────────────────────────────────
+        function startEdit(cell) {
+            const field = cell.dataset.field;
+            const rowIdx = parseInt(cell.dataset.rowidx);
+            const data = getDisplayData();
+            if (rowIdx >= data.length) return;
+
+            const item = data[rowIdx];
+            const col = COLUMNS.find(c => c.key === field);
+            if (!col) return;
+            if (col.readonly) return;
+
+            const currentVal = item[field] !== undefined ? item[field] : '';
+
+            // Prevent double edit
+            if (cell.classList.contains('editing')) return;
+
+            cell.classList.add('editing');
+
+            let input;
+
+            if (col.type === 'select') {
+                input = document.createElement('select');
+                col.options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt;
+                    if (opt === currentVal) option.selected = true;
+                    input.appendChild(option);
+                });
+            } else if (col.type === 'date') {
+                input = document.createElement('input');
+                input.type = 'date';
+                input.value = currentVal || '';
+            } else {
+                input = document.createElement('input');
+                input.type = 'text';
+                if (col.type === 'number') {
+                    input.type = 'text';
+                    input.value = currentVal !== '' && currentVal !== null ? formatNumber(currentVal) : '';
+                } else {
+                    input.value = currentVal || '';
+                }
+            }
+
+            input.className = 'inline-edit-input';
+            input.style.width = '100%';
+            input.style.border = '2px solid #0a2e5c';
+            input.style.borderRadius = '4px';
+            input.style.padding = '2px 4px';
+            input.style.fontSize = '12px';
+            input.style.fontFamily = 'inherit';
+            input.style.background = '#fff';
+            input.style.outline = 'none';
+
+            // Replace content
+            cell.innerHTML = '';
+            cell.appendChild(input);
+
+            input.focus();
+            if (input.select) input.select();
+
+            // Save on blur
+            const saveEdit = () => {
+                let newVal = input.value.trim();
+                if (col.type === 'number') {
+                    newVal = parseNumber(newVal);
+                } else if (col.type === 'date') {
+                    newVal = newVal || '';
+                }
+                // For select, value is already correct
+
+                // Update data
+                const displayData = getDisplayData();
+                if (rowIdx < displayData.length) {
+                    const target = displayData[rowIdx];
+                    // Find the actual item in allData
+                    const realIdx = allData.findIndex(d => d._id === target._id);
+                    if (realIdx !== -1) {
+                        allData[realIdx][field] = newVal;
+                        // Auto-calc
+                        allData[realIdx] = autoCalcRow(allData[realIdx]);
+                        markUnsaved();
+                        renderTable();
+                        // Re-edit the same cell if user wants to continue? No, just close.
+                    } else {
+                        // If not found, just re-render
+                        renderTable();
+                    }
+                } else {
+                    renderTable();
+                }
+            };
+
+            input.addEventListener('blur', saveEdit);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    input.blur();
+                }
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    // Cancel - restore previous value
+                    const displayData = getDisplayData();
+                    if (rowIdx < displayData.length) {
+                        const target = displayData[rowIdx];
+                        const realIdx = allData.findIndex(d => d._id === target._id);
+                        if (realIdx !== -1) {
+                            allData[realIdx][field] = currentVal;
+                        }
+                    }
+                    renderTable();
+                }
+            });
+
+            // For select, blur on change
+            if (col.type === 'select') {
+                input.addEventListener('change', () => {
+                    // Small delay to let the change register
+                    setTimeout(() => input.blur(), 50);
+                });
+            }
+
+            // Store current value for escape
+            cell.dataset.prevValue = currentVal;
+        }
+
+        // ─────────────────────────────────────────────
+        // 14. Add row
+        // ─────────────────────────────────────────────
+        function addRow() {
+            const newRow = createEmptyRow();
+            newRow._id = '_temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            allData.push(newRow);
+            markUnsaved();
+            renderTable();
+            // Scroll to bottom
+            setTimeout(() => {
+                const lastRow = tableBody.querySelector('tr:last-child');
+                if (lastRow) lastRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        // ─────────────────────────────────────────────
+        // 15. Delete row
+        // ─────────────────────────────────────────────
+        function deleteRow(id, rowIdx) {
+            const displayData = getDisplayData();
+            if (rowIdx >= displayData.length) return;
+            const item = displayData[rowIdx];
+            if (!item) return;
+
+            if (!confirm(`Hapus baris No. ${rowIdx + 1}?`)) return;
+
+            const realIdx = allData.findIndex(d => d._id === item._id);
+            if (realIdx !== -1) {
+                if (item._id && !item._id.startsWith('_temp_')) {
+                    // Real item - delete from Firestore
+                    db.collection(COLLECTION).doc(item._id).delete()
+                        .then(() => {
+                            showToast('Data berhasil dihapus.', 'success');
+                        })
+                        .catch(err => {
+                            showToast('Gagal hapus: ' + err.message, 'error');
+                        });
+                }
+                allData.splice(realIdx, 1);
+                markUnsaved();
+                renderTable();
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // 16. Mark unsaved / saved
+        // ─────────────────────────────────────────────
+        function markUnsaved() {
+            hasUnsavedChanges = true;
+            updateSaveButton();
+        }
+
+        function markSaved() {
+            hasUnsavedChanges = false;
+            updateSaveButton();
+        }
+
+        function updateSaveButton() {
+            if (hasUnsavedChanges) {
+                saveBtn.className = 'btn-save unsaved';
+                saveBtn.textContent = '⚠️ Simpan';
+                saveBtn.disabled = false;
+            } else {
+                saveBtn.className = 'btn-save saved';
+                saveBtn.textContent = '✓ Tersimpan';
+                saveBtn.disabled = true;
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // 17. Save all to Firestore
+        // ─────────────────────────────────────────────
+        async function saveAll() {
+            if (!hasUnsavedChanges) return;
+
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Menyimpan...';
+
+            try {
+                const promises = [];
+                let savedCount = 0;
+
+                for (const item of allData) {
+                    // Skip empty rows (all fields empty)
+                    const hasData = COLUMN_KEYS.some(key => {
+                        const val = item[key];
+                        return val !== '' && val !== null && val !== undefined;
+                    });
+                    if (!hasData && !item._id) continue;
+
+                    const dataToSave = {};
+                    COLUMN_KEYS.forEach(key => {
+                        dataToSave[key] = item[key] !== undefined ? item[key] : '';
+                    });
+                    dataToSave.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+
+                    if (item._id && !item._id.startsWith('_temp_')) {
+                        // Update existing
+                        promises.push(db.collection(COLLECTION).doc(item._id).update(dataToSave));
+                        savedCount++;
+                    } else {
+                        // New item
+                        dataToSave.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        const docRef = db.collection(COLLECTION).doc();
+                        dataToSave._id = docRef.id;
+                        promises.push(docRef.set(dataToSave));
+                        // Update the item with real id
+                        item._id = docRef.id;
+                        savedCount++;
+                    }
+                }
+
+                await Promise.all(promises);
+                showToast(`✅ ${savedCount} data berhasil disimpan!`, 'success');
+                markSaved();
+                // Reload data from server
+                loadData();
+            } catch (error) {
+                console.error('Save error:', error);
+                showToast('❌ Gagal menyimpan: ' + error.message, 'error');
+                saveBtn.disabled = false;
+                updateSaveButton();
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // 18. Load data from Firestore
         // ─────────────────────────────────────────────
         function loadData() {
             db.collection(COLLECTION)
                 .orderBy('createdAt', 'desc')
                 .onSnapshot((snapshot) => {
-                    allData = [];
+                    const loaded = [];
                     snapshot.forEach(doc => {
-                        allData.push({ id: doc.id, ...doc.data() });
+                        const data = doc.data();
+                        data._id = doc.id;
+                        // Ensure all fields exist
+                        COLUMN_KEYS.forEach(key => {
+                            if (data[key] === undefined) data[key] = '';
+                        });
+                        loaded.push(data);
                     });
+                    // Preserve any unsaved temp rows
+                    const tempRows = allData.filter(d => d._id && d._id.startsWith('_temp_'));
+                    allData = [...loaded, ...tempRows];
+                    markSaved();
                     renderTable();
-                    updateCount();
-                    updateSummary();
+                    loadSettings();
                 }, (error) => {
                     console.error('Firestore read error:', error);
                     showToast('Gagal memuat data: ' + error.message, 'error');
                 });
         }
 
+        // ─────────────────────────────────────────────
+        // 19. Load settings
+        // ─────────────────────────────────────────────
         function loadSettings() {
             db.collection(SETTINGS_COLLECTION).doc('main')
                 .onSnapshot((doc) => {
@@ -1114,289 +1446,82 @@
                     modalBendahara.value = settingsData.bendahara || '';
                     modalAnggaran1.value = settingsData.anggaran1 || 0;
                     modalAnggaran2.value = settingsData.anggaran2 || 0;
-                    updateSummaryHeader();
-                    updateSummary();
                 }, (error) => {
                     console.error('Settings read error:', error);
                 });
         }
 
         // ─────────────────────────────────────────────
-        // 9.  Render table
+        // 20. Update count
         // ─────────────────────────────────────────────
-        function renderTable() {
-            if (allData.length === 0) {
-                tableBody.innerHTML =
-                    `<tr class="empty-row"><td colspan="23">Belum ada data. Silakan tambahkan data baru.</td></tr>`;
-                return;
-            }
-
-            let html = '';
-            allData.forEach((item) => {
-                html += `
-                        <tr>
-                            <td>${escapeHtml(item.no || '')}</td>
-                            <td>${escapeHtml(item.noBKU || '')}</td>
-                            <td>${escapeHtml(item.noRek || '')}</td>
-                            <td>${escapeHtml(item.siplah || '')}</td>
-                            <td>${escapeHtml(item.jenisKegiatan || '')}</td>
-                            <td>${escapeHtml(item.uraian || '')}</td>
-                            <td>${escapeHtml(item.komponen || '')}</td>
-                            <td>${escapeHtml(item.standar || '')}</td>
-                            <td>${escapeHtml(item.jenisBelanja || '')}</td>
-                            <td>${escapeHtml(item.tahap || '')}</td>
-                            <td>${item.vol || ''}</td>
-                            <td>${escapeHtml(item.satuan || '')}</td>
-                            <td>${formatRupiah(item.harga)}</td>
-                            <td>${formatRupiah(item.jumlahHarga)}</td>
-                            <td>${item.tglPelaksanaan || ''}</td>
-                            <td>${item.tglPembayaran || ''}</td>
-                            <td>${escapeHtml(item.jenisPajak || '')}</td>
-                            <td>${item.persenPajak || ''}</td>
-                            <td>${formatRupiah(item.jmlPajak)}</td>
-                            <td>${escapeHtml(item.toko || '')}</td>
-                            <td>${escapeHtml(item.alamatToko || '')}</td>
-                            <td>${escapeHtml(item.telp || '')}</td>
-                            <td>
-                                <div class="actions">
-                                    <button class="btn-edit" data-id="${item.id}">Edit</button>
-                                    <button class="btn-delete" data-id="${item.id}">Hapus</button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-            });
-            tableBody.innerHTML = html;
-
-            document.querySelectorAll('.btn-edit').forEach(btn => {
-                btn.addEventListener('click', () => editData(btn.dataset.id));
-            });
-            document.querySelectorAll('.btn-delete').forEach(btn => {
-                btn.addEventListener('click', () => deleteData(btn.dataset.id));
-            });
-        }
-
-        // ─────────────────────────────────────────────
-        // 10. Helpers
-        // ─────────────────────────────────────────────
-        function escapeHtml(str) {
-            if (!str) return '';
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
-
-        function formatRupiah(val) {
-            if (val === undefined || val === null || val === '') return '';
-            const num = parseFloat(val);
-            if (isNaN(num)) return '';
-            return 'Rp ' + num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        }
-
         function updateCount() {
-            recordCount.textContent = allData.length + ' data';
-        }
-
-        function getFormData() {
-            return {
-                no: f_no.value.trim(),
-                noBKU: f_noBKU.value.trim(),
-                noRek: f_noRek.value.trim(),
-                siplah: f_siplah.value,
-                jenisKegiatan: f_jenisKegiatan.value.trim(),
-                uraian: f_uraian.value.trim(),
-                komponen: f_komponen.value,
-                standar: f_standar.value,
-                jenisBelanja: f_jenisBelanja.value,
-                tahap: f_tahap.value,
-                vol: parseFloat(f_vol.value) || 0,
-                satuan: f_satuan.value.trim(),
-                harga: parseFloat(f_harga.value) || 0,
-                jumlahHarga: parseFloat(f_jumlahHarga.value) || 0,
-                tglPelaksanaan: f_tglPelaksanaan.value,
-                tglPembayaran: f_tglPembayaran.value,
-                jenisPajak: f_jenisPajak.value.trim(),
-                persenPajak: parseFloat(f_persenPajak.value) || 0,
-                jmlPajak: parseFloat(f_jmlPajak.value) || 0,
-                toko: f_toko.value.trim(),
-                alamatToko: f_alamatToko.value.trim(),
-                telp: f_telp.value.trim(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-        }
-
-        function setFormData(data) {
-            f_no.value = data.no || '';
-            f_noBKU.value = data.noBKU || '';
-            f_noRek.value = data.noRek || '';
-            f_siplah.value = data.siplah || 'Siplah';
-            f_jenisKegiatan.value = data.jenisKegiatan || '';
-            f_uraian.value = data.uraian || '';
-            f_komponen.value = data.komponen || 'penerimaan Peserta Didik baru';
-            f_standar.value = data.standar || 'Pengembangan Kompetensi Lulusan';
-            f_jenisBelanja.value = data.jenisBelanja || 'Pegawai';
-            f_tahap.value = data.tahap || 'Tahap 1';
-            f_vol.value = data.vol || '';
-            f_satuan.value = data.satuan || '';
-            f_harga.value = data.harga || '';
-            f_jumlahHarga.value = data.jumlahHarga || '';
-            f_tglPelaksanaan.value = data.tglPelaksanaan || '';
-            f_tglPembayaran.value = data.tglPembayaran || '';
-            f_jenisPajak.value = data.jenisPajak || '';
-            f_persenPajak.value = data.persenPajak || '';
-            f_jmlPajak.value = data.jmlPajak || '';
-            f_toko.value = data.toko || '';
-            f_alamatToko.value = data.alamatToko || '';
-            f_telp.value = data.telp || '';
-            autoCalc();
-        }
-
-        function resetForm() {
-            form.reset();
-            f_no.value = '';
-            f_noBKU.value = '';
-            f_noRek.value = '';
-            f_jenisKegiatan.value = '';
-            f_uraian.value = '';
-            f_vol.value = '';
-            f_satuan.value = '';
-            f_harga.value = '';
-            f_jumlahHarga.value = '';
-            f_tglPelaksanaan.value = '';
-            f_tglPembayaran.value = '';
-            f_jenisPajak.value = '';
-            f_persenPajak.value = '';
-            f_jmlPajak.value = '';
-            f_toko.value = '';
-            f_alamatToko.value = '';
-            f_telp.value = '';
-            f_siplah.value = 'Siplah';
-            f_komponen.value = 'penerimaan Peserta Didik baru';
-            f_standar.value = 'Pengembangan Kompetensi Lulusan';
-            f_jenisBelanja.value = 'Pegawai';
-            f_tahap.value = 'Tahap 1';
-            editingId = null;
-            submitBtn.textContent = 'Simpan';
-            formTitle.textContent = '+ Tambah Data';
-            cancelEditBtn.style.display = 'none';
-            autoCalc();
+            const data = getDisplayData();
+            recordCount.textContent = data.length + ' data';
         }
 
         // ─────────────────────────────────────────────
-        // 11. Summary update
+        // 21. Filter
         // ─────────────────────────────────────────────
-        function updateSummaryHeader() {
-            const ks = settingsData.kepalaSekolah || '-';
-            const bd = settingsData.bendahara || '-';
-            summarySchoolInfo.textContent = `Kepsek: ${ks} | Bendahara: ${bd}`;
-        }
-
-        function updateSummary() {
-            const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
-            const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
-
-            let total1 = 0,
-                total2 = 0;
-            allData.forEach(item => {
-                const jml = parseFloat(item.jumlahHarga) || 0;
-                if (item.tahap === 'Tahap 1') total1 += jml;
-                else if (item.tahap === 'Tahap 2') total2 += jml;
-            });
-
-            const belum1 = Math.max(0, anggaran1 - total1);
-            const belum2 = Math.max(0, anggaran2 - total2);
-
-            sumAnggaran1.textContent = formatRupiah(anggaran1);
-            sumAnggaran2.textContent = formatRupiah(anggaran2);
-            sumTeranggarkan1.textContent = formatRupiah(total1);
-            sumTeranggarkan2.textContent = formatRupiah(total2);
-            sumBelum1.textContent = formatRupiah(belum1);
-            sumBelum2.textContent = formatRupiah(belum2);
-        }
-
-        // ─────────────────────────────────────────────
-        // 12. CRUD: Create / Update
-        // ─────────────────────────────────────────────
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const data = getFormData();
-
-            if (!data.no || !data.uraian) {
-                showToast('No dan Uraian wajib diisi.', 'error');
-                return;
-            }
-
-            try {
-                if (editingId) {
-                    await db.collection(COLLECTION).doc(editingId).update(data);
-                    showToast('Data berhasil diperbarui!', 'success');
-                } else {
-                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    await db.collection(COLLECTION).add(data);
-                    showToast('Data berhasil ditambahkan!', 'success');
-                }
-                resetForm();
-            } catch (error) {
-                console.error('Save error:', error);
-                showToast('Gagal menyimpan: ' + error.message, 'error');
-            }
+        filterInput.addEventListener('input', () => {
+            filterText = filterInput.value;
+            renderTable();
         });
 
         // ─────────────────────────────────────────────
-        // 13. CRUD: Edit
+        // 22. Sort
         // ─────────────────────────────────────────────
-        function editData(id) {
-            const item = allData.find(d => d.id === id);
-            if (!item) return;
-
-            editingId = id;
-            setFormData(item);
-            submitBtn.textContent = 'Update';
-            formTitle.textContent = '✏️ Edit Data';
-            cancelEditBtn.style.display = 'inline-block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // ─────────────────────────────────────────────
-        // 14. CRUD: Delete
-        // ─────────────────────────────────────────────
-        async function deleteData(id) {
-            const item = allData.find(d => d.id === id);
-            if (!item) return;
-
-            if (!confirm(`Hapus data No. ${item.no || '?'} — "${item.uraian || ''}"?`)) return;
-
-            try {
-                await db.collection(COLLECTION).doc(id).delete();
-                showToast('Data berhasil dihapus.', 'success');
-            } catch (error) {
-                console.error('Delete error:', error);
-                showToast('Gagal menghapus: ' + error.message, 'error');
-            }
-        }
+        document.querySelectorAll('thead th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const key = th.dataset.sort;
+                if (sortKey === key) {
+                    sortAsc = !sortAsc;
+                } else {
+                    sortKey = key;
+                    sortAsc = true;
+                }
+                // Update sort indicators
+                document.querySelectorAll('thead th[data-sort]').forEach(h => {
+                    h.classList.remove('sorted');
+                    const icon = h.querySelector('.sort-icon');
+                    if (icon) icon.textContent = '';
+                });
+                th.classList.add('sorted');
+                let icon = th.querySelector('.sort-icon');
+                if (!icon) {
+                    icon = document.createElement('span');
+                    icon.className = 'sort-icon';
+                    th.appendChild(icon);
+                }
+                icon.textContent = sortAsc ? '▲' : '▼';
+                renderTable();
+            });
+        });
 
         // ─────────────────────────────────────────────
-        // 15. Reset & Cancel
+        // 23. Add row button
         // ─────────────────────────────────────────────
-        resetBtn.addEventListener('click', resetForm);
-        cancelEditBtn.addEventListener('click', resetForm);
+        addRowBtn.addEventListener('click', addRow);
 
         // ─────────────────────────────────────────────
-        // 16. Modal Settings
+        // 24. Save button
         // ─────────────────────────────────────────────
-        function openModal() {
+        saveBtn.addEventListener('click', saveAll);
+
+        // ─────────────────────────────────────────────
+        // 25. Settings modal
+        // ─────────────────────────────────────────────
+        function openSettings() {
             settingsModal.classList.add('active');
         }
 
-        function closeModal() {
+        function closeSettings() {
             settingsModal.classList.remove('active');
         }
 
-        settingsBtn.addEventListener('click', openModal);
-        modalCancelBtn.addEventListener('click', closeModal);
+        settingsBtn.addEventListener('click', openSettings);
+        modalCancelBtn.addEventListener('click', closeSettings);
         settingsModal.addEventListener('click', (e) => {
-            if (e.target === settingsModal) closeModal();
+            if (e.target === settingsModal) closeSettings();
         });
 
         modalSaveBtn.addEventListener('click', async () => {
@@ -1405,24 +1530,44 @@
             const anggaran1 = parseFloat(modalAnggaran1.value) || 0;
             const anggaran2 = parseFloat(modalAnggaran2.value) || 0;
 
-            const data = { kepalaSekolah, bendahara, anggaran1, anggaran2, updatedAt: firebase.firestore.FieldValue
-                    .serverTimestamp() };
-
             try {
-                await db.collection(SETTINGS_COLLECTION).doc('main').set(data, { merge: true });
-                settingsData = data;
-                updateSummaryHeader();
-                updateSummary();
+                await db.collection(SETTINGS_COLLECTION).doc('main').set({
+                    kepalaSekolah,
+                    bendahara,
+                    anggaran1,
+                    anggaran2,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
                 showToast('Pengaturan berhasil disimpan!', 'success');
-                closeModal();
+                closeSettings();
             } catch (error) {
-                console.error('Save settings error:', error);
-                showToast('Gagal menyimpan pengaturan: ' + error.message, 'error');
+                showToast('Gagal menyimpan: ' + error.message, 'error');
             }
         });
 
         // ─────────────────────────────────────────────
-        // 17. Logout
+        // 26. Menu dropdown
+        // ─────────────────────────────────────────────
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuWrapper.classList.toggle('active');
+        });
+
+        document.addEventListener('click', () => {
+            menuWrapper.classList.remove('active');
+        });
+
+        menuDropdown.querySelectorAll('a').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const menu = item.dataset.menu;
+                showToast(`📋 Menu "${menu}" - (fitur coming soon)`, 'info');
+                menuWrapper.classList.remove('active');
+            });
+        });
+
+        // ─────────────────────────────────────────────
+        // 27. Logout
         // ─────────────────────────────────────────────
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('bosnbs_jenjang');
@@ -1431,13 +1576,20 @@
         });
 
         // ─────────────────────────────────────────────
-        // 18. Init
+        // 28. Init
         // ─────────────────────────────────────────────
-        autoCalc();
-        loadData();
-        loadSettings();
+        // Add sort icons to headers
+        document.querySelectorAll('thead th[data-sort]').forEach(th => {
+            const icon = document.createElement('span');
+            icon.className = 'sort-icon';
+            icon.textContent = '';
+            th.appendChild(icon);
+        });
 
-        console.log('📋 BOS-NBS · Database siap (tanpa auth, menggunakan localStorage)');
+        loadData();
+
+        console.log('📋 BOS-NBS · Database siap (inline edit, sort, filter)');
+        console.log('ℹ️  Double-klik sel untuk edit, klik header untuk sortir');
     </script>
 
 </body>
