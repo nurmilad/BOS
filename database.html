@@ -8,8 +8,6 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
     </script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
-    </script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
     </script>
 
@@ -50,7 +48,16 @@
             gap: 12px;
         }
 
-        .app-header .brand-icon {
+        .app-header .brand img {
+            height: 44px;
+            width: 44px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: #f0f4fa;
+            padding: 4px;
+        }
+
+        .app-header .brand .fallback-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -61,7 +68,6 @@
             color: #fff;
             font-weight: 700;
             font-size: 20px;
-            letter-spacing: -0.02em;
         }
 
         .app-header h1 {
@@ -681,7 +687,8 @@
     <!-- ─── Header ─── -->
     <header class="app-header">
         <div class="brand">
-            <div class="brand-icon">B</div>
+            <img src="logo.png" alt="Logo Sekolah" id="logoImg" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='inline-flex';" />
+            <span class="fallback-icon" style="display:none;">B</span>
             <div>
                 <h1>BOS-NBS</h1>
                 <span class="sub">Database Pelaporan</span>
@@ -948,7 +955,7 @@
 
     <script>
         // ─────────────────────────────────────────────
-        // 1.  Firebase init
+        // 1.  Firebase init (hanya Firestore)
         // ─────────────────────────────────────────────
         const firebaseConfig = {
             apiKey: "AIzaSyD61HLphga_Egy_VTGeqx5D8_XmqgWzMsE",
@@ -960,21 +967,31 @@
         };
 
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
         const db = firebase.firestore();
 
         // ─────────────────────────────────────────────
-        // 2.  State
+        // 2.  Cek session login
+        // ─────────────────────────────────────────────
+        const jenjang = localStorage.getItem('bosnbs_jenjang');
+        const tahun = localStorage.getItem('bosnbs_tahun');
+
+        if (!jenjang || !tahun) {
+            // Jika tidak ada session, redirect ke login
+            window.location.href = 'index.html';
+        }
+
+        // ─────────────────────────────────────────────
+        // 3.  State
         // ─────────────────────────────────────────────
         let allData = [];
         let editingId = null;
-        let settingsData = {}; // { kepalaSekolah, bendahara, anggaran1, anggaran2 }
+        let settingsData = {};
 
         const COLLECTION = 'data_bos';
         const SETTINGS_COLLECTION = 'settings_bos';
 
         // ─────────────────────────────────────────────
-        // 3.  DOM refs
+        // 4.  DOM refs
         // ─────────────────────────────────────────────
         const form = document.getElementById('dataForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -986,7 +1003,6 @@
         const formTitle = document.getElementById('formTitle');
         const userBadge = document.getElementById('userBadge');
 
-        // Summary elements
         const sumAnggaran1 = document.getElementById('sumAnggaran1');
         const sumAnggaran2 = document.getElementById('sumAnggaran2');
         const sumTeranggarkan1 = document.getElementById('sumTeranggarkan1');
@@ -995,7 +1011,6 @@
         const sumBelum2 = document.getElementById('sumBelum2');
         const summarySchoolInfo = document.getElementById('summarySchoolInfo');
 
-        // Modal
         const settingsModal = document.getElementById('settingsModal');
         const settingsBtn = document.getElementById('settingsBtn');
         const modalCancelBtn = document.getElementById('modalCancelBtn');
@@ -1030,7 +1045,12 @@
         const f_telp = document.getElementById('f_telp');
 
         // ─────────────────────────────────────────────
-        // 4.  Toast helper
+        // 5.  Tampilkan user badge
+        // ─────────────────────────────────────────────
+        userBadge.textContent = `${jenjang} · ${tahun}`;
+
+        // ─────────────────────────────────────────────
+        // 6.  Toast helper
         // ─────────────────────────────────────────────
         let toastTimer = null;
 
@@ -1044,7 +1064,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 5.  Auto-calc
+        // 7.  Auto-calc
         // ─────────────────────────────────────────────
         function autoCalc() {
             const vol = parseFloat(f_vol.value) || 0;
@@ -1063,7 +1083,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 6.  CRUD: Read data & settings
+        // 8.  CRUD: Read data & settings
         // ─────────────────────────────────────────────
         function loadData() {
             db.collection(COLLECTION)
@@ -1083,7 +1103,6 @@
         }
 
         function loadSettings() {
-            // Ambil dokumen settings (hanya satu, misal id 'main')
             db.collection(SETTINGS_COLLECTION).doc('main')
                 .onSnapshot((doc) => {
                     if (doc.exists) {
@@ -1091,12 +1110,10 @@
                     } else {
                         settingsData = { kepalaSekolah: '', bendahara: '', anggaran1: 0, anggaran2: 0 };
                     }
-                    // Update modal fields
                     modalKepalaSekolah.value = settingsData.kepalaSekolah || '';
                     modalBendahara.value = settingsData.bendahara || '';
                     modalAnggaran1.value = settingsData.anggaran1 || 0;
                     modalAnggaran2.value = settingsData.anggaran2 || 0;
-                    // Update summary header
                     updateSummaryHeader();
                     updateSummary();
                 }, (error) => {
@@ -1105,7 +1122,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 7.  Render table
+        // 9.  Render table
         // ─────────────────────────────────────────────
         function renderTable() {
             if (allData.length === 0) {
@@ -1151,7 +1168,6 @@
             });
             tableBody.innerHTML = html;
 
-            // ── Event listeners for edit/delete ──
             document.querySelectorAll('.btn-edit').forEach(btn => {
                 btn.addEventListener('click', () => editData(btn.dataset.id));
             });
@@ -1161,7 +1177,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 8.  Helpers
+        // 10. Helpers
         // ─────────────────────────────────────────────
         function escapeHtml(str) {
             if (!str) return '';
@@ -1267,7 +1283,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 9.  Summary update
+        // 11. Summary update
         // ─────────────────────────────────────────────
         function updateSummaryHeader() {
             const ks = settingsData.kepalaSekolah || '-';
@@ -1279,7 +1295,6 @@
             const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
             const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
 
-            // Hitung total per tahap
             let total1 = 0,
                 total2 = 0;
             allData.forEach(item => {
@@ -1300,7 +1315,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 10. CRUD: Create / Update
+        // 12. CRUD: Create / Update
         // ─────────────────────────────────────────────
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1329,7 +1344,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 11. CRUD: Edit
+        // 13. CRUD: Edit
         // ─────────────────────────────────────────────
         function editData(id) {
             const item = allData.find(d => d.id === id);
@@ -1344,7 +1359,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 12. CRUD: Delete
+        // 14. CRUD: Delete
         // ─────────────────────────────────────────────
         async function deleteData(id) {
             const item = allData.find(d => d.id === id);
@@ -1362,13 +1377,13 @@
         }
 
         // ─────────────────────────────────────────────
-        // 13. Reset & Cancel
+        // 15. Reset & Cancel
         // ─────────────────────────────────────────────
         resetBtn.addEventListener('click', resetForm);
         cancelEditBtn.addEventListener('click', resetForm);
 
         // ─────────────────────────────────────────────
-        // 14. Modal Settings
+        // 16. Modal Settings
         // ─────────────────────────────────────────────
         function openModal() {
             settingsModal.classList.add('active');
@@ -1380,7 +1395,6 @@
 
         settingsBtn.addEventListener('click', openModal);
         modalCancelBtn.addEventListener('click', closeModal);
-        // Tutup modal jika klik di luar
         settingsModal.addEventListener('click', (e) => {
             if (e.target === settingsModal) closeModal();
         });
@@ -1408,40 +1422,22 @@
         });
 
         // ─────────────────────────────────────────────
-        // 15. Logout
+        // 17. Logout
         // ─────────────────────────────────────────────
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            try {
-                await auth.signOut();
-                localStorage.clear();
-                window.location.href = 'index.html';
-            } catch (e) {
-                showToast('Gagal keluar: ' + e.message, 'error');
-            }
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('bosnbs_jenjang');
+            localStorage.removeItem('bosnbs_tahun');
+            window.location.href = 'index.html';
         });
 
         // ─────────────────────────────────────────────
-        // 16. Auth state & init
-        // ─────────────────────────────────────────────
-        auth.onAuthStateChanged(async (user) => {
-            if (!user) {
-                window.location.href = 'index.html';
-                return;
-            }
-
-            const jenjang = localStorage.getItem('bosnbs_jenjang') || 'SMP';
-            const tahun = localStorage.getItem('bosnbs_tahun') || '2025';
-            userBadge.textContent = `${jenjang} · ${tahun}`;
-
-            loadData();
-            loadSettings();
-        });
-
-        // ─────────────────────────────────────────────
-        // 17. Init auto-calc
+        // 18. Init
         // ─────────────────────────────────────────────
         autoCalc();
-        console.log('📋 BOS-NBS · Database siap (dengan Tahap & Ringkasan)');
+        loadData();
+        loadSettings();
+
+        console.log('📋 BOS-NBS · Database siap (tanpa auth, menggunakan localStorage)');
     </script>
 
 </body>
