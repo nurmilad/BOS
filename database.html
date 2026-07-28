@@ -680,7 +680,7 @@
             background: #ffffff;
             border-radius: 24px;
             padding: 28px 32px 24px;
-            max-width: 480px;
+            max-width: 520px;
             width: 100%;
             box-shadow: 0 32px 80px rgba(0, 20, 40, 0.2);
             transform: scale(0.95);
@@ -920,8 +920,12 @@
     <div class="modal-overlay" id="settingsModal">
         <div class="modal">
             <h2>⚙️ Pengaturan Sekolah</h2>
-            <div class="sub">Data kepala sekolah, bendahara, dan anggaran per tahap untuk <span id="modalSessionLabel">SMP · 2025</span>.</div>
+            <div class="sub">Data kepala sekolah, bendahara, NPSN, dan anggaran per tahap untuk <span id="modalSessionLabel">SMP · 2025</span>.</div>
 
+            <div class="form-group">
+                <label for="modalNpsn">NPSN</label>
+                <input type="text" id="modalNpsn" placeholder="Nomor Pokok Sekolah Nasional" maxlength="10" />
+            </div>
             <div class="form-group">
                 <label for="modalKepalaSekolah">Nama Kepala Sekolah</label>
                 <input type="text" id="modalKepalaSekolah" placeholder="Nama Kepala Sekolah" />
@@ -981,17 +985,13 @@
                 </div>
             </div>
 
+            <!-- Menu sederhana: Buku & Kwitansi -->
             <div class="menu-wrapper" id="menuWrapper">
-                <button class="btn-icon" id="menuBtn">📋 <span class="badge">7</span></button>
+                <button class="btn-icon" id="menuBtn">📋 Menu</button>
                 <div class="menu-dropdown" id="menuDropdown">
-                    <a data-menu="BKU">📒 BKU</a>
-                    <a data-menu="BPT">📕 BPT</a>
-                    <a data-menu="BPB">📗 BPB</a>
-                    <a data-menu="BPP">📘 BPP</a>
-                    <a data-menu="BPU">📙 BPU</a>
-                    <a data-menu="ROB">📄 ROB</a>
+                    <a data-menu="buku">📖 Buku</a>
                     <div class="divider"></div>
-                    <a data-menu="Kwitansi">🧾 Kwitansi</a>
+                    <a data-menu="kwitansi">🧾 Kwitansi</a>
                 </div>
             </div>
         </div>
@@ -1101,7 +1101,7 @@
         document.getElementById('modalSessionLabel').textContent = `${sessionJenjang} · ${sessionTahun}`;
 
         // ─────────────────────────────────────────────
-        // 3.  Mapping STANDAR & KOMPONEN (sesuai ketentuan)
+        // 3.  Mapping STANDAR & KOMPONEN
         // ─────────────────────────────────────────────
         const STANDAR_MAP = {
             '01': 'Pengembangan Kompetensi Lulusan',
@@ -1129,31 +1129,20 @@
             '12': 'pembayaran honor'
         };
 
-        // ─────────────────────────────────────────────
-        // 4.  Fungsi otomatis Standar & Komponen dari Kode Kegiatan
-        // ─────────────────────────────────────────────
         function parseKodeKegiatan(kode) {
             if (!kode || typeof kode !== 'string') return { standar: '', komponen: '' };
-
-            // Bersihkan spasi
             const clean = kode.trim();
             const parts = clean.split('.');
             if (parts.length < 2) return { standar: '', komponen: '' };
-
-            // Bagian pertama = Standar (2 digit), bagian kedua = Komponen (2 digit)
             const standarCode = parts[0].padStart(2, '0');
             const komponenCode = parts[1].padStart(2, '0');
-
             const standar = STANDAR_MAP[standarCode] || '';
             const komponen = KOMPONEN_MAP[komponenCode] || '';
-
-            console.log(`🔍 Parse Kode: "${clean}" → Standar: ${standarCode} (${standar}), Komponen: ${komponenCode} (${komponen})`);
-
             return { standar, komponen };
         }
 
         // ─────────────────────────────────────────────
-        // 5.  State
+        // 4.  State
         // ─────────────────────────────────────────────
         let allData = [];
         let settingsData = {};
@@ -1162,7 +1151,6 @@
         let sortAsc = true;
         let filterText = '';
 
-        // State untuk kolom yang disembunyikan
         let hiddenColumns = new Set();
 
         const COLLECTION = 'data_bos';
@@ -1171,7 +1159,7 @@
         const HIDDEN_COLS_KEY = 'bosnbs_hidden_cols';
 
         // ─────────────────────────────────────────────
-        // 6.  DOM refs
+        // 5.  DOM refs
         // ─────────────────────────────────────────────
         const tableBody = document.getElementById('tableBody');
         const headerRow = document.getElementById('headerRow');
@@ -1191,6 +1179,7 @@
         const settingsModal = document.getElementById('settingsModal');
         const modalCancelBtn = document.getElementById('modalCancelBtn');
         const modalSaveBtn = document.getElementById('modalSaveBtn');
+        const modalNpsn = document.getElementById('modalNpsn');
         const modalKepalaSekolah = document.getElementById('modalKepalaSekolah');
         const modalBendahara = document.getElementById('modalBendahara');
         const modalAnggaran1 = document.getElementById('modalAnggaran1');
@@ -1205,7 +1194,7 @@
         const sumTotal = document.getElementById('sumTotal');
 
         // ─────────────────────────────────────────────
-        // 7.  Column definitions (untuk hide/unhide)
+        // 6.  Column definitions (untuk hide/unhide)
         // ─────────────────────────────────────────────
         const COLUMN_DEFS = [
             { key: 'no', label: 'No', required: true },
@@ -1235,7 +1224,7 @@
         ];
 
         // ─────────────────────────────────────────────
-        // 8.  Load/Save hidden columns
+        // 7.  Load/Save hidden columns
         // ─────────────────────────────────────────────
         function loadHiddenColumns() {
             try {
@@ -1249,7 +1238,6 @@
             } catch (e) {
                 hiddenColumns = new Set();
             }
-            // Pastikan kolom required tidak tersembunyi
             COLUMN_DEFS.forEach(col => {
                 if (col.required && hiddenColumns.has(col.key)) {
                     hiddenColumns.delete(col.key);
@@ -1263,9 +1251,6 @@
             } catch (e) { /* ignore */ }
         }
 
-        // ─────────────────────────────────────────────
-        // 9.  Apply hidden columns to table
-        // ─────────────────────────────────────────────
         function applyHiddenColumns() {
             const headers = headerRow.querySelectorAll('th');
             headers.forEach(th => {
@@ -1304,9 +1289,6 @@
             updateColMenu();
         }
 
-        // ─────────────────────────────────────────────
-        // 10. Update kolom menu dropdown
-        // ─────────────────────────────────────────────
         function updateColMenu() {
             let html = '';
             COLUMN_DEFS.forEach(col => {
@@ -1342,7 +1324,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 11. Column Resizer
+        // 8.  Column Resizer
         // ─────────────────────────────────────────────
         let columnWidths = {};
 
@@ -1421,7 +1403,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 12. Toast
+        // 9.  Toast
         // ─────────────────────────────────────────────
         let toastTimer = null;
 
@@ -1435,7 +1417,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 13. Format number with dots
+        // 10. Format number with dots
         // ─────────────────────────────────────────────
         function formatNumber(val) {
             if (val === undefined || val === null || val === '') return '';
@@ -1465,7 +1447,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 14. Column definitions
+        // 11. Column definitions
         // ─────────────────────────────────────────────
         const COLUMNS = [
             { key: 'noBukti', type: 'text', label: 'No. Bukti' },
@@ -1497,7 +1479,7 @@
         const COLUMN_KEYS = COLUMNS.map(c => c.key);
 
         // ─────────────────────────────────────────────
-        // 15. Generate empty row data (with jenjang & tahun)
+        // 12. Generate empty row data
         // ─────────────────────────────────────────────
         function createEmptyRow() {
             const row = {};
@@ -1514,7 +1496,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 16. Auto-calc
+        // 13. Auto-calc
         // ─────────────────────────────────────────────
         function autoCalcRow(row) {
             const vol = parseFloat(row.vol) || 0;
@@ -1527,7 +1509,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 17. Get display data (filtered + sorted + jenjang/tahun)
+        // 14. Get display data
         // ─────────────────────────────────────────────
         function getDisplayData() {
             let data = allData.filter(item =>
@@ -1560,7 +1542,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 18. Render table
+        // 15. Render table
         // ─────────────────────────────────────────────
         function renderTable() {
             const data = getDisplayData();
@@ -1652,7 +1634,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 19. Update sort indicators
+        // 16. Update sort indicators
         // ─────────────────────────────────────────────
         function updateSortIndicators() {
             const headers = headerRow.querySelectorAll('th[data-sort]');
@@ -1674,7 +1656,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 20. Start inline edit (dengan otomatisasi Standar & Komponen)
+        // 17. Start inline edit
         // ─────────────────────────────────────────────
         function startEdit(cell) {
             const field = cell.dataset.field;
@@ -1746,12 +1728,10 @@
                     if (realIdx !== -1) {
                         allData[realIdx][field] = newVal;
 
-                        // Jika field adalah kodeKegiatan, update standar dan komponen otomatis
                         if (field === 'kodeKegiatan') {
                             const parsed = parseKodeKegiatan(newVal);
                             allData[realIdx]['standar'] = parsed.standar;
                             allData[realIdx]['komponen'] = parsed.komponen;
-                            console.log(`✅ Otomatis: Standar="${parsed.standar}", Komponen="${parsed.komponen}"`);
                         }
 
                         allData[realIdx] = autoCalcRow(allData[realIdx]);
@@ -1791,7 +1771,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 21. Add row
+        // 18. Add row
         // ─────────────────────────────────────────────
         function addRow() {
             const newRow = createEmptyRow();
@@ -1806,7 +1786,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 22. Delete row
+        // 19. Delete row
         // ─────────────────────────────────────────────
         function deleteRow(id, rowIdx) {
             const displayData = getDisplayData();
@@ -1830,7 +1810,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 23. Save / unsaved state
+        // 20. Save / unsaved state
         // ─────────────────────────────────────────────
         function markUnsaved() {
             hasUnsavedChanges = true;
@@ -1855,7 +1835,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 24. Save all to Firestore
+        // 21. Save all to Firestore
         // ─────────────────────────────────────────────
         async function saveAll() {
             if (!hasUnsavedChanges) return;
@@ -1910,7 +1890,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 25. Load data from Firestore
+        // 22. Load data from Firestore
         // ─────────────────────────────────────────────
         function loadData() {
             db.collection(COLLECTION)
@@ -1941,7 +1921,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 26. Load settings (per jenjang & tahun)
+        // 23. Load settings (per jenjang & tahun) + NPSN
         // ─────────────────────────────────────────────
         function loadSettings() {
             const docId = `${sessionJenjang}_${sessionTahun}`;
@@ -1950,8 +1930,9 @@
                     if (doc.exists) {
                         settingsData = doc.data();
                     } else {
-                        settingsData = { kepalaSekolah: '', bendahara: '', anggaran1: 0, anggaran2: 0 };
+                        settingsData = { npsn: '', kepalaSekolah: '', bendahara: '', anggaran1: 0, anggaran2: 0 };
                     }
+                    modalNpsn.value = settingsData.npsn || '';
                     modalKepalaSekolah.value = settingsData.kepalaSekolah || '';
                     modalBendahara.value = settingsData.bendahara || '';
                     modalAnggaran1.value = settingsData.anggaran1 || 0;
@@ -1963,7 +1944,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 27. Update count
+        // 24. Update count
         // ─────────────────────────────────────────────
         function updateCount() {
             const data = getDisplayData();
@@ -1971,7 +1952,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 28. Update Summary
+        // 25. Update Summary
         // ─────────────────────────────────────────────
         function updateSummary() {
             const data = getDisplayData();
@@ -2001,7 +1982,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 29. Filter
+        // 26. Filter
         // ─────────────────────────────────────────────
         filterInput.addEventListener('input', () => {
             filterText = filterInput.value;
@@ -2009,7 +1990,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 30. Sort handlers
+        // 27. Sort handlers
         // ─────────────────────────────────────────────
         function setupSortHandlers() {
             const headers = headerRow.querySelectorAll('th[data-sort]');
@@ -2035,7 +2016,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 31. Event listeners
+        // 28. Event listeners
         // ─────────────────────────────────────────────
         addRowBtn.addEventListener('click', addRow);
         saveBtn.addEventListener('click', saveAll);
@@ -2047,6 +2028,7 @@
         });
 
         modalSaveBtn.addEventListener('click', async () => {
+            const npsn = modalNpsn.value.trim();
             const kepalaSekolah = modalKepalaSekolah.value.trim();
             const bendahara = modalBendahara.value.trim();
             const anggaran1 = parseFloat(modalAnggaran1.value) || 0;
@@ -2055,6 +2037,7 @@
             const docId = `${sessionJenjang}_${sessionTahun}`;
             try {
                 await db.collection(SETTINGS_COLLECTION).doc(docId).set({
+                    npsn,
                     kepalaSekolah,
                     bendahara,
                     anggaran1,
@@ -2071,7 +2054,7 @@
             }
         });
 
-        // Menu dropdown utama
+        // Menu dropdown sederhana
         menuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             menuWrapper.classList.toggle('active');
@@ -2081,7 +2064,12 @@
             item.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const menu = item.dataset.menu;
-                showToast(`📋 Menu "${menu}" - (fitur coming soon)`, 'info');
+                if (menu === 'buku') {
+                    // Redirect ke buku.html
+                    window.location.href = 'buku.html';
+                } else if (menu === 'kwitansi') {
+                    showToast('🧾 Halaman Kwitansi (coming soon)', 'info');
+                }
                 menuWrapper.classList.remove('active');
             });
         });
@@ -2101,7 +2089,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 32. Init
+        // 29. Init
         // ─────────────────────────────────────────────
         document.querySelectorAll('thead th[data-sort]').forEach(th => {
             const icon = document.createElement('span');
@@ -2123,10 +2111,9 @@
 
         loadData();
 
-        console.log('📋 BOS-NBS · Database siap (otomatis Standar & Komponen dari Kode Kegiatan)');
+        console.log('📋 BOS-NBS · Database siap (menu: Buku & Kwitansi, +NPSN)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
-        console.log('ℹ️  Klik header untuk sortir, klik "Kolom" untuk hide/unhide');
-        console.log('ℹ️  Format Kode Kegiatan: XX.YY.ZZ (XX=Standar, YY=Komponen)');
+        console.log('ℹ️  Klik "Buku" untuk menuju halaman buku.');
     </script>
 
 </body>
