@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BOS-NBS · Database</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
+    </script>
+
+    <style>
+        /* ── Reset & Base ── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f4f8fc;
+            color: #0a1e33;
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            max-width: 1600px;
+            margin: 0 auto 28px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e2edf6;
+        }
+
+        .app-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-header .brand-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: #0a2e5c;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .app-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0a2e5c;
+            letter-spacing: -0.02em;
+        }
+
+        .app-header .sub {
+            font-size: 13px;
+            color: #7a8fa6;
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .header-actions .user-badge {
+            font-size: 13px;
+            color: #1f3a5f;
+            background: #e9f0f7;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .btn-logout {
+            background: transparent;
+            border: 1.5px solid #d0dde9;
+            padding: 8px 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #1f3a5f;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn-logout:hover {
+            background: #f0f4fa;
+            border-color: #b0c4d8;
+        }
+
+        /* ── Container ── */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ── Form Card ── */
+        .form-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 20, 40, 0.06);
+            padding: 24px 28px 28px;
+            margin-bottom: 28px;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .form-card:hover {
+            box-shadow: 0 8px 32px rgba(0, 20, 40, 0.08);
+        }
+
+        .form-card .form-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0a2e5c;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px 18px;
+        }
+
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-grid .half-width {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #2f4a6a;
+            margin-bottom: 4px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 9px 12px;
+            font-size: 13px;
+            font-family: inherit;
+            border: 1.5px solid #dce6ef;
+            border-radius: 10px;
+            background: #fafcfe;
+            color: #0a1e33;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            outline: none;
+            width: 100%;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #0a2e5c;
+            box-shadow: 0 0 0 3px rgba(10, 46, 92, 0.08);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #b0c4d8;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+            padding-top: 16px;
+            border-top: 1px solid #eef4f9;
+        }
+
+        .btn-primary {
+            background: #0a2e5c;
+            color: #fff;
+            border: none;
+            padding: 10px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+
+        .btn-primary:hover {
+            background: #123f72;
+        }
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+
+        .btn-secondary {
+            background: #e9f0f7;
+            color: #1f3a5f;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #dce6f0;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-edit {
+            background: #f1c40f;
+            color: #1f2a3a;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-edit:hover {
+            background: #d4ac0d;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+
+        /* ── Table Card ── */
+        .table-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 20, 40, 0.06);
+            padding: 20px 0 4px 0;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px 16px 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .table-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0a2e5c;
+        }
+
+        .table-header .badge-count {
+            font-size: 13px;
+            color: #5a7a9a;
+            background: #e9f0f7;
+            padding: 2px 14px;
+            border-radius: 16px;
+            font-weight: 500;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            padding: 0 4px 4px 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            min-width: 1400px;
+        }
+
+        thead {
+            background: #f2f7fc;
+            border-bottom: 2px solid #dce6ef;
+        }
+
+        thead th {
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: 600;
+            color: #1f3a5f;
+            white-space: nowrap;
+            font-size: 11px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: #f2f7fc;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #eef4f9;
+            transition: background 0.15s ease;
+        }
+
+        tbody tr:hover {
+            background: #f8fafd;
+        }
+
+        tbody td {
+            padding: 8px 8px;
+            vertical-align: middle;
+            color: #1a3048;
+            max-width: 180px;
+            word-break: break-word;
+        }
+
+        tbody td .actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .text-muted {
+            color: #8aa0b8;
+            font-style: italic;
+        }
+
+        .empty-row td {
+            padding: 40px 8px;
+            text-align: center;
+            color: #8aa0b8;
+            font-size: 14px;
+        }
+
+        /* ── Status / Pesan ── */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0a2e5c;
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-weight: 500;
+            font-size: 14px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.16);
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .toast.success {
+            background: #1a7a3a;
+        }
+        .toast.error {
+            background: #b00020;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .form-grid .half-width {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-card {
+                padding: 16px;
+            }
+            .app-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .header-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .table-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .form-actions .btn-primary,
+            .form-actions .btn-secondary {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .app-header h1 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ─── Toast ─── -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ─── Header ─── -->
+    <header class="app-header">
+        <div class="brand">
+            <div class="brand-icon">B</div>
+            <div>
+                <h1>BOS-NBS</h1>
+                <span class="sub">Database Pelaporan</span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <span class="user-badge" id="userBadge">SMP · 2025</span>
+            <button class="btn-logout" id="logoutBtn">Keluar</button>
+        </div>
+    </header>
+
+    <!-- ─── Container ─── -->
+    <div class="container">
+
+        <!-- Form -->
+        <div class="form-card" id="formCard">
+            <div class="form-title">
+                <span id="formTitle">+ Tambah Data</span>
+            </div>
+
+            <form id="dataForm" autocomplete="off">
+                <div class="form-grid">
+                    <!-- No -->
+                    <div class="form-group">
+                        <label for="f_no">No</label>
+                        <input type="text" id="f_no" placeholder="1" />
+                    </div>
+                    <!-- No. BKU -->
+                    <div class="form-group">
+                        <label for="f_noBKU">No. BKU</label>
+                        <input type="text" id="f_noBKU" placeholder="BKU-001" />
+                    </div>
+                    <!-- No. Rek -->
+                    <div class="form-group">
+                        <label for="f_noRek">No. Rek</label>
+                        <input type="text" id="f_noRek" placeholder="4.1.2.3" />
+                    </div>
+                    <!-- Siplah -->
+                    <div class="form-group">
+                        <label for="f_siplah">Siplah</label>
+                        <select id="f_siplah">
+                            <option value="Siplah">Siplah</option>
+                            <option value="Non Siplah">Non Siplah</option>
+                        </select>
+                    </div>
+
+                    <!-- Jenis Kegiatan -->
+                    <div class="form-group">
+                        <label for="f_jenisKegiatan">Jenis Kegiatan</label>
+                        <input type="text" id="f_jenisKegiatan" placeholder="Kegiatan ..." />
+                    </div>
+                    <!-- Uraian -->
+                    <div class="form-group">
+                        <label for="f_uraian">Uraian</label>
+                        <input type="text" id="f_uraian" placeholder="Uraian kegiatan" />
+                    </div>
+
+                    <!-- Komponen -->
+                    <div class="form-group">
+                        <label for="f_komponen">Komponen</label>
+                        <select id="f_komponen">
+                            <option value="penerimaan Peserta Didik baru">penerimaan Peserta Didik baru</option>
+                            <option value="pengembangan perpustakaan">pengembangan perpustakaan</option>
+                            <option value="pelaksanaan kegiatan pembelajaran dan ekstrakurikuler">pelaksanaan kegiatan pembelajaran dan ekstrakurikuler</option>
+                            <option value="pelaksanaan kegiatan asesmen dan evaluasi pembelajaran">pelaksanaan kegiatan asesmen dan evaluasi pembelajaran</option>
+                            <option value="pelaksanaan administrasi kegiatan sekolah">pelaksanaan administrasi kegiatan sekolah</option>
+                            <option value="pengembangan profesi guru dan tenaga kependidikan">pengembangan profesi guru dan tenaga kependidikan</option>
+                            <option value="pembiayaan langganan daya dan jasa">pembiayaan langganan daya dan jasa</option>
+                            <option value="pemeliharaan sarana dan prasarana sekolah">pemeliharaan sarana dan prasarana sekolah</option>
+                            <option value="penyediaan alat multimedia pembelajaran">penyediaan alat multimedia pembelajaran</option>
+                            <option value="penyelenggaraan kegiatan peningkatan kompetensi keahlian">penyelenggaraan kegiatan peningkatan kompetensi keahlian</option>
+                            <option value="penyelenggaraan kegiatan dalam mendukung keterserapan lulusan">penyelenggaraan kegiatan dalam mendukung keterserapan lulusan</option>
+                            <option value="pembayaran honor">pembayaran honor</option>
+                        </select>
+                    </div>
+
+                    <!-- Standar -->
+                    <div class="form-group">
+                        <label for="f_standar">Standar</label>
+                        <select id="f_standar">
+                            <option value="Pengembangan Kompetensi Lulusan">Pengembangan Kompetensi Lulusan</option>
+                            <option value="Pengembangan standar isi">Pengembangan standar isi</option>
+                            <option value="Pengembangan standar proses">Pengembangan standar proses</option>
+                            <option value="Pengembangan pendidik dan tenaga kependidikan">Pengembangan pendidik dan tenaga kependidikan</option>
+                            <option value="Pengembangan sarana dan prasarana sekolah">Pengembangan sarana dan prasarana sekolah</option>
+                            <option value="Pengembangan standar pengelolaan">Pengembangan standar pengelolaan</option>
+                            <option value="Pengembangan standar pembiayaan">Pengembangan standar pembiayaan</option>
+                            <option value="Pengembangan dan implementasi sistem penilaian">Pengembangan dan implementasi sistem penilaian</option>
+                        </select>
+                    </div>
+
+                    <!-- Jenis Belanja -->
+                    <div class="form-group">
+                        <label for="f_jenisBelanja">Jenis Belanja</label>
+                        <select id="f_jenisBelanja">
+                            <option value="Pegawai">Pegawai</option>
+                            <option value="Barang dan Jasa">Barang dan Jasa</option>
+                            <option value="Peralatan dan Mesin">Peralatan dan Mesin</option>
+                            <option value="Aset tetap lainnya">Aset tetap lainnya</option>
+                        </select>
+                    </div>
+
+                    <!-- Vol -->
+                    <div class="form-group">
+                        <label for="f_vol">Vol</label>
+                        <input type="number" id="f_vol" placeholder="1" step="0.01" />
+                    </div>
+                    <!-- Satuan -->
+                    <div class="form-group">
+                        <label for="f_satuan">Satuan</label>
+                        <input type="text" id="f_satuan" placeholder="Unit" />
+                    </div>
+                    <!-- Harga -->
+                    <div class="form-group">
+                        <label for="f_harga">Harga</label>
+                        <input type="number" id="f_harga" placeholder="0" step="0.01" />
+                    </div>
+                    <!-- Jumlah Harga -->
+                    <div class="form-group">
+                        <label for="f_jumlahHarga">Jumlah Harga</label>
+                        <input type="number" id="f_jumlahHarga" placeholder="auto" step="0.01" readonly style="background:#f2f6fb;cursor:default;" />
+                    </div>
+
+                    <!-- Tgl Pelaksanaan -->
+                    <div class="form-group">
+                        <label for="f_tglPelaksanaan">Tgl Pelaksanaan</label>
+                        <input type="date" id="f_tglPelaksanaan" />
+                    </div>
+                    <!-- Tgl Pembayaran -->
+                    <div class="form-group">
+                        <label for="f_tglPembayaran">Tgl Pembayaran</label>
+                        <input type="date" id="f_tglPembayaran" />
+                    </div>
+
+                    <!-- Jenis Pajak -->
+                    <div class="form-group">
+                        <label for="f_jenisPajak">Jenis Pajak</label>
+                        <input type="text" id="f_jenisPajak" placeholder="PPN / PPh" />
+                    </div>
+                    <!-- % Pajak -->
+                    <div class="form-group">
+                        <label for="f_persenPajak">% Pajak</label>
+                        <input type="number" id="f_persenPajak" placeholder="0" step="0.01" />
+                    </div>
+                    <!-- Jml Pajak -->
+                    <div class="form-group">
+                        <label for="f_jmlPajak">Jml Pajak</label>
+                        <input type="number" id="f_jmlPajak" placeholder="auto" step="0.01" readonly style="background:#f2f6fb;cursor:default;" />
+                    </div>
+
+                    <!-- Toko / Personal -->
+                    <div class="form-group">
+                        <label for="f_toko">Toko / Personal</label>
+                        <input type="text" id="f_toko" placeholder="Nama toko / personal" />
+                    </div>
+                    <!-- Alamat Toko/Personal -->
+                    <div class="form-group">
+                        <label for="f_alamatToko">Alamat</label>
+                        <input type="text" id="f_alamatToko" placeholder="Alamat" />
+                    </div>
+                    <!-- Telp -->
+                    <div class="form-group">
+                        <label for="f_telp">Telp.</label>
+                        <input type="text" id="f_telp" placeholder="0812..." />
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary" id="submitBtn">Simpan</button>
+                    <button type="reset" class="btn-secondary" id="resetBtn">Reset</button>
+                    <button type="button" class="btn-secondary" id="cancelEditBtn" style="display:none;">Batal Edit</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table -->
+        <div class="table-card">
+            <div class="table-header">
+                <h2>Daftar Data BOS</h2>
+                <span class="badge-count" id="recordCount">0 data</span>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>No. BKU</th>
+                            <th>No. Rek</th>
+                            <th>Siplah</th>
+                            <th>Jenis Keg.</th>
+                            <th>Uraian</th>
+                            <th>Komponen</th>
+                            <th>Standar</th>
+                            <th>Jenis Belanja</th>
+                            <th>Vol</th>
+                            <th>Satuan</th>
+                            <th>Harga</th>
+                            <th>Jml Harga</th>
+                            <th>Tgl Pelaks.</th>
+                            <th>Tgl Bayar</th>
+                            <th>Jenis Pajak</th>
+                            <th>% Pajak</th>
+                            <th>Jml Pajak</th>
+                            <th>Toko/Personal</th>
+                            <th>Alamat</th>
+                            <th>Telp.</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr class="empty-row">
+                            <td colspan="22">Belum ada data. Silakan tambahkan data baru.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ─────────────────────────────────────────────
+        // 1.  Firebase init
+        // ─────────────────────────────────────────────
+        const firebaseConfig = {
+            apiKey: "AIzaSyD61HLphga_Egy_VTGeqx5D8_XmqgWzMsE",
+            authDomain: "bos-nbs.firebaseapp.com",
+            projectId: "bos-nbs",
+            storageBucket: "bos-nbs.firebasestorage.app",
+            messagingSenderId: "691310998051",
+            appId: "1:691310998051:web:fe576f0c14f37f84c6f796"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ─────────────────────────────────────────────
+        // 2.  State
+        // ─────────────────────────────────────────────
+        let allData = [];
+        let editingId = null;
+
+        const COLLECTION = 'data_bos';
+
+        // ─────────────────────────────────────────────
+        // 3.  DOM refs
+        // ─────────────────────────────────────────────
+        const form = document.getElementById('dataForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const tableBody = document.getElementById('tableBody');
+        const recordCount = document.getElementById('recordCount');
+        const toast = document.getElementById('toast');
+        const formTitle = document.getElementById('formTitle');
+        const userBadge = document.getElementById('userBadge');
+
+        // ─── Form fields ───
+        const f_no = document.getElementById('f_no');
+        const f_noBKU = document.getElementById('f_noBKU');
+        const f_noRek = document.getElementById('f_noRek');
+        const f_siplah = document.getElementById('f_siplah');
+        const f_jenisKegiatan = document.getElementById('f_jenisKegiatan');
+        const f_uraian = document.getElementById('f_uraian');
+        const f_komponen = document.getElementById('f_komponen');
+        const f_standar = document.getElementById('f_standar');
+        const f_jenisBelanja = document.getElementById('f_jenisBelanja');
+        const f_vol = document.getElementById('f_vol');
+        const f_satuan = document.getElementById('f_satuan');
+        const f_harga = document.getElementById('f_harga');
+        const f_jumlahHarga = document.getElementById('f_jumlahHarga');
+        const f_tglPelaksanaan = document.getElementById('f_tglPelaksanaan');
+        const f_tglPembayaran = document.getElementById('f_tglPembayaran');
+        const f_jenisPajak = document.getElementById('f_jenisPajak');
+        const f_persenPajak = document.getElementById('f_persenPajak');
+        const f_jmlPajak = document.getElementById('f_jmlPajak');
+        const f_toko = document.getElementById('f_toko');
+        const f_alamatToko = document.getElementById('f_alamatToko');
+        const f_telp = document.getElementById('f_telp');
+
+        // ─────────────────────────────────────────────
+        // 4.  Toast helper
+        // ─────────────────────────────────────────────
+        let toastTimer = null;
+
+        function showToast(msg, type = 'info') {
+            toast.textContent = msg;
+            toast.className = 'toast show ' + type;
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.className = 'toast';
+            }, 3500);
+        }
+
+        // ─────────────────────────────────────────────
+        // 5.  Auto-calc: Jumlah Harga & Jml Pajak
+        // ─────────────────────────────────────────────
+        function autoCalc() {
+            const vol = parseFloat(f_vol.value) || 0;
+            const harga = parseFloat(f_harga.value) || 0;
+            const pajak = parseFloat(f_persenPajak.value) || 0;
+
+            const jml = vol * harga;
+            f_jumlahHarga.value = jml.toFixed(2);
+
+            const jmlPajak = jml * (pajak / 100);
+            f_jmlPajak.value = jmlPajak.toFixed(2);
+        }
+
+        [f_vol, f_harga, f_persenPajak].forEach(el => {
+            el.addEventListener('input', autoCalc);
+        });
+
+        // ─────────────────────────────────────────────
+        // 6.  CRUD: Read
+        // ─────────────────────────────────────────────
+        function loadData() {
+            db.collection(COLLECTION)
+                .orderBy('createdAt', 'desc')
+                .onSnapshot((snapshot) => {
+                    allData = [];
+                    snapshot.forEach(doc => {
+                        allData.push({ id: doc.id, ...doc.data() });
+                    });
+                    renderTable();
+                    updateCount();
+                }, (error) => {
+                    console.error('Firestore read error:', error);
+                    showToast('Gagal memuat data: ' + error.message, 'error');
+                });
+        }
+
+        // ─────────────────────────────────────────────
+        // 7.  Render table
+        // ─────────────────────────────────────────────
+        function renderTable() {
+            if (allData.length === 0) {
+                tableBody.innerHTML =
+                    `<tr class="empty-row"><td colspan="22">Belum ada data. Silakan tambahkan data baru.</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            allData.forEach((item) => {
+                html += `
+                        <tr>
+                            <td>${escapeHtml(item.no || '')}</td>
+                            <td>${escapeHtml(item.noBKU || '')}</td>
+                            <td>${escapeHtml(item.noRek || '')}</td>
+                            <td>${escapeHtml(item.siplah || '')}</td>
+                            <td>${escapeHtml(item.jenisKegiatan || '')}</td>
+                            <td>${escapeHtml(item.uraian || '')}</td>
+                            <td>${escapeHtml(item.komponen || '')}</td>
+                            <td>${escapeHtml(item.standar || '')}</td>
+                            <td>${escapeHtml(item.jenisBelanja || '')}</td>
+                            <td>${item.vol || ''}</td>
+                            <td>${escapeHtml(item.satuan || '')}</td>
+                            <td>${formatRupiah(item.harga)}</td>
+                            <td>${formatRupiah(item.jumlahHarga)}</td>
+                            <td>${item.tglPelaksanaan || ''}</td>
+                            <td>${item.tglPembayaran || ''}</td>
+                            <td>${escapeHtml(item.jenisPajak || '')}</td>
+                            <td>${item.persenPajak || ''}</td>
+                            <td>${formatRupiah(item.jmlPajak)}</td>
+                            <td>${escapeHtml(item.toko || '')}</td>
+                            <td>${escapeHtml(item.alamatToko || '')}</td>
+                            <td>${escapeHtml(item.telp || '')}</td>
+                            <td>
+                                <div class="actions">
+                                    <button class="btn-edit" data-id="${item.id}">Edit</button>
+                                    <button class="btn-delete" data-id="${item.id}">Hapus</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+            });
+            tableBody.innerHTML = html;
+
+            // ── Event listeners for edit/delete ──
+            document.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.addEventListener('click', () => editData(btn.dataset.id));
+            });
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', () => deleteData(btn.dataset.id));
+            });
+        }
+
+        // ─────────────────────────────────────────────
+        // 8.  Helpers
+        // ─────────────────────────────────────────────
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function formatRupiah(val) {
+            if (val === undefined || val === null || val === '') return '';
+            const num = parseFloat(val);
+            if (isNaN(num)) return '';
+            return 'Rp ' + num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        function updateCount() {
+            recordCount.textContent = allData.length + ' data';
+        }
+
+        function getFormData() {
+            return {
+                no: f_no.value.trim(),
+                noBKU: f_noBKU.value.trim(),
+                noRek: f_noRek.value.trim(),
+                siplah: f_siplah.value,
+                jenisKegiatan: f_jenisKegiatan.value.trim(),
+                uraian: f_uraian.value.trim(),
+                komponen: f_komponen.value,
+                standar: f_standar.value,
+                jenisBelanja: f_jenisBelanja.value,
+                vol: parseFloat(f_vol.value) || 0,
+                satuan: f_satuan.value.trim(),
+                harga: parseFloat(f_harga.value) || 0,
+                jumlahHarga: parseFloat(f_jumlahHarga.value) || 0,
+                tglPelaksanaan: f_tglPelaksanaan.value,
+                tglPembayaran: f_tglPembayaran.value,
+                jenisPajak: f_jenisPajak.value.trim(),
+                persenPajak: parseFloat(f_persenPajak.value) || 0,
+                jmlPajak: parseFloat(f_jmlPajak.value) || 0,
+                toko: f_toko.value.trim(),
+                alamatToko: f_alamatToko.value.trim(),
+                telp: f_telp.value.trim(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+        }
+
+        function setFormData(data) {
+            f_no.value = data.no || '';
+            f_noBKU.value = data.noBKU || '';
+            f_noRek.value = data.noRek || '';
+            f_siplah.value = data.siplah || 'Siplah';
+            f_jenisKegiatan.value = data.jenisKegiatan || '';
+            f_uraian.value = data.uraian || '';
+            f_komponen.value = data.komponen || 'penerimaan Peserta Didik baru';
+            f_standar.value = data.standar || 'Pengembangan Kompetensi Lulusan';
+            f_jenisBelanja.value = data.jenisBelanja || 'Pegawai';
+            f_vol.value = data.vol || '';
+            f_satuan.value = data.satuan || '';
+            f_harga.value = data.harga || '';
+            f_jumlahHarga.value = data.jumlahHarga || '';
+            f_tglPelaksanaan.value = data.tglPelaksanaan || '';
+            f_tglPembayaran.value = data.tglPembayaran || '';
+            f_jenisPajak.value = data.jenisPajak || '';
+            f_persenPajak.value = data.persenPajak || '';
+            f_jmlPajak.value = data.jmlPajak || '';
+            f_toko.value = data.toko || '';
+            f_alamatToko.value = data.alamatToko || '';
+            f_telp.value = data.telp || '';
+            autoCalc();
+        }
+
+        function resetForm() {
+            form.reset();
+            f_no.value = '';
+            f_noBKU.value = '';
+            f_noRek.value = '';
+            f_jenisKegiatan.value = '';
+            f_uraian.value = '';
+            f_vol.value = '';
+            f_satuan.value = '';
+            f_harga.value = '';
+            f_jumlahHarga.value = '';
+            f_tglPelaksanaan.value = '';
+            f_tglPembayaran.value = '';
+            f_jenisPajak.value = '';
+            f_persenPajak.value = '';
+            f_jmlPajak.value = '';
+            f_toko.value = '';
+            f_alamatToko.value = '';
+            f_telp.value = '';
+            f_siplah.value = 'Siplah';
+            f_komponen.value = 'penerimaan Peserta Didik baru';
+            f_standar.value = 'Pengembangan Kompetensi Lulusan';
+            f_jenisBelanja.value = 'Pegawai';
+            editingId = null;
+            submitBtn.textContent = 'Simpan';
+            formTitle.textContent = '+ Tambah Data';
+            cancelEditBtn.style.display = 'none';
+            autoCalc();
+        }
+
+        // ─────────────────────────────────────────────
+        // 9.  CRUD: Create / Update
+        // ─────────────────────────────────────────────
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = getFormData();
+
+            // validasi sederhana
+            if (!data.no || !data.uraian) {
+                showToast('No dan Uraian wajib diisi.', 'error');
+                return;
+            }
+
+            try {
+                if (editingId) {
+                    // Update
+                    await db.collection(COLLECTION).doc(editingId).update(data);
+                    showToast('Data berhasil diperbarui!', 'success');
+                } else {
+                    // Create
+                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection(COLLECTION).add(data);
+                    showToast('Data berhasil ditambahkan!', 'success');
+                }
+                resetForm();
+            } catch (error) {
+                console.error('Save error:', error);
+                showToast('Gagal menyimpan: ' + error.message, 'error');
+            }
+        });
+
+        // ─────────────────────────────────────────────
+        // 10. CRUD: Edit
+        // ─────────────────────────────────────────────
+        function editData(id) {
+            const item = allData.find(d => d.id === id);
+            if (!item) return;
+
+            editingId = id;
+            setFormData(item);
+            submitBtn.textContent = 'Update';
+            formTitle.textContent = '✏️ Edit Data';
+            cancelEditBtn.style.display = 'inline-block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ─────────────────────────────────────────────
+        // 11. CRUD: Delete
+        // ─────────────────────────────────────────────
+        async function deleteData(id) {
+            const item = allData.find(d => d.id === id);
+            if (!item) return;
+
+            if (!confirm(`Hapus data No. ${item.no || '?'} — "${item.uraian || ''}"?`)) return;
+
+            try {
+                await db.collection(COLLECTION).doc(id).delete();
+                showToast('Data berhasil dihapus.', 'success');
+            } catch (error) {
+                console.error('Delete error:', error);
+                showToast('Gagal menghapus: ' + error.message, 'error');
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // 12. Reset & Cancel
+        // ─────────────────────────────────────────────
+        resetBtn.addEventListener('click', resetForm);
+        cancelEditBtn.addEventListener('click', resetForm);
+
+        // ─────────────────────────────────────────────
+        // 13. Logout
+        // ─────────────────────────────────────────────
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                localStorage.clear();
+                window.location.href = 'index.html';
+            } catch (e) {
+                showToast('Gagal keluar: ' + e.message, 'error');
+            }
+        });
+
+        // ─────────────────────────────────────────────
+        // 14. Auth state & init
+        // ─────────────────────────────────────────────
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                // Redirect ke login jika belum login
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Tampilkan info jenjang & tahun dari localStorage
+            const jenjang = localStorage.getItem('bosnbs_jenjang') || 'SMP';
+            const tahun = localStorage.getItem('bosnbs_tahun') || '2025';
+            userBadge.textContent = `${jenjang} · ${tahun}`;
+
+            // Load data
+            loadData();
+        });
+
+        // ─────────────────────────────────────────────
+        // 15. Inisialisasi form dengan auto-calc
+        // ─────────────────────────────────────────────
+        autoCalc();
+        console.log('📋 BOS-NBS · Database siap');
+    </script>
+
+</body>
+</html>
