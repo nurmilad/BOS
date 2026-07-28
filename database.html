@@ -331,8 +331,8 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
-            min-width: 1400px;
-            table-layout: fixed;
+            table-layout: auto; /* kolom menyesuaikan konten */
+            min-width: 700px; /* agar tetap nyaman di layar kecil */
         }
 
         /* ── Borders ── */
@@ -364,6 +364,7 @@
             position: relative;
             overflow: hidden;
             text-overflow: ellipsis;
+            min-width: 60px;
         }
 
         thead th:hover {
@@ -837,7 +838,8 @@
                 <thead>
                     <tr id="headerRow">
                         <th style="width:32px;min-width:32px;text-align:center;" data-col="no">No</th>
-                        <th data-col="noBKU">No. BKU</th>
+                        <th data-col="noBukti">No. Bukti</th>
+                        <th data-col="kodeKegiatan">Kode Kegiatan</th>
                         <th data-col="noRek">No. Rek</th>
                         <th data-col="siplah">Siplah</th>
                         <th data-col="jenisKegiatan">Jenis Keg.</th>
@@ -863,7 +865,7 @@
                 </thead>
                 <tbody id="tableBody">
                     <tr class="empty-row">
-                        <td colspan="23">Belum ada data. Klik ➕ untuk menambah baris.</td>
+                        <td colspan="24">Belum ada data. Klik ➕ untuk menambah baris.</td>
                     </tr>
                 </tbody>
             </table>
@@ -972,17 +974,14 @@
         function initResizers() {
             const headers = headerRow.querySelectorAll('th');
             headers.forEach(th => {
-                // Hapus resizer lama jika ada
                 const oldResizer = th.querySelector('.col-resizer');
                 if (oldResizer) oldResizer.remove();
 
-                // Buat resizer baru
                 const resizer = document.createElement('span');
                 resizer.className = 'col-resizer';
                 resizer.dataset.col = th.dataset.col;
                 th.appendChild(resizer);
 
-                // Event drag
                 resizer.addEventListener('mousedown', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -1057,7 +1056,8 @@
         // 8.  Column definitions
         // ─────────────────────────────────────────────
         const COLUMNS = [
-            { key: 'noBKU', type: 'text', label: 'No. BKU' },
+            { key: 'noBukti', type: 'text', label: 'No. Bukti' },
+            { key: 'kodeKegiatan', type: 'text', label: 'Kode Kegiatan' },
             { key: 'noRek', type: 'text', label: 'No. Rek' },
             { key: 'siplah', type: 'select', options: ['Siplah', 'Non Siplah'] },
             { key: 'jenisKegiatan', type: 'text', label: 'Jenis Kegiatan' },
@@ -1178,7 +1178,7 @@
 
             if (data.length === 0) {
                 tableBody.innerHTML =
-                    `<tr class="empty-row"><td colspan="23">Tidak ada data untuk ${sessionJenjang} · ${sessionTahun}. Klik ➕ untuk menambah.</td></tr>`;
+                    `<tr class="empty-row"><td colspan="24">Tidak ada data untuk ${sessionJenjang} · ${sessionTahun}. Klik ➕ untuk menambah.</td></tr>`;
                 updateCount();
                 return;
             }
@@ -1229,14 +1229,13 @@
             });
 
             html += `<tr class="add-row-row">
-                        <td colspan="23" class="add-row-cell">
+                        <td colspan="24" class="add-row-cell">
                             <button class="btn-add-row" id="addRowBottomBtn">➕ Tambah Baris</button>
                         </td>
                     </tr>`;
 
             tableBody.innerHTML = html;
 
-            // Apply column widths to body cells (they inherit from thead)
             applyColumnWidths();
 
             document.querySelectorAll('.editable-cell').forEach(cell => {
@@ -1656,7 +1655,7 @@
 
         loadData();
 
-        console.log('📋 BOS-NBS · Database siap (multi-jenjang, multi-tahun, resizeable columns)');
+        console.log('📋 BOS-NBS · Database siap (No. Bukti + Kode Kegiatan, lebar fleksibel)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
         console.log('ℹ️  Drag border kolom untuk mengatur lebar, tersimpan otomatis di browser');
     </script>
