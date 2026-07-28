@@ -73,6 +73,20 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         }
 
+        .brand-logo .fallback-logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            background: #0a2e5c;
+            border-radius: 18px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 32px;
+            box-shadow: 0 8px 20px -6px rgba(10, 46, 92, 0.25);
+        }
+
         .brand h1 {
             font-size: 26px;
             font-weight: 700;
@@ -145,15 +159,6 @@
             color: #a5b9ce;
         }
 
-        /* ── Password wrapper ── */
-        .password-wrapper {
-            position: relative;
-        }
-
-        .password-wrapper input {
-            padding-right: 16px;
-        }
-
         /* ── Button ── */
         .btn-login {
             width: 100%;
@@ -188,7 +193,7 @@
             box-shadow: none;
         }
 
-        /* ── Error / status ── */
+        /* ── Message ── */
         .message {
             margin-top: 16px;
             text-align: center;
@@ -203,6 +208,10 @@
             color: #1a7a3a;
         }
 
+        .message.info {
+            color: #0a2e5c;
+        }
+
         /* ── Responsive ── */
         @media (max-width: 480px) {
             .login-card {
@@ -214,10 +223,14 @@
                 font-size: 22px;
             }
 
-            .brand-logo img {
+            .brand-logo img,
+            .brand-logo .fallback-logo {
                 width: 64px;
                 height: 64px;
-                padding: 6px;
+            }
+
+            .brand-logo .fallback-logo {
+                font-size: 26px;
             }
 
             .form-group select,
@@ -249,9 +262,9 @@
 
         <!-- Brand dengan logo -->
         <div class="brand">
-            <div class="brand-logo">
-                <!-- Logo sekolah dari GitHub -->
-                <img src="logo.png" alt="Logo Sekolah" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'brand-icon\' style=\'display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;background:#0a2e5c;border-radius:18px;color:#fff;font-weight:700;font-size:28px;letter-spacing:-0.02em;box-shadow:0 8px 20px -6px rgba(10,46,92,0.25);\'>B</div>';" />
+            <div class="brand-logo" id="logoContainer">
+                <!-- Logo sekolah dari GitHub, fallback via JS jika gagal load -->
+                <img src="logo.png" alt="Logo Sekolah" id="logoImg" />
             </div>
             <h1>BOS-NBS</h1>
             <div class="sub">Sistem Pelaporan Dana BOS</div>
@@ -279,7 +292,7 @@
             <!-- Password -->
             <div class="form-group">
                 <label for="password">Password</label>
-                <div class="password-wrapper">
+                <div>
                     <input type="password" id="password" placeholder=" " required autocomplete="off" />
                 </div>
             </div>
@@ -306,9 +319,25 @@
 
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        // Firestore tidak digunakan di login, tapi tetap diinisialisasi agar tidak error
 
         // ─────────────────────────────────────────────
-        // 2.  Populate tahun anggaran (2024–2034)
+        // 2.  Fallback logo jika gambar gagal load
+        // ─────────────────────────────────────────────
+        const logoImg = document.getElementById('logoImg');
+        const logoContainer = document.getElementById('logoContainer');
+
+        logoImg.addEventListener('error', function() {
+            // Ganti dengan fallback teks
+            this.style.display = 'none';
+            const fallback = document.createElement('div');
+            fallback.className = 'fallback-logo';
+            fallback.textContent = 'B';
+            logoContainer.appendChild(fallback);
+        });
+
+        // ─────────────────────────────────────────────
+        // 3.  Populate tahun anggaran (2024–2034)
         // ─────────────────────────────────────────────
         (function populateYears() {
             const select = document.getElementById('tahun');
@@ -329,7 +358,7 @@
         })();
 
         // ─────────────────────────────────────────────
-        // 3.  Login handler
+        // 4.  Login handler dengan error detail
         // ─────────────────────────────────────────────
         const form = document.getElementById('loginForm');
         const messageEl = document.getElementById('message');
@@ -339,58 +368,83 @@
         const VALID_PASSWORD = 'bosnbs';
         passwordInput.placeholder = '';
 
+        // Fungsi untuk menampilkan pesan
+        function setMessage(text, type = 'error') {
+            messageEl.textContent = text;
+            messageEl.className = 'message ' + type;
+        }
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            messageEl.textContent = '\u00A0';
-            messageEl.className = 'message';
+            // Reset pesan
+            setMessage('\u00A0', 'info');
 
             const password = passwordInput.value.trim();
             const jenjang = document.getElementById('jenjang').value;
             const tahun = document.getElementById('tahun').value;
 
+            // Validasi password
             if (!password) {
-                messageEl.textContent = 'Password wajib diisi.';
-                messageEl.className = 'message';
+                setMessage('Password wajib diisi.');
                 return;
             }
 
             if (password !== VALID_PASSWORD) {
-                messageEl.textContent = 'Password yang Anda masukkan salah.';
-                messageEl.className = 'message';
+                setMessage('Password yang Anda masukkan salah.');
                 passwordInput.value = '';
                 passwordInput.focus();
                 return;
             }
 
+            // ── Password benar: login ke Firebase (Anonymous) ──
             loginBtn.disabled = true;
             loginBtn.textContent = 'Memproses…';
 
             try {
-                await auth.signInAnonymously();
+                // Cek koneksi internet sederhana
+                if (!navigator.onLine) {
+                    throw new Error('Tidak ada koneksi internet. Periksa jaringan Anda.');
+                }
 
+                // Sign in anonymously
+                const userCredential = await auth.signInAnonymously();
+
+                // Simpan data sesi
                 localStorage.setItem('bosnbs_jenjang', jenjang);
                 localStorage.setItem('bosnbs_tahun', tahun);
-                localStorage.setItem('bosnbs_uid', auth.currentUser ? auth.currentUser.uid : '');
+                localStorage.setItem('bosnbs_uid', userCredential.user.uid);
 
-                messageEl.textContent = '✓ Berhasil masuk, mengalihkan…';
-                messageEl.className = 'message success';
+                setMessage('✓ Berhasil masuk, mengalihkan…', 'success');
 
+                // Redirect ke database.html
                 setTimeout(() => {
                     window.location.href = 'database.html';
                 }, 600);
 
             } catch (error) {
-                console.error('Firebase login error:', error);
-                messageEl.textContent = 'Gagal terhubung ke server. Coba lagi.';
-                messageEl.className = 'message';
+                console.error('Firebase login error detail:', error);
+
+                // Mapping error ke pesan yang mudah dipahami
+                let errorMessage = 'Gagal terhubung ke server. ';
+                if (error.code === 'auth/operation-not-allowed') {
+                    errorMessage += 'Login anonim belum diaktifkan. Aktifkan di Firebase Console → Authentication → Sign-in methods.';
+                } else if (error.code === 'auth/network-request-failed') {
+                    errorMessage += 'Periksa koneksi internet Anda.';
+                } else if (error.message) {
+                    errorMessage += error.message;
+                } else {
+                    errorMessage += 'Coba lagi nanti.';
+                }
+
+                setMessage(errorMessage);
                 loginBtn.disabled = false;
                 loginBtn.textContent = 'Masuk';
             }
         });
 
         // ─────────────────────────────────────────────
-        // 4.  Fokus ke password setelah load
+        // 5.  Fokus ke password setelah load
         // ─────────────────────────────────────────────
         window.addEventListener('load', () => {
             setTimeout(() => passwordInput.focus(), 100);
@@ -400,7 +454,22 @@
             this.select();
         });
 
-        console.log('🔐 BOS-NBS · login siap');
+        // ─────────────────────────────────────────────
+        // 6.  Cek status autentikasi (jika sudah login, redirect)
+        // ─────────────────────────────────────────────
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Jika sudah login, cek apakah ada session, jika ya redirect ke database
+                const jenjang = localStorage.getItem('bosnbs_jenjang');
+                const tahun = localStorage.getItem('bosnbs_tahun');
+                if (jenjang && tahun) {
+                    // Redirect ke database jika sudah login
+                    window.location.href = 'database.html';
+                }
+            }
+        });
+
+        console.log('🔐 BOS-NBS · login siap (dengan error handling)');
         console.log('ℹ️  Password: ' + '•'.repeat(VALID_PASSWORD.length));
     </script>
 
