@@ -93,6 +93,27 @@
             font-weight: 500;
         }
 
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #d0dde9;
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #1f3a5f;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-outline:hover {
+            background: #f0f4fa;
+            border-color: #b0c4d8;
+        }
+
         .btn-logout {
             background: transparent;
             border: 1.5px solid #d0dde9;
@@ -143,16 +164,12 @@
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 14px 18px;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 14px 16px;
         }
 
         .form-grid .full-width {
             grid-column: 1 / -1;
-        }
-
-        .form-grid .half-width {
-            grid-column: span 2;
         }
 
         .form-group {
@@ -297,6 +314,7 @@
             box-shadow: 0 4px 20px rgba(0, 20, 40, 0.06);
             padding: 20px 0 4px 0;
             overflow: hidden;
+            margin-bottom: 28px;
         }
 
         .table-header {
@@ -332,7 +350,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
-            min-width: 1400px;
+            min-width: 1500px;
         }
 
         thead {
@@ -390,7 +408,139 @@
             font-size: 14px;
         }
 
-        /* ── Status / Pesan ── */
+        /* ── Summary Card ── */
+        .summary-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 20, 40, 0.06);
+            padding: 20px 28px;
+            margin-bottom: 28px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px 24px;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .summary-item .label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #5a7a9a;
+            letter-spacing: 0.2px;
+        }
+
+        .summary-item .value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0a2e5c;
+            margin-top: 2px;
+        }
+
+        .summary-item .value.anggaran {
+            color: #1a7a3a;
+        }
+        .summary-item .value.teranggarkan {
+            color: #0a2e5c;
+        }
+        .summary-item .value.belum {
+            color: #b00020;
+        }
+
+        .summary-divider {
+            border: none;
+            border-top: 1px solid #e2edf6;
+            margin: 16px 0 12px 0;
+        }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 30, 51, 0.4);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 32px 36px 28px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 32px 80px rgba(0, 20, 40, 0.2);
+            transform: scale(0.95);
+            transition: transform 0.25s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0a2e5c;
+            margin-bottom: 6px;
+        }
+
+        .modal .sub {
+            font-size: 13px;
+            color: #7a8fa6;
+            margin-bottom: 22px;
+        }
+
+        .modal .form-group {
+            margin-bottom: 16px;
+        }
+
+        .modal .form-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #1f3a5f;
+            margin-bottom: 4px;
+        }
+
+        .modal .form-group input {
+            padding: 10px 14px;
+            font-size: 14px;
+            border-radius: 12px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 22px;
+            justify-content: flex-end;
+        }
+
+        .modal-actions .btn-primary {
+            padding: 10px 28px;
+        }
+        .modal-actions .btn-secondary {
+            padding: 10px 24px;
+        }
+
+        /* ── Toast ── */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -427,9 +577,6 @@
             .form-grid {
                 grid-template-columns: 1fr 1fr;
             }
-            .form-grid .half-width {
-                grid-column: span 1;
-            }
         }
 
         @media (max-width: 600px) {
@@ -454,6 +601,13 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+            .modal {
+                padding: 24px 20px;
+                margin: 16px;
+            }
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
             .btn-primary,
             .btn-secondary {
                 width: 100%;
@@ -467,6 +621,13 @@
             .form-actions .btn-secondary {
                 width: 100%;
             }
+            .modal-actions {
+                flex-direction: column;
+            }
+            .modal-actions .btn-primary,
+            .modal-actions .btn-secondary {
+                width: 100%;
+            }
         }
 
         @media (max-width: 480px) {
@@ -476,6 +637,9 @@
             .app-header h1 {
                 font-size: 18px;
             }
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -483,6 +647,36 @@
 
     <!-- ─── Toast ─── -->
     <div class="toast" id="toast"></div>
+
+    <!-- ─── Modal Pengaturan ─── -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <h2>⚙️ Pengaturan Sekolah</h2>
+            <div class="sub">Isi data kepala sekolah, bendahara, dan anggaran per tahap.</div>
+
+            <div class="form-group">
+                <label for="modalKepalaSekolah">Nama Kepala Sekolah</label>
+                <input type="text" id="modalKepalaSekolah" placeholder="Nama Kepala Sekolah" />
+            </div>
+            <div class="form-group">
+                <label for="modalBendahara">Nama Bendahara</label>
+                <input type="text" id="modalBendahara" placeholder="Nama Bendahara" />
+            </div>
+            <div class="form-group">
+                <label for="modalAnggaran1">Anggaran Tahap 1 (Rp)</label>
+                <input type="number" id="modalAnggaran1" placeholder="0" step="1000" />
+            </div>
+            <div class="form-group">
+                <label for="modalAnggaran2">Anggaran Tahap 2 (Rp)</label>
+                <input type="number" id="modalAnggaran2" placeholder="0" step="1000" />
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" id="modalCancelBtn">Batal</button>
+                <button class="btn-primary" id="modalSaveBtn">Simpan</button>
+            </div>
+        </div>
+    </div>
 
     <!-- ─── Header ─── -->
     <header class="app-header">
@@ -494,6 +688,7 @@
             </div>
         </div>
         <div class="header-actions">
+            <button class="btn-outline" id="settingsBtn">⚙️ Menu</button>
             <span class="user-badge" id="userBadge">SMP · 2025</span>
             <button class="btn-logout" id="logoutBtn">Keluar</button>
         </div>
@@ -590,6 +785,15 @@
                         </select>
                     </div>
 
+                    <!-- Tahap (baru) -->
+                    <div class="form-group">
+                        <label for="f_tahap">Tahap</label>
+                        <select id="f_tahap">
+                            <option value="Tahap 1">Tahap 1</option>
+                            <option value="Tahap 2">Tahap 2</option>
+                        </select>
+                    </div>
+
                     <!-- Vol -->
                     <div class="form-group">
                         <label for="f_vol">Vol</label>
@@ -682,6 +886,7 @@
                             <th>Komponen</th>
                             <th>Standar</th>
                             <th>Jenis Belanja</th>
+                            <th>Tahap</th>
                             <th>Vol</th>
                             <th>Satuan</th>
                             <th>Harga</th>
@@ -699,10 +904,44 @@
                     </thead>
                     <tbody id="tableBody">
                         <tr class="empty-row">
-                            <td colspan="22">Belum ada data. Silakan tambahkan data baru.</td>
+                            <td colspan="23">Belum ada data. Silakan tambahkan data baru.</td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- ─── Summary ─── -->
+        <div class="summary-card" id="summaryCard">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
+                <h3 style="font-size:16px; font-weight:600; color:#0a2e5c;">📊 Ringkasan Anggaran</h3>
+                <span style="font-size:12px; color:#7a8fa6;" id="summarySchoolInfo">Kepsek: - | Bendahara: -</span>
+            </div>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <span class="label">Anggaran Tahap 1</span>
+                    <span class="value anggaran" id="sumAnggaran1">Rp 0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Anggaran Tahap 2</span>
+                    <span class="value anggaran" id="sumAnggaran2">Rp 0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Teranggarkan Tahap 1</span>
+                    <span class="value teranggarkan" id="sumTeranggarkan1">Rp 0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Teranggarkan Tahap 2</span>
+                    <span class="value teranggarkan" id="sumTeranggarkan2">Rp 0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Belum Teranggarkan Tahap 1</span>
+                    <span class="value belum" id="sumBelum1">Rp 0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Belum Teranggarkan Tahap 2</span>
+                    <span class="value belum" id="sumBelum2">Rp 0</span>
+                </div>
             </div>
         </div>
     </div>
@@ -729,8 +968,10 @@
         // ─────────────────────────────────────────────
         let allData = [];
         let editingId = null;
+        let settingsData = {}; // { kepalaSekolah, bendahara, anggaran1, anggaran2 }
 
         const COLLECTION = 'data_bos';
+        const SETTINGS_COLLECTION = 'settings_bos';
 
         // ─────────────────────────────────────────────
         // 3.  DOM refs
@@ -745,6 +986,25 @@
         const formTitle = document.getElementById('formTitle');
         const userBadge = document.getElementById('userBadge');
 
+        // Summary elements
+        const sumAnggaran1 = document.getElementById('sumAnggaran1');
+        const sumAnggaran2 = document.getElementById('sumAnggaran2');
+        const sumTeranggarkan1 = document.getElementById('sumTeranggarkan1');
+        const sumTeranggarkan2 = document.getElementById('sumTeranggarkan2');
+        const sumBelum1 = document.getElementById('sumBelum1');
+        const sumBelum2 = document.getElementById('sumBelum2');
+        const summarySchoolInfo = document.getElementById('summarySchoolInfo');
+
+        // Modal
+        const settingsModal = document.getElementById('settingsModal');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const modalCancelBtn = document.getElementById('modalCancelBtn');
+        const modalSaveBtn = document.getElementById('modalSaveBtn');
+        const modalKepalaSekolah = document.getElementById('modalKepalaSekolah');
+        const modalBendahara = document.getElementById('modalBendahara');
+        const modalAnggaran1 = document.getElementById('modalAnggaran1');
+        const modalAnggaran2 = document.getElementById('modalAnggaran2');
+
         // ─── Form fields ───
         const f_no = document.getElementById('f_no');
         const f_noBKU = document.getElementById('f_noBKU');
@@ -755,6 +1015,7 @@
         const f_komponen = document.getElementById('f_komponen');
         const f_standar = document.getElementById('f_standar');
         const f_jenisBelanja = document.getElementById('f_jenisBelanja');
+        const f_tahap = document.getElementById('f_tahap');
         const f_vol = document.getElementById('f_vol');
         const f_satuan = document.getElementById('f_satuan');
         const f_harga = document.getElementById('f_harga');
@@ -783,7 +1044,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 5.  Auto-calc: Jumlah Harga & Jml Pajak
+        // 5.  Auto-calc
         // ─────────────────────────────────────────────
         function autoCalc() {
             const vol = parseFloat(f_vol.value) || 0;
@@ -802,7 +1063,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 6.  CRUD: Read
+        // 6.  CRUD: Read data & settings
         // ─────────────────────────────────────────────
         function loadData() {
             db.collection(COLLECTION)
@@ -814,9 +1075,32 @@
                     });
                     renderTable();
                     updateCount();
+                    updateSummary();
                 }, (error) => {
                     console.error('Firestore read error:', error);
                     showToast('Gagal memuat data: ' + error.message, 'error');
+                });
+        }
+
+        function loadSettings() {
+            // Ambil dokumen settings (hanya satu, misal id 'main')
+            db.collection(SETTINGS_COLLECTION).doc('main')
+                .onSnapshot((doc) => {
+                    if (doc.exists) {
+                        settingsData = doc.data();
+                    } else {
+                        settingsData = { kepalaSekolah: '', bendahara: '', anggaran1: 0, anggaran2: 0 };
+                    }
+                    // Update modal fields
+                    modalKepalaSekolah.value = settingsData.kepalaSekolah || '';
+                    modalBendahara.value = settingsData.bendahara || '';
+                    modalAnggaran1.value = settingsData.anggaran1 || 0;
+                    modalAnggaran2.value = settingsData.anggaran2 || 0;
+                    // Update summary header
+                    updateSummaryHeader();
+                    updateSummary();
+                }, (error) => {
+                    console.error('Settings read error:', error);
                 });
         }
 
@@ -826,7 +1110,7 @@
         function renderTable() {
             if (allData.length === 0) {
                 tableBody.innerHTML =
-                    `<tr class="empty-row"><td colspan="22">Belum ada data. Silakan tambahkan data baru.</td></tr>`;
+                    `<tr class="empty-row"><td colspan="23">Belum ada data. Silakan tambahkan data baru.</td></tr>`;
                 return;
             }
 
@@ -843,6 +1127,7 @@
                             <td>${escapeHtml(item.komponen || '')}</td>
                             <td>${escapeHtml(item.standar || '')}</td>
                             <td>${escapeHtml(item.jenisBelanja || '')}</td>
+                            <td>${escapeHtml(item.tahap || '')}</td>
                             <td>${item.vol || ''}</td>
                             <td>${escapeHtml(item.satuan || '')}</td>
                             <td>${formatRupiah(item.harga)}</td>
@@ -907,6 +1192,7 @@
                 komponen: f_komponen.value,
                 standar: f_standar.value,
                 jenisBelanja: f_jenisBelanja.value,
+                tahap: f_tahap.value,
                 vol: parseFloat(f_vol.value) || 0,
                 satuan: f_satuan.value.trim(),
                 harga: parseFloat(f_harga.value) || 0,
@@ -933,6 +1219,7 @@
             f_komponen.value = data.komponen || 'penerimaan Peserta Didik baru';
             f_standar.value = data.standar || 'Pengembangan Kompetensi Lulusan';
             f_jenisBelanja.value = data.jenisBelanja || 'Pegawai';
+            f_tahap.value = data.tahap || 'Tahap 1';
             f_vol.value = data.vol || '';
             f_satuan.value = data.satuan || '';
             f_harga.value = data.harga || '';
@@ -971,6 +1258,7 @@
             f_komponen.value = 'penerimaan Peserta Didik baru';
             f_standar.value = 'Pengembangan Kompetensi Lulusan';
             f_jenisBelanja.value = 'Pegawai';
+            f_tahap.value = 'Tahap 1';
             editingId = null;
             submitBtn.textContent = 'Simpan';
             formTitle.textContent = '+ Tambah Data';
@@ -979,14 +1267,46 @@
         }
 
         // ─────────────────────────────────────────────
-        // 9.  CRUD: Create / Update
+        // 9.  Summary update
+        // ─────────────────────────────────────────────
+        function updateSummaryHeader() {
+            const ks = settingsData.kepalaSekolah || '-';
+            const bd = settingsData.bendahara || '-';
+            summarySchoolInfo.textContent = `Kepsek: ${ks} | Bendahara: ${bd}`;
+        }
+
+        function updateSummary() {
+            const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
+            const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
+
+            // Hitung total per tahap
+            let total1 = 0,
+                total2 = 0;
+            allData.forEach(item => {
+                const jml = parseFloat(item.jumlahHarga) || 0;
+                if (item.tahap === 'Tahap 1') total1 += jml;
+                else if (item.tahap === 'Tahap 2') total2 += jml;
+            });
+
+            const belum1 = Math.max(0, anggaran1 - total1);
+            const belum2 = Math.max(0, anggaran2 - total2);
+
+            sumAnggaran1.textContent = formatRupiah(anggaran1);
+            sumAnggaran2.textContent = formatRupiah(anggaran2);
+            sumTeranggarkan1.textContent = formatRupiah(total1);
+            sumTeranggarkan2.textContent = formatRupiah(total2);
+            sumBelum1.textContent = formatRupiah(belum1);
+            sumBelum2.textContent = formatRupiah(belum2);
+        }
+
+        // ─────────────────────────────────────────────
+        // 10. CRUD: Create / Update
         // ─────────────────────────────────────────────
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const data = getFormData();
 
-            // validasi sederhana
             if (!data.no || !data.uraian) {
                 showToast('No dan Uraian wajib diisi.', 'error');
                 return;
@@ -994,11 +1314,9 @@
 
             try {
                 if (editingId) {
-                    // Update
                     await db.collection(COLLECTION).doc(editingId).update(data);
                     showToast('Data berhasil diperbarui!', 'success');
                 } else {
-                    // Create
                     data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                     await db.collection(COLLECTION).add(data);
                     showToast('Data berhasil ditambahkan!', 'success');
@@ -1011,7 +1329,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 10. CRUD: Edit
+        // 11. CRUD: Edit
         // ─────────────────────────────────────────────
         function editData(id) {
             const item = allData.find(d => d.id === id);
@@ -1026,7 +1344,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 11. CRUD: Delete
+        // 12. CRUD: Delete
         // ─────────────────────────────────────────────
         async function deleteData(id) {
             const item = allData.find(d => d.id === id);
@@ -1044,13 +1362,53 @@
         }
 
         // ─────────────────────────────────────────────
-        // 12. Reset & Cancel
+        // 13. Reset & Cancel
         // ─────────────────────────────────────────────
         resetBtn.addEventListener('click', resetForm);
         cancelEditBtn.addEventListener('click', resetForm);
 
         // ─────────────────────────────────────────────
-        // 13. Logout
+        // 14. Modal Settings
+        // ─────────────────────────────────────────────
+        function openModal() {
+            settingsModal.classList.add('active');
+        }
+
+        function closeModal() {
+            settingsModal.classList.remove('active');
+        }
+
+        settingsBtn.addEventListener('click', openModal);
+        modalCancelBtn.addEventListener('click', closeModal);
+        // Tutup modal jika klik di luar
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) closeModal();
+        });
+
+        modalSaveBtn.addEventListener('click', async () => {
+            const kepalaSekolah = modalKepalaSekolah.value.trim();
+            const bendahara = modalBendahara.value.trim();
+            const anggaran1 = parseFloat(modalAnggaran1.value) || 0;
+            const anggaran2 = parseFloat(modalAnggaran2.value) || 0;
+
+            const data = { kepalaSekolah, bendahara, anggaran1, anggaran2, updatedAt: firebase.firestore.FieldValue
+                    .serverTimestamp() };
+
+            try {
+                await db.collection(SETTINGS_COLLECTION).doc('main').set(data, { merge: true });
+                settingsData = data;
+                updateSummaryHeader();
+                updateSummary();
+                showToast('Pengaturan berhasil disimpan!', 'success');
+                closeModal();
+            } catch (error) {
+                console.error('Save settings error:', error);
+                showToast('Gagal menyimpan pengaturan: ' + error.message, 'error');
+            }
+        });
+
+        // ─────────────────────────────────────────────
+        // 15. Logout
         // ─────────────────────────────────────────────
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             try {
@@ -1063,29 +1421,27 @@
         });
 
         // ─────────────────────────────────────────────
-        // 14. Auth state & init
+        // 16. Auth state & init
         // ─────────────────────────────────────────────
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
-                // Redirect ke login jika belum login
                 window.location.href = 'index.html';
                 return;
             }
 
-            // Tampilkan info jenjang & tahun dari localStorage
             const jenjang = localStorage.getItem('bosnbs_jenjang') || 'SMP';
             const tahun = localStorage.getItem('bosnbs_tahun') || '2025';
             userBadge.textContent = `${jenjang} · ${tahun}`;
 
-            // Load data
             loadData();
+            loadSettings();
         });
 
         // ─────────────────────────────────────────────
-        // 15. Inisialisasi form dengan auto-calc
+        // 17. Init auto-calc
         // ─────────────────────────────────────────────
         autoCalc();
-        console.log('📋 BOS-NBS · Database siap');
+        console.log('📋 BOS-NBS · Database siap (dengan Tahap & Ringkasan)');
     </script>
 
 </body>
