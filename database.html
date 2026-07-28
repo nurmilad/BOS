@@ -366,6 +366,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             min-width: 60px;
+            transition: background 0.15s ease;
         }
 
         thead th:hover {
@@ -376,11 +377,20 @@
             display: inline-block;
             margin-left: 4px;
             font-size: 10px;
-            opacity: 0.4;
+            opacity: 0.5;
+            transition: opacity 0.2s ease;
         }
 
         thead th.sorted .sort-icon {
             opacity: 1;
+        }
+
+        thead th .sort-hint {
+            font-size: 9px;
+            opacity: 0.4;
+            margin-left: 4px;
+            font-weight: 400;
+            text-transform: none;
         }
 
         /* ── Column Resizer ── */
@@ -907,29 +917,29 @@
             <table id="mainTable">
                 <thead>
                     <tr id="headerRow">
-                        <th style="width:32px;min-width:32px;text-align:center;" data-col="no">No</th>
-                        <th data-col="noBukti">No. Bukti</th>
-                        <th data-col="kodeKegiatan">Kode Kegiatan</th>
-                        <th data-col="noRek">No. Rek</th>
-                        <th data-col="siplah">Siplah</th>
-                        <th data-col="jenisKegiatan">Jenis Keg.</th>
-                        <th data-col="uraian">Uraian</th>
-                        <th data-col="komponen">Komponen</th>
-                        <th data-col="standar">Standar</th>
-                        <th data-col="jenisBelanja">Jenis Belanja</th>
-                        <th data-col="tahap">Tahap</th>
-                        <th data-col="vol">Vol</th>
-                        <th data-col="satuan">Satuan</th>
-                        <th data-col="harga">Harga</th>
-                        <th data-col="jumlahHarga">Jml Harga</th>
-                        <th data-col="tglPelaksanaan">Tgl Pelaks.</th>
-                        <th data-col="tglPembayaran">Tgl Bayar</th>
-                        <th data-col="jenisPajak">Jenis Pajak</th>
-                        <th data-col="persenPajak">% Pajak</th>
-                        <th data-col="jmlPajak">Jml Pajak</th>
-                        <th data-col="toko">Toko/Personal</th>
-                        <th data-col="alamatToko">Alamat</th>
-                        <th data-col="telp">Telp.</th>
+                        <th style="width:32px;min-width:32px;text-align:center;" data-col="no" data-sort="no">No</th>
+                        <th data-col="noBukti" data-sort="noBukti">No. Bukti <span class="sort-hint">↕</span></th>
+                        <th data-col="kodeKegiatan" data-sort="kodeKegiatan">Kode Kegiatan <span class="sort-hint">↕</span></th>
+                        <th data-col="noRek" data-sort="noRek">No. Rek <span class="sort-hint">↕</span></th>
+                        <th data-col="siplah" data-sort="siplah">Siplah <span class="sort-hint">↕</span></th>
+                        <th data-col="jenisKegiatan" data-sort="jenisKegiatan">Jenis Keg. <span class="sort-hint">↕</span></th>
+                        <th data-col="uraian" data-sort="uraian">Uraian <span class="sort-hint">↕</span></th>
+                        <th data-col="komponen" data-sort="komponen">Komponen <span class="sort-hint">↕</span></th>
+                        <th data-col="standar" data-sort="standar">Standar <span class="sort-hint">↕</span></th>
+                        <th data-col="jenisBelanja" data-sort="jenisBelanja">Jenis Belanja <span class="sort-hint">↕</span></th>
+                        <th data-col="tahap" data-sort="tahap">Tahap <span class="sort-hint">↕</span></th>
+                        <th data-col="vol" data-sort="vol">Vol <span class="sort-hint">↕</span></th>
+                        <th data-col="satuan" data-sort="satuan">Satuan <span class="sort-hint">↕</span></th>
+                        <th data-col="harga" data-sort="harga">Harga <span class="sort-hint">↕</span></th>
+                        <th data-col="jumlahHarga" data-sort="jumlahHarga">Jml Harga <span class="sort-hint">↕</span></th>
+                        <th data-col="tglPelaksanaan" data-sort="tglPelaksanaan">Tgl Pelaks. <span class="sort-hint">↕</span></th>
+                        <th data-col="tglPembayaran" data-sort="tglPembayaran">Tgl Bayar <span class="sort-hint">↕</span></th>
+                        <th data-col="jenisPajak" data-sort="jenisPajak">Jenis Pajak <span class="sort-hint">↕</span></th>
+                        <th data-col="persenPajak" data-sort="persenPajak">% Pajak <span class="sort-hint">↕</span></th>
+                        <th data-col="jmlPajak" data-sort="jmlPajak">Jml Pajak <span class="sort-hint">↕</span></th>
+                        <th data-col="toko" data-sort="toko">Toko/Personal <span class="sort-hint">↕</span></th>
+                        <th data-col="alamatToko" data-sort="alamatToko">Alamat <span class="sort-hint">↕</span></th>
+                        <th data-col="telp" data-sort="telp">Telp. <span class="sort-hint">↕</span></th>
                         <th style="width:50px;min-width:50px;" data-col="actions">Aksi</th>
                     </tr>
                 </thead>
@@ -1376,10 +1386,33 @@
             updateCount();
             updateSaveButton();
             updateSummary();
+            updateSortIndicators();
         }
 
         // ─────────────────────────────────────────────
-        // 13. Start inline edit
+        // 13. Update sort indicators
+        // ─────────────────────────────────────────────
+        function updateSortIndicators() {
+            const headers = headerRow.querySelectorAll('th[data-sort]');
+            headers.forEach(th => {
+                const key = th.dataset.sort;
+                const icon = th.querySelector('.sort-icon');
+                if (key === sortKey) {
+                    th.classList.add('sorted');
+                    if (icon) {
+                        icon.textContent = sortAsc ? '▲' : '▼';
+                    }
+                } else {
+                    th.classList.remove('sorted');
+                    if (icon) {
+                        icon.textContent = '↕';
+                    }
+                }
+            });
+        }
+
+        // ─────────────────────────────────────────────
+        // 14. Start inline edit
         // ─────────────────────────────────────────────
         function startEdit(cell) {
             const field = cell.dataset.field;
@@ -1487,7 +1520,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 14. Add row
+        // 15. Add row
         // ─────────────────────────────────────────────
         function addRow() {
             const newRow = createEmptyRow();
@@ -1502,7 +1535,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 15. Delete row
+        // 16. Delete row
         // ─────────────────────────────────────────────
         function deleteRow(id, rowIdx) {
             const displayData = getDisplayData();
@@ -1526,7 +1559,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 16. Save / unsaved state
+        // 17. Save / unsaved state
         // ─────────────────────────────────────────────
         function markUnsaved() {
             hasUnsavedChanges = true;
@@ -1551,7 +1584,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 17. Save all to Firestore
+        // 18. Save all to Firestore
         // ─────────────────────────────────────────────
         async function saveAll() {
             if (!hasUnsavedChanges) return;
@@ -1606,7 +1639,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 18. Load data from Firestore
+        // 19. Load data from Firestore
         // ─────────────────────────────────────────────
         function loadData() {
             db.collection(COLLECTION)
@@ -1637,7 +1670,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 19. Load settings (per jenjang & tahun)
+        // 20. Load settings (per jenjang & tahun)
         // ─────────────────────────────────────────────
         function loadSettings() {
             const docId = `${sessionJenjang}_${sessionTahun}`;
@@ -1659,7 +1692,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 20. Update count
+        // 21. Update count
         // ─────────────────────────────────────────────
         function updateCount() {
             const data = getDisplayData();
@@ -1667,7 +1700,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 21. Update Summary
+        // 22. Update Summary
         // ─────────────────────────────────────────────
         function updateSummary() {
             const data = getDisplayData();
@@ -1697,7 +1730,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 22. Filter
+        // 23. Filter
         // ─────────────────────────────────────────────
         filterInput.addEventListener('input', () => {
             filterText = filterInput.value;
@@ -1705,36 +1738,34 @@
         });
 
         // ─────────────────────────────────────────────
-        // 23. Sort
+        // 24. Sort handlers
         // ─────────────────────────────────────────────
-        document.querySelectorAll('thead th[data-sort]').forEach(th => {
-            th.addEventListener('click', () => {
-                const key = th.dataset.sort;
-                if (sortKey === key) {
-                    sortAsc = !sortAsc;
-                } else {
-                    sortKey = key;
-                    sortAsc = true;
-                }
-                document.querySelectorAll('thead th[data-sort]').forEach(h => {
-                    h.classList.remove('sorted');
-                    const icon = h.querySelector('.sort-icon');
-                    if (icon) icon.textContent = '';
-                });
-                th.classList.add('sorted');
-                let icon = th.querySelector('.sort-icon');
-                if (!icon) {
-                    icon = document.createElement('span');
-                    icon.className = 'sort-icon';
-                    th.appendChild(icon);
-                }
-                icon.textContent = sortAsc ? '▲' : '▼';
-                renderTable();
+        function setupSortHandlers() {
+            const headers = headerRow.querySelectorAll('th[data-sort]');
+            headers.forEach(th => {
+                // Remove existing listener to avoid duplicates
+                th.removeEventListener('click', handleSortClick);
+                th.addEventListener('click', handleSortClick);
             });
-        });
+        }
+
+        function handleSortClick(e) {
+            const th = e.currentTarget;
+            const key = th.dataset.sort;
+            if (!key) return;
+
+            if (sortKey === key) {
+                sortAsc = !sortAsc;
+            } else {
+                sortKey = key;
+                sortAsc = true;
+            }
+
+            renderTable();
+        }
 
         // ─────────────────────────────────────────────
-        // 24. Event listeners
+        // 25. Event listeners
         // ─────────────────────────────────────────────
         addRowBtn.addEventListener('click', addRow);
         saveBtn.addEventListener('click', saveAll);
@@ -1764,7 +1795,6 @@
                 }, { merge: true });
                 showToast('Pengaturan berhasil disimpan!', 'success');
                 settingsModal.classList.remove('active');
-                // Refresh settings
                 loadSettings();
             } catch (error) {
                 showToast('Gagal menyimpan: ' + error.message, 'error');
@@ -1794,12 +1824,13 @@
         });
 
         // ─────────────────────────────────────────────
-        // 25. Init
+        // 26. Init
         // ─────────────────────────────────────────────
+        // Tambahkan icon sortir di setiap header
         document.querySelectorAll('thead th[data-sort]').forEach(th => {
             const icon = document.createElement('span');
             icon.className = 'sort-icon';
-            icon.textContent = '';
+            icon.textContent = '↕';
             th.appendChild(icon);
         });
 
@@ -1808,13 +1839,14 @@
         setTimeout(() => {
             initResizers();
             applyColumnWidths();
+            setupSortHandlers();
         }, 50);
 
         loadData();
 
-        console.log('📋 BOS-NBS · Database siap (settings per jenjang & tahun)');
+        console.log('📋 BOS-NBS · Database siap (sortir dengan klik header)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
-        console.log('ℹ️  Drag border kolom untuk mengatur lebar, tersimpan otomatis di browser');
+        console.log('ℹ️  Klik header tabel untuk mengurutkan data');
     </script>
 
 </body>
