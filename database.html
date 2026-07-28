@@ -25,6 +25,7 @@
             color: #0a1e33;
             padding: 16px 24px 40px;
             min-height: 100vh;
+            user-select: none;
         }
 
         /* ── Header ── */
@@ -323,6 +324,7 @@
         .table-wrapper {
             overflow-x: auto;
             padding: 0 2px 2px 2px;
+            position: relative;
         }
 
         table {
@@ -330,6 +332,7 @@
             border-collapse: collapse;
             font-size: 12px;
             min-width: 1400px;
+            table-layout: fixed;
         }
 
         /* ── Borders ── */
@@ -358,6 +361,9 @@
             cursor: pointer;
             user-select: none;
             white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         thead th:hover {
@@ -375,6 +381,30 @@
             opacity: 1;
         }
 
+        /* ── Column Resizer ── */
+        .col-resizer {
+            position: absolute;
+            top: 0;
+            right: -4px;
+            width: 8px;
+            height: 100%;
+            cursor: col-resize;
+            z-index: 10;
+            background: transparent;
+            transition: background 0.15s ease;
+        }
+
+        .col-resizer:hover,
+        .col-resizer.active {
+            background: #0a2e5c;
+            opacity: 0.3;
+        }
+
+        .col-resizer.active {
+            opacity: 0.6;
+        }
+
+        /* ── Body cells ── */
         tbody tr {
             transition: background 0.1s ease;
         }
@@ -387,13 +417,11 @@
             padding: 4px 6px;
             vertical-align: middle;
             color: #1a3048;
-            max-width: 160px;
             word-break: break-word;
             line-height: 1.4;
             max-height: 2.8em;
             overflow: hidden;
             text-overflow: ellipsis;
-            display: table-cell;
         }
 
         /* ── Inline editing ── */
@@ -715,6 +743,14 @@
                 padding: 6px 14px;
             }
         }
+
+        /* ── Drag indicator ── */
+        .dragging-active {
+            cursor: col-resize !important;
+        }
+        .dragging-active * {
+            cursor: col-resize !important;
+        }
     </style>
 </head>
 <body>
@@ -799,30 +835,30 @@
         <div class="table-wrapper">
             <table id="mainTable">
                 <thead>
-                    <tr>
-                        <th style="width:32px;min-width:32px;text-align:center;">No</th>
-                        <th data-sort="noBKU">No. BKU</th>
-                        <th data-sort="noRek">No. Rek</th>
-                        <th data-sort="siplah">Siplah</th>
-                        <th data-sort="jenisKegiatan">Jenis Keg.</th>
-                        <th data-sort="uraian">Uraian</th>
-                        <th data-sort="komponen">Komponen</th>
-                        <th data-sort="standar">Standar</th>
-                        <th data-sort="jenisBelanja">Jenis Belanja</th>
-                        <th data-sort="tahap">Tahap</th>
-                        <th data-sort="vol">Vol</th>
-                        <th data-sort="satuan">Satuan</th>
-                        <th data-sort="harga">Harga</th>
-                        <th data-sort="jumlahHarga">Jml Harga</th>
-                        <th data-sort="tglPelaksanaan">Tgl Pelaks.</th>
-                        <th data-sort="tglPembayaran">Tgl Bayar</th>
-                        <th data-sort="jenisPajak">Jenis Pajak</th>
-                        <th data-sort="persenPajak">% Pajak</th>
-                        <th data-sort="jmlPajak">Jml Pajak</th>
-                        <th data-sort="toko">Toko/Personal</th>
-                        <th data-sort="alamatToko">Alamat</th>
-                        <th data-sort="telp">Telp.</th>
-                        <th style="width:50px;min-width:50px;">Aksi</th>
+                    <tr id="headerRow">
+                        <th style="width:32px;min-width:32px;text-align:center;" data-col="no">No</th>
+                        <th data-col="noBKU">No. BKU</th>
+                        <th data-col="noRek">No. Rek</th>
+                        <th data-col="siplah">Siplah</th>
+                        <th data-col="jenisKegiatan">Jenis Keg.</th>
+                        <th data-col="uraian">Uraian</th>
+                        <th data-col="komponen">Komponen</th>
+                        <th data-col="standar">Standar</th>
+                        <th data-col="jenisBelanja">Jenis Belanja</th>
+                        <th data-col="tahap">Tahap</th>
+                        <th data-col="vol">Vol</th>
+                        <th data-col="satuan">Satuan</th>
+                        <th data-col="harga">Harga</th>
+                        <th data-col="jumlahHarga">Jml Harga</th>
+                        <th data-col="tglPelaksanaan">Tgl Pelaks.</th>
+                        <th data-col="tglPembayaran">Tgl Bayar</th>
+                        <th data-col="jenisPajak">Jenis Pajak</th>
+                        <th data-col="persenPajak">% Pajak</th>
+                        <th data-col="jmlPajak">Jml Pajak</th>
+                        <th data-col="toko">Toko/Personal</th>
+                        <th data-col="alamatToko">Alamat</th>
+                        <th data-col="telp">Telp.</th>
+                        <th style="width:50px;min-width:50px;" data-col="actions">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -873,11 +909,13 @@
 
         const COLLECTION = 'data_bos';
         const SETTINGS_COLLECTION = 'settings_bos';
+        const COL_WIDTHS_KEY = 'bosnbs_col_widths';
 
         // ─────────────────────────────────────────────
         // 4.  DOM refs
         // ─────────────────────────────────────────────
         const tableBody = document.getElementById('tableBody');
+        const headerRow = document.getElementById('headerRow');
         const recordCount = document.getElementById('recordCount');
         const toast = document.getElementById('toast');
         const filterInput = document.getElementById('filterInput');
@@ -897,7 +935,89 @@
         const modalAnggaran2 = document.getElementById('modalAnggaran2');
 
         // ─────────────────────────────────────────────
-        // 5.  Toast
+        // 5.  Column Resizer
+        // ─────────────────────────────────────────────
+        let columnWidths = {};
+
+        function loadColumnWidths() {
+            try {
+                const saved = localStorage.getItem(COL_WIDTHS_KEY);
+                if (saved) {
+                    columnWidths = JSON.parse(saved);
+                } else {
+                    columnWidths = {};
+                }
+            } catch (e) {
+                columnWidths = {};
+            }
+        }
+
+        function saveColumnWidths() {
+            try {
+                localStorage.setItem(COL_WIDTHS_KEY, JSON.stringify(columnWidths));
+            } catch (e) { /* ignore */ }
+        }
+
+        function applyColumnWidths() {
+            const headers = headerRow.querySelectorAll('th');
+            headers.forEach(th => {
+                const col = th.dataset.col;
+                if (col && columnWidths[col]) {
+                    th.style.width = columnWidths[col] + 'px';
+                    th.style.minWidth = columnWidths[col] + 'px';
+                }
+            });
+        }
+
+        function initResizers() {
+            const headers = headerRow.querySelectorAll('th');
+            headers.forEach(th => {
+                // Hapus resizer lama jika ada
+                const oldResizer = th.querySelector('.col-resizer');
+                if (oldResizer) oldResizer.remove();
+
+                // Buat resizer baru
+                const resizer = document.createElement('span');
+                resizer.className = 'col-resizer';
+                resizer.dataset.col = th.dataset.col;
+                th.appendChild(resizer);
+
+                // Event drag
+                resizer.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const col = th.dataset.col;
+                    if (!col) return;
+
+                    const startX = e.clientX;
+                    const startWidth = th.offsetWidth;
+
+                    document.body.classList.add('dragging-active');
+
+                    const onMouseMove = (ev) => {
+                        const diff = ev.clientX - startX;
+                        const newWidth = Math.max(40, startWidth + diff);
+                        th.style.width = newWidth + 'px';
+                        th.style.minWidth = newWidth + 'px';
+                        columnWidths[col] = newWidth;
+                        saveColumnWidths();
+                    };
+
+                    const onMouseUp = () => {
+                        document.body.classList.remove('dragging-active');
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+                    };
+
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                });
+            });
+        }
+
+        // ─────────────────────────────────────────────
+        // 6.  Toast
         // ─────────────────────────────────────────────
         let toastTimer = null;
 
@@ -911,7 +1031,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 6.  Format number with dots
+        // 7.  Format number with dots
         // ─────────────────────────────────────────────
         function formatNumber(val) {
             if (val === undefined || val === null || val === '') return '';
@@ -934,7 +1054,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 7.  Column definitions
+        // 8.  Column definitions
         // ─────────────────────────────────────────────
         const COLUMNS = [
             { key: 'noBKU', type: 'text', label: 'No. BKU' },
@@ -987,7 +1107,7 @@
         const COLUMN_KEYS = COLUMNS.map(c => c.key);
 
         // ─────────────────────────────────────────────
-        // 8.  Generate empty row data (with jenjang & tahun)
+        // 9.  Generate empty row data (with jenjang & tahun)
         // ─────────────────────────────────────────────
         function createEmptyRow() {
             const row = {};
@@ -999,14 +1119,13 @@
                 else if (key === 'tahap') row[key] = 'Tahap 1';
                 else row[key] = '';
             });
-            // Tambahkan jenjang dan tahun untuk identifikasi
             row.jenjang = sessionJenjang;
             row.tahun = sessionTahun;
             return row;
         }
 
         // ─────────────────────────────────────────────
-        // 9.  Auto-calc
+        // 10. Auto-calc
         // ─────────────────────────────────────────────
         function autoCalcRow(row) {
             const vol = parseFloat(row.vol) || 0;
@@ -1019,15 +1138,13 @@
         }
 
         // ─────────────────────────────────────────────
-        // 10. Get display data (filtered + sorted + jenjang/tahun)
+        // 11. Get display data (filtered + sorted + jenjang/tahun)
         // ─────────────────────────────────────────────
         function getDisplayData() {
-            // Filter berdasarkan jenjang dan tahun session
             let data = allData.filter(item =>
                 item.jenjang === sessionJenjang && item.tahun === sessionTahun
             );
 
-            // Filter teks
             if (filterText.trim()) {
                 const search = filterText.trim().toLowerCase();
                 data = data.filter(item => {
@@ -1038,7 +1155,6 @@
                 });
             }
 
-            // Sort
             if (sortKey) {
                 data.sort((a, b) => {
                     let va = a[sortKey] !== undefined ? a[sortKey] : '';
@@ -1055,7 +1171,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 11. Render table
+        // 12. Render table
         // ─────────────────────────────────────────────
         function renderTable() {
             const data = getDisplayData();
@@ -1120,6 +1236,9 @@
 
             tableBody.innerHTML = html;
 
+            // Apply column widths to body cells (they inherit from thead)
+            applyColumnWidths();
+
             document.querySelectorAll('.editable-cell').forEach(cell => {
                 cell.addEventListener('dblclick', () => startEdit(cell));
             });
@@ -1138,7 +1257,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 12. Start inline edit (sama seperti sebelumnya)
+        // 13. Start inline edit
         // ─────────────────────────────────────────────
         function startEdit(cell) {
             const field = cell.dataset.field;
@@ -1246,7 +1365,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 13. Add row
+        // 14. Add row
         // ─────────────────────────────────────────────
         function addRow() {
             const newRow = createEmptyRow();
@@ -1261,7 +1380,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 14. Delete row
+        // 15. Delete row
         // ─────────────────────────────────────────────
         function deleteRow(id, rowIdx) {
             const displayData = getDisplayData();
@@ -1285,7 +1404,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 15. Save / unsaved state
+        // 16. Save / unsaved state
         // ─────────────────────────────────────────────
         function markUnsaved() {
             hasUnsavedChanges = true;
@@ -1310,7 +1429,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 16. Save all to Firestore (with jenjang & tahun)
+        // 17. Save all to Firestore
         // ─────────────────────────────────────────────
         async function saveAll() {
             if (!hasUnsavedChanges) return;
@@ -1323,7 +1442,6 @@
                 let savedCount = 0;
 
                 for (const item of allData) {
-                    // Hanya simpan data yang sesuai dengan session
                     if (item.jenjang !== sessionJenjang || item.tahun !== sessionTahun) continue;
 
                     const hasData = COLUMN_KEYS.some(key => {
@@ -1356,7 +1474,7 @@
                 await Promise.all(promises);
                 showToast(`✅ ${savedCount} data berhasil disimpan!`, 'success');
                 markSaved();
-                loadData(); // refresh
+                loadData();
             } catch (error) {
                 console.error('Save error:', error);
                 showToast('❌ Gagal menyimpan: ' + error.message, 'error');
@@ -1366,7 +1484,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 17. Load data from Firestore
+        // 18. Load data from Firestore
         // ─────────────────────────────────────────────
         function loadData() {
             db.collection(COLLECTION)
@@ -1379,13 +1497,11 @@
                         COLUMN_KEYS.forEach(key => {
                             if (data[key] === undefined) data[key] = '';
                         });
-                        // Pastikan ada field jenjang dan tahun, jika tidak, set default (agar tidak tampil)
                         if (!data.jenjang) data.jenjang = '';
                         if (!data.tahun) data.tahun = '';
                         loaded.push(data);
                     });
 
-                    // Pertahankan data sementara yang belum tersimpan
                     const tempRows = allData.filter(d => d._id && d._id.startsWith('_temp_') &&
                         d.jenjang === sessionJenjang && d.tahun === sessionTahun);
                     allData = [...loaded, ...tempRows];
@@ -1399,7 +1515,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 18. Load settings
+        // 19. Load settings
         // ─────────────────────────────────────────────
         function loadSettings() {
             db.collection(SETTINGS_COLLECTION).doc('main')
@@ -1419,7 +1535,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 19. Update count
+        // 20. Update count
         // ─────────────────────────────────────────────
         function updateCount() {
             const data = getDisplayData();
@@ -1427,7 +1543,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 20. Filter
+        // 21. Filter
         // ─────────────────────────────────────────────
         filterInput.addEventListener('input', () => {
             filterText = filterInput.value;
@@ -1435,7 +1551,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 21. Sort
+        // 22. Sort
         // ─────────────────────────────────────────────
         document.querySelectorAll('thead th[data-sort]').forEach(th => {
             th.addEventListener('click', () => {
@@ -1464,7 +1580,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 22. Event listeners
+        // 23. Event listeners
         // ─────────────────────────────────────────────
         addRowBtn.addEventListener('click', addRow);
         saveBtn.addEventListener('click', saveAll);
@@ -1519,8 +1635,9 @@
         });
 
         // ─────────────────────────────────────────────
-        // 23. Init
+        // 24. Init
         // ─────────────────────────────────────────────
+        // Tambahkan sort icon
         document.querySelectorAll('thead th[data-sort]').forEach(th => {
             const icon = document.createElement('span');
             icon.className = 'sort-icon';
@@ -1528,10 +1645,20 @@
             th.appendChild(icon);
         });
 
+        // Load column widths dari localStorage
+        loadColumnWidths();
+
+        // Init resizers setelah header siap
+        setTimeout(() => {
+            initResizers();
+            applyColumnWidths();
+        }, 50);
+
         loadData();
 
-        console.log('📋 BOS-NBS · Database siap (multi-jenjang & multi-tahun)');
+        console.log('📋 BOS-NBS · Database siap (multi-jenjang, multi-tahun, resizeable columns)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
+        console.log('ℹ️  Drag border kolom untuk mengatur lebar, tersimpan otomatis di browser');
     </script>
 
 </body>
