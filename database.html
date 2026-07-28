@@ -833,7 +833,7 @@
     <div class="modal-overlay" id="settingsModal">
         <div class="modal">
             <h2>⚙️ Pengaturan Sekolah</h2>
-            <div class="sub">Data kepala sekolah, bendahara, dan anggaran per tahap.</div>
+            <div class="sub">Data kepala sekolah, bendahara, dan anggaran per tahap untuk <span id="modalSessionLabel">SMP · 2025</span>.</div>
 
             <div class="form-group">
                 <label for="modalKepalaSekolah">Nama Kepala Sekolah</label>
@@ -1002,6 +1002,7 @@
             window.location.href = 'index.html';
         }
         document.getElementById('userBadge').textContent = `${sessionJenjang} · ${sessionTahun}`;
+        document.getElementById('modalSessionLabel').textContent = `${sessionJenjang} · ${sessionTahun}`;
 
         // ─────────────────────────────────────────────
         // 3.  State
@@ -1636,10 +1637,11 @@
         }
 
         // ─────────────────────────────────────────────
-        // 19. Load settings
+        // 19. Load settings (per jenjang & tahun)
         // ─────────────────────────────────────────────
         function loadSettings() {
-            db.collection(SETTINGS_COLLECTION).doc('main')
+            const docId = `${sessionJenjang}_${sessionTahun}`;
+            db.collection(SETTINGS_COLLECTION).doc(docId)
                 .onSnapshot((doc) => {
                     if (doc.exists) {
                         settingsData = doc.data();
@@ -1670,7 +1672,6 @@
         function updateSummary() {
             const data = getDisplayData();
 
-            // Hitung total per tahap dari data
             let total1 = 0,
                 total2 = 0;
             data.forEach(item => {
@@ -1750,17 +1751,21 @@
             const anggaran1 = parseFloat(modalAnggaran1.value) || 0;
             const anggaran2 = parseFloat(modalAnggaran2.value) || 0;
 
+            const docId = `${sessionJenjang}_${sessionTahun}`;
             try {
-                await db.collection(SETTINGS_COLLECTION).doc('main').set({
+                await db.collection(SETTINGS_COLLECTION).doc(docId).set({
                     kepalaSekolah,
                     bendahara,
                     anggaran1,
                     anggaran2,
+                    jenjang: sessionJenjang,
+                    tahun: sessionTahun,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
                 showToast('Pengaturan berhasil disimpan!', 'success');
                 settingsModal.classList.remove('active');
-                updateSummary();
+                // Refresh settings
+                loadSettings();
             } catch (error) {
                 showToast('Gagal menyimpan: ' + error.message, 'error');
             }
@@ -1791,7 +1796,6 @@
         // ─────────────────────────────────────────────
         // 25. Init
         // ─────────────────────────────────────────────
-        // Tambahkan sort icon
         document.querySelectorAll('thead th[data-sort]').forEach(th => {
             const icon = document.createElement('span');
             icon.className = 'sort-icon';
@@ -1799,10 +1803,8 @@
             th.appendChild(icon);
         });
 
-        // Load column widths dari localStorage
         loadColumnWidths();
 
-        // Init resizers setelah header siap
         setTimeout(() => {
             initResizers();
             applyColumnWidths();
@@ -1810,7 +1812,7 @@
 
         loadData();
 
-        console.log('📋 BOS-NBS · Database siap (dengan ringkasan anggaran)');
+        console.log('📋 BOS-NBS · Database siap (settings per jenjang & tahun)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
         console.log('ℹ️  Drag border kolom untuk mengatur lebar, tersimpan otomatis di browser');
     </script>
