@@ -31,6 +31,7 @@
             min-height: 100vh;
         }
 
+        /* ── Header ── */
         .app-header {
             display: flex;
             align-items: center;
@@ -138,6 +139,7 @@
             border-color: #b0c4d8;
         }
 
+        /* ── Toolbar ── */
         .toolbar {
             display: flex;
             align-items: center;
@@ -213,6 +215,7 @@
             background: #123f72;
         }
 
+        /* ── Tabs ── */
         .tabs {
             display: flex;
             gap: 4px;
@@ -259,6 +262,7 @@
             display: block;
         }
 
+        /* ── Filter ── */
         .filter-row {
             display: flex;
             align-items: center;
@@ -287,6 +291,7 @@
             border-color: #0a2e5c;
         }
 
+        /* ── Header Buku ── */
         .book-header {
             text-align: center;
             margin-bottom: 24px;
@@ -329,6 +334,7 @@
             font-weight: 600;
         }
 
+        /* ── Table ── */
         .table-wrapper {
             overflow-x: auto;
             margin-bottom: 20px;
@@ -377,6 +383,7 @@
             font-weight: 600;
         }
 
+        /* ── Closing Statement ── */
         .closing-statement {
             margin-top: 20px;
             padding: 16px 20px;
@@ -442,6 +449,7 @@
             margin-top: 2px;
         }
 
+        /* ── Toast ── */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -473,6 +481,7 @@
             background: #b00020;
         }
 
+        /* ── Responsive ── */
         @media (max-width: 768px) {
             body {
                 padding: 12px;
@@ -500,116 +509,43 @@
         /* ── Print / PDF ── */
         @media print {
             body {
-                background: #fff !important;
-                padding: 0 !important;
-                margin: 0 !important;
+                background: #fff;
+                padding: 0;
+                margin: 0;
             }
-
-            .no-print {
-                display: none !important;
-            }
-
             .app-header,
             .toolbar,
-            .tabs {
+            .tabs,
+            .filter-row .filter-actions {
                 display: none !important;
             }
-
             .tab-content {
                 box-shadow: none !important;
                 padding: 20px 28px !important;
                 border-radius: 0 !important;
+            }
+            .tab-content.active {
                 display: block !important;
             }
-
             .tab-content:not(.active) {
                 display: none !important;
             }
-
             .book-table {
                 font-size: 10px !important;
-                border: 1px solid #000 !important;
             }
-
             .book-table th,
             .book-table td {
-                border: 1px solid #000 !important;
                 padding: 4px 6px !important;
             }
-
-            .book-meta {
-                background: #fff !important;
-                border: 1px solid #000 !important;
-            }
-
             .closing-statement {
                 background: #fff !important;
-                border: 1px solid #000 !important;
-                page-break-inside: avoid;
+                border: 1px solid #ccc !important;
             }
-
             .signature .sign-block .name {
                 border-top-color: #000 !important;
             }
-
-            .filter-row {
+            .no-print {
                 display: none !important;
-            }
-
-            /* Pastikan tabel tidak terpotong */
-            .table-wrapper {
-                overflow: visible !important;
-                page-break-inside: auto;
-            }
-
-            table {
-                page-break-inside: auto;
-            }
-
-            tr {
-                page-break-inside: avoid;
-                page-break-after: auto;
-            }
-
-            thead {
-                display: table-header-group;
-            }
-
-            tfoot {
-                display: table-footer-group;
-            }
-
-            .closing-statement {
-                page-break-inside: avoid;
-            }
-
-            .signature {
-                page-break-inside: avoid;
-            }
-        }
-
-        /* ── Print layout untuk A4 ── */
-        .print-container {
-            max-width: 210mm;
-            margin: 0 auto;
-            padding: 1cm;
-            background: #fff;
-        }
-
-        @media print {
-            .print-container {
-                padding: 1cm !important;
-                max-width: 100% !important;
-            }
-
-            /* Sembunyikan scrollbar */
-            .table-wrapper::-webkit-scrollbar {
-                display: none;
-            }
-
-            .table-wrapper {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
             }
         }
     </style>
@@ -620,7 +556,7 @@
     <div class="toast" id="toast"></div>
 
     <!-- ─── Header ─── -->
-    <header class="app-header no-print">
+    <header class="app-header">
         <div class="brand">
             <img src="logo.png" alt="Logo" id="logoImg" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='inline-flex';" />
             <span class="fallback-icon" style="display:none;">B</span>
@@ -636,7 +572,7 @@
     </header>
 
     <!-- ─── Toolbar ─── -->
-    <div class="toolbar no-print">
+    <div class="toolbar">
         <div class="toolbar-left">
             <span style="font-size:13px;font-weight:500;color:#1f3a5f;">📋 Buku</span>
         </div>
@@ -647,7 +583,7 @@
     </div>
 
     <!-- ─── Tabs ─── -->
-    <div class="tabs no-print" id="tabContainer">
+    <div class="tabs" id="tabContainer">
         <button class="tab-btn active" data-tab="buku-kas">📒 Buku Kas</button>
         <button class="tab-btn" data-tab="buku-tunai">💰 Buku Tunai</button>
         <button class="tab-btn" data-tab="buku-bank">🏦 Buku Bank</button>
@@ -658,30 +594,30 @@
 
     <!-- ─── Tab Content: Buku Kas ─── -->
     <div class="tab-content active" id="tab-buku-kas">
-        <div id="bukuKasContent" class="print-container">
-            <!-- Filter -->
-            <div class="filter-row no-print">
-                <label>Bulan:</label>
-                <select id="bulanSelect">
-                    <option value="01">Januari</option>
-                    <option value="02">Februari</option>
-                    <option value="03">Maret</option>
-                    <option value="04">April</option>
-                    <option value="05">Mei</option>
-                    <option value="06">Juni</option>
-                    <option value="07">Juli</option>
-                    <option value="08">Agustus</option>
-                    <option value="09">September</option>
-                    <option value="10">Oktober</option>
-                    <option value="11">November</option>
-                    <option value="12">Desember</option>
-                </select>
-                <label>Tahun:</label>
-                <select id="tahunSelect"></select>
-                <button class="btn-primary" id="loadDataBtn" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
-            </div>
+        <!-- Filter -->
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelect">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelect"></select>
+            <button class="btn-primary" id="loadDataBtn" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
+        </div>
 
-            <!-- Buku Kas -->
+        <!-- Buku Kas -->
+        <div id="bukuKasContent">
             <div class="book-header">
                 <h2>BUKU KAS UMUM</h2>
                 <div class="sub-info">
@@ -724,7 +660,8 @@
             <!-- Closing Statement -->
             <div class="closing-statement" id="closingStatement">
                 <div style="font-size:13px;margin-bottom:8px;">
-                    Pada hari ini <span id="closingHari">-</span>, tanggal <span id="closingTanggal">-</span> bulan <span id="closingBulan">-</span> Tahun <span id="closingTahun">-</span>, Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut:
+                    Pada hari ini <span id="closingHari">-</span>, tanggal <span id="closingTanggal">-</span> Tahun <span id="closingTahun">-</span>, 
+                    Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut:
                 </div>
                 <div class="closing-grid">
                     <div class="item"><span>Saldo Bank</span> <span id="saldoBank">Rp 0</span></div>
@@ -816,7 +753,6 @@
         const metaSekolah = document.getElementById('metaSekolah');
         const closingHari = document.getElementById('closingHari');
         const closingTanggal = document.getElementById('closingTanggal');
-        const closingBulan = document.getElementById('closingBulan');
         const closingTahun = document.getElementById('closingTahun');
         const saldoBank = document.getElementById('saldoBank');
         const saldoTunai = document.getElementById('saldoTunai');
@@ -953,14 +889,17 @@
                                 month = dateParts[1];
                             }
                             month = month.padStart(2, '0');
+                            // Transaksi yang terjadi pada atau sebelum bulan yang dimaksud
                             if ((parseInt(month) < parseInt(bulan) && parseInt(year) <= parseInt(tahun)) ||
                                 (parseInt(month) === parseInt(bulan) && parseInt(year) === parseInt(tahun))) {
+                                // Pengeluaran mengurangi saldo
                                 totalSaldo -= parseFloat(d.jumlahHarga) || 0;
                             }
                         }
                     }
                 });
 
+                // Tambahkan pemasukan anggaran jika tanggalnya <= bulan yang dimaksud
                 const tgl1 = settingsData.tanggalPemasukan1 || '';
                 const tgl2 = settingsData.tanggalPemasukan2 || '';
                 const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
@@ -1010,9 +949,11 @@
             displayBulan.textContent = getMonthName(bulan);
             displayTahun.textContent = tahun;
 
+            // Ambil saldo akhir bulan lalu (saldo Bank = total saldo)
             const prev = getPreviousMonth(bulan, tahun);
             const saldoAkhirBulanLalu = await getSaldoAkhirBulan(prev.month, prev.year);
 
+            // Ambil semua data pengeluaran dari data_bos untuk bulan ini
             const snapshot = await db.collection(COLLECTION)
                 .where('jenjang', '==', sessionJenjang)
                 .where('tahun', '==', sessionTahun)
@@ -1020,6 +961,9 @@
 
             const transaksi = [];
 
+            // 1. Baris pertama: Saldo Bank Bulan [bulan lalu]
+            // 2. Baris kedua: Saldo Tunai Bulan [bulan lalu]
+            // Karena semua transaksi non-tunai, saldo bank = total saldo, tunai = 0
             const bulanLaluNama = getMonthName(prev.month);
 
             transaksi.push({
@@ -1028,7 +972,7 @@
                 kodeRekening: '',
                 noBukti: '',
                 uraian: `Saldo Bank Bulan ${bulanLaluNama}`,
-                penerimaan: saldoAkhirBulanLalu,
+                penerimaan: 0,
                 pengeluaran: 0,
                 saldo: saldoAkhirBulanLalu,
                 isSaldoAwal: true,
@@ -1043,11 +987,12 @@
                 uraian: `Saldo Tunai Bulan ${bulanLaluNama}`,
                 penerimaan: 0,
                 pengeluaran: 0,
-                saldo: 0,
+                saldo: 0, // Tidak ada transaksi tunai
                 isSaldoAwal: true,
                 jenis: 'saldo_awal'
             });
 
+            // Proses data pengeluaran dari data_bos (non-tunai)
             snapshot.forEach(doc => {
                 const d = doc.data();
                 d._id = doc.id;
@@ -1087,6 +1032,7 @@
                 }
             });
 
+            // Proses pemasukan anggaran dari settings (non-tunai)
             const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
             const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
             const tgl1 = settingsData.tanggalPemasukan1 || '';
@@ -1113,9 +1059,9 @@
                     if (month === bulan && year === tahun) {
                         transaksi.push({
                             tanggal: tgl,
-                            kodeKegiatan: '',
-                            kodeRekening: '',
-                            noBukti: '',
+                            kodeKegiatan: '', // kosong
+                            kodeRekening: '', // kosong
+                            noBukti: '', // kosong
                             uraian: keterangan,
                             penerimaan: jumlah,
                             pengeluaran: 0,
@@ -1130,22 +1076,25 @@
             addPemasukan(tgl1, anggaran1, 'Penerimaan Anggaran Tahap 1');
             addPemasukan(tgl2, anggaran2, 'Penerimaan Anggaran Tahap 2');
 
+            // Urutkan berdasarkan tanggal (saldo awal tetap di atas)
             transaksi.sort((a, b) => {
                 if (a.isSaldoAwal && !b.isSaldoAwal) return -1;
                 if (!a.isSaldoAwal && b.isSaldoAwal) return 1;
                 return a.tanggal.localeCompare(b.tanggal);
             });
 
+            // Hitung saldo kumulatif
             let saldoKumulatif = saldoAkhirBulanLalu;
             transaksi.forEach(item => {
                 if (item.isSaldoAwal) {
-                    item.saldo = item.saldo;
+                    item.saldo = item.saldo; // sudah di-set
                 } else {
                     saldoKumulatif += (item.penerimaan || 0) - (item.pengeluaran || 0);
                     item.saldo = saldoKumulatif;
                 }
             });
 
+            // Tambahkan baris Bunga Bank dan Pajak Bunga di akhir (tidak merubah saldo)
             transaksi.push({
                 tanggal: '',
                 kodeKegiatan: '',
@@ -1194,7 +1143,7 @@
 
             let html = '';
 
-            data.forEach((item) => {
+            data.forEach((item, index) => {
                 const tgl = item.tanggal || '';
                 const kode = item.kodeKegiatan || '';
                 const rek = item.kodeRekening || '';
@@ -1204,6 +1153,7 @@
                 const pengeluaran = item.pengeluaran || 0;
                 const saldo = item.saldo || 0;
 
+                // Untuk pemasukan, kosongkan kode kegiatan, kode rekening, no bukti
                 let displayKode = kode;
                 let displayRek = rek;
                 let displayBukti = bukti;
@@ -1213,6 +1163,7 @@
                     displayBukti = '';
                 }
 
+                // Untuk saldo awal, bunga, pajak - semua kosong
                 if (item.isSaldoAwal || item.jenis === 'bunga' || item.jenis === 'pajak') {
                     displayKode = '';
                     displayRek = '';
@@ -1248,18 +1199,18 @@
             const lastDay = new Date(tahun, bulan, 0);
             const dayName = getDayName(lastDay);
 
-            // Format: Pada hari ini [dddd], tanggal [dd] bulan [mmmm] Tahun [yyyy]
             closingHari.textContent = dayName;
             closingTanggal.textContent = lastDay.getDate();
-            closingBulan.textContent = getMonthName(String(bulan));
             closingTahun.textContent = tahun;
 
+            // Ambil saldo terakhir dari data
             let saldoAkhir = 0;
             if (data.length > 0) {
                 const last = data[data.length - 1];
                 saldoAkhir = last.saldo || 0;
             }
 
+            // Karena semua transaksi non-tunai, saldo bank = total saldo, tunai = 0
             saldoBank.textContent = formatRupiah(saldoAkhir);
             saldoTunai.textContent = formatRupiah(0);
             saldoTotal.textContent = formatRupiah(saldoAkhir);
@@ -1283,38 +1234,19 @@
         });
 
         // ─────────────────────────────────────────────
-        // 14. Print PDF (diperbaiki)
+        // 14. Print PDF
         // ─────────────────────────────────────────────
         document.getElementById('printBtn').addEventListener('click', function() {
             const content = document.getElementById('bukuKasContent');
+            const originalDisplay = content.style.display;
+            content.style.display = 'block';
 
-            // Sembunyikan elemen yang tidak perlu di print
             const filterRow = document.querySelector('.filter-row');
             const filterDisplay = filterRow.style.display;
             filterRow.style.display = 'none';
 
-            const tabs = document.querySelector('.tabs');
-            const tabsDisplay = tabs.style.display;
-            tabs.style.display = 'none';
-
-            const toolbar = document.querySelector('.toolbar');
-            const toolbarDisplay = toolbar.style.display;
-            toolbar.style.display = 'none';
-
-            const header = document.querySelector('.app-header');
-            const headerDisplay = header.style.display;
-            header.style.display = 'none';
-
-            // Tambahkan class untuk print
-            document.body.classList.add('printing');
-
             const opt = {
-                margin: {
-                    top: 1.5,
-                    bottom: 1.5,
-                    left: 1.5,
-                    right: 1.5
-                },
+                margin: [1, 1, 1, 1],
                 filename: `BUKU_KAS_${displayBulan.textContent}_${displayTahun.textContent}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: {
@@ -1322,52 +1254,36 @@
                     useCORS: true,
                     letterRendering: true,
                     width: 210,
-                    height: 297,
-                    scrollY: 0,
-                    windowHeight: content.scrollHeight
+                    height: 297
                 },
                 jsPDF: {
                     unit: 'mm',
                     format: 'a4',
                     orientation: 'portrait'
                 },
-                pagebreak: {
-                    mode: ['avoid-all', 'css', 'legacy']
-                }
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
-            // Atur overflow tabel agar tidak terpotong
             const tableWrapper = content.querySelector('.table-wrapper');
             if (tableWrapper) {
                 tableWrapper.style.overflow = 'visible';
-                tableWrapper.style.maxHeight = 'none';
             }
 
-            // Gunakan html2pdf
             html2pdf().set(opt).from(content).save()
                 .then(() => {
-                    // Restore
+                    content.style.display = originalDisplay;
                     filterRow.style.display = filterDisplay;
-                    tabs.style.display = tabsDisplay;
-                    toolbar.style.display = toolbarDisplay;
-                    header.style.display = headerDisplay;
-                    document.body.classList.remove('printing');
                     if (tableWrapper) {
                         tableWrapper.style.overflow = '';
-                        tableWrapper.style.maxHeight = '';
                     }
                 })
                 .catch((err) => {
                     console.error('PDF Error:', err);
                     showToast('Gagal cetak PDF: ' + err.message, 'error');
+                    content.style.display = originalDisplay;
                     filterRow.style.display = filterDisplay;
-                    tabs.style.display = tabsDisplay;
-                    toolbar.style.display = toolbarDisplay;
-                    header.style.display = headerDisplay;
-                    document.body.classList.remove('printing');
                     if (tableWrapper) {
                         tableWrapper.style.overflow = '';
-                        tableWrapper.style.maxHeight = '';
                     }
                 });
         });
@@ -1406,7 +1322,7 @@
             loadKasData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Buku Kas siap (perbaikan kalimat penutupan & cetak PDF)');
+        console.log('📋 BOS-NBS · Buku Kas siap (saldo bank = total, tunai = 0)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
