@@ -858,7 +858,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 9.  Hitung saldo akhir bulan tertentu
+        // 9.  Hitung saldo akhir bulan tertentu (PERBAIKAN: pengeluaran dikurangi)
         // ─────────────────────────────────────────────
         async function getSaldoAkhirBulan(bulan, tahun) {
             try {
@@ -889,12 +889,11 @@
                                 month = dateParts[1];
                             }
                             month = month.padStart(2, '0');
-                            // Bandingkan bulan dan tahun
-                            if (parseInt(month) < parseInt(bulan) && parseInt(year) <= parseInt(tahun)) {
-                                totalSaldo += parseFloat(d.jumlahHarga) || 0;
-                            }
-                            if (parseInt(month) === parseInt(bulan) && parseInt(year) === parseInt(tahun)) {
-                                totalSaldo += parseFloat(d.jumlahHarga) || 0;
+                            // Jika transaksi terjadi pada atau sebelum bulan yang dimaksud
+                            if ((parseInt(month) < parseInt(bulan) && parseInt(year) <= parseInt(tahun)) ||
+                                (parseInt(month) === parseInt(bulan) && parseInt(year) === parseInt(tahun))) {
+                                // KOREKSI: pengeluaran dikurangi (bukan ditambah)
+                                totalSaldo -= parseFloat(d.jumlahHarga) || 0;
                             }
                         }
                     }
@@ -1326,7 +1325,7 @@
             loadKasData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Buku Kas siap dengan saldo awal dan bunga bank');
+        console.log('📋 BOS-NBS · Buku Kas siap (perbaikan saldo awal)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
