@@ -835,7 +835,15 @@
                     if (doc.exists) {
                         settingsData = doc.data();
                     } else {
-                        settingsData = { kepalaSekolah: '', bendahara: '', anggaran1: 0, anggaran2: 0, npsn: '' };
+                        settingsData = {
+                            kepalaSekolah: '',
+                            bendahara: '',
+                            anggaran1: 0,
+                            anggaran2: 0,
+                            npsn: '',
+                            tanggalPemasukan1: '',
+                            tanggalPemasukan2: ''
+                        };
                     }
                     // Update meta
                     metaNpsn.textContent = settingsData.npsn || '-';
@@ -848,7 +856,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 9.  Load data for Buku Kas (menggunakan tglPembayaran)
+        // 9.  Load data for Buku Kas (menggunakan tglPembayaran untuk pengeluaran)
         // ─────────────────────────────────────────────
         function loadKasData() {
             const bulan = bulanSelect.value;
@@ -857,18 +865,18 @@
             displayBulan.textContent = getMonthName(bulan);
             displayTahun.textContent = tahun;
 
-            // Ambil semua data untuk jenjang & tahun ini (tanpa orderBy)
+            // Ambil semua data pengeluaran dari data_bos
             db.collection(COLLECTION)
                 .where('jenjang', '==', sessionJenjang)
                 .where('tahun', '==', sessionTahun)
                 .get()
                 .then((snapshot) => {
-                    const data = [];
-                    console.log('📊 Total data dari Firestore:', snapshot.size);
+                    const transaksi = [];
+
+                    // 1. Proses data pengeluaran dari data_bos
                     snapshot.forEach(doc => {
                         const d = doc.data();
                         d._id = doc.id;
-                        // Gunakan tglPembayaran sebagai acuan
                         const tgl = d.tglPembayaran;
                         if (tgl) {
                             let dateParts = null;
@@ -888,20 +896,76 @@
                                 }
                                 month = month.padStart(2, '0');
                                 if (month === bulan && year === tahun) {
-                                    data.push(d);
+                                    transaksi.push({
+                                        tanggal: tgl,
+                                        kodeKegiatan: d.kodeKegiatan || '',
+                                        kodeRekening: d.noRek || '',
+                                        noBukti: d.noBukti || '',
+                                        uraian: d.uraian || '',
+                                        penerimaan: 0,
+                                        pengeluaran: parseFloat(d.jumlahHarga) || 0,
+                                        jenis: 'pengeluaran'
+                                    });
                                 }
-                            } else {
-                                console.warn('⚠️ Format tanggal tidak dikenali (tglPembayaran):', tgl);
                             }
-                        } else {
-                            console.warn('⚠️ Data tanpa tglPembayaran:', d);
                         }
                     });
 
-                    allKasData = data;
-                    console.log('✅ Data setelah filter bulan (tglPembayaran):', data.length);
-                    renderKasTable(data);
-                    updateClosingStatement(data);
+                    // 2. Proses data pemasukan anggaran dari settings_bos
+                    // Kita sudah punya settingsData yang di-load dari loadSettings()
+                    // Tapi loadSettings() async, kita perlu pastikan data sudah ada
+                    // Kita gunakan data dari settingsData yang sudah di-load
+                    const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
+                    const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
+                    const tgl1 = settingsData.tanggalPemasukan1 || '';
+                    const tgl2 = settingsData.tanggalPemasukan2 || '';
+
+                    // Fungsi untuk menambahkan pemasukan jika tanggal sesuai bulan/tahun
+                    function addPemasukan(tgl, jumlah, keterangan) {
+                        if (!tgl || jumlah <= 0) return;
+                        let dateParts = null;
+                        if (tgl.includes('-')) {
+                            dateParts = tgl.split('-');
+                        } else if (tgl.includes('/')) {
+                            dateParts = tgl.split('/');
+                        }
+                        if (dateParts && dateParts.length === 3) {
+                            let year, month;
+                            if (dateParts[0].length === 4) {
+                                year = dateParts[0];
+                                month = dateParts[1];
+                            } else {
+                                year = dateParts[2];
+                                month = dateParts[1];
+                            }
+                            month = month.padStart(2, '0');
+                            if (month === bulan && year === tahun) {
+                                transaksi.push({
+                                    tanggal: tgl,
+                                    kodeKegiatan: '',
+                                    kodeRekening: '',
+                                    noBukti: 'PEMASUKAN',
+                                    uraian: keterangan,
+                                    penerimaan: jumlah,
+                                    pengeluaran: 0,
+                                    jenis: 'pemasukan'
+                                });
+                            }
+                        }
+                    }
+
+                    addPemasukan(tgl1, anggaran1, 'Penerimaan Anggaran Tahap 1');
+                    addPemasukan(tgl2, anggaran2, 'Penerimaan Anggaran Tahap 2');
+
+                    // Urutkan berdasarkan tanggal
+                    transaksi.sort((a, b) => {
+                        return a.tanggal.localeCompare(b.tanggal);
+                    });
+
+                    allKasData = transaksi;
+                    console.log('✅ Total transaksi:', transaksi.length);
+                    renderKasTable(transaksi);
+                    updateClosingStatement(transaksi);
                 })
                 .catch((error) => {
                     console.error('Error loading data:', error);
@@ -926,22 +990,15 @@
 
             let saldo = 0;
             let html = '';
-            // Urutkan berdasarkan tglPembayaran (client-side)
-            const sorted = [...data].sort((a, b) => {
-                const tglA = a.tglPembayaran || '9999-99-99';
-                const tglB = b.tglPembayaran || '9999-99-99';
-                return tglA.localeCompare(tglB);
-            });
 
-            sorted.forEach(item => {
-                const tgl = item.tglPembayaran || '';
+            data.forEach(item => {
+                const tgl = item.tanggal || '';
                 const kode = item.kodeKegiatan || '';
-                const rek = item.noRek || '';
+                const rek = item.kodeRekening || '';
                 const bukti = item.noBukti || '';
                 const uraian = item.uraian || '';
-                const nilai = parseFloat(item.jumlahHarga) || 0;
-                const penerimaan = nilai > 0 ? nilai : 0;
-                const pengeluaran = nilai < 0 ? Math.abs(nilai) : 0;
+                const penerimaan = item.penerimaan || 0;
+                const pengeluaran = item.pengeluaran || 0;
 
                 saldo += penerimaan - pengeluaran;
 
@@ -960,10 +1017,8 @@
             });
 
             // Total baris
-            const totalPenerimaan = sorted.reduce((sum, item) => sum + (parseFloat(item.jumlahHarga) > 0 ? parseFloat(item
-                .jumlahHarga) : 0), 0);
-            const totalPengeluaran = sorted.reduce((sum, item) => sum + (parseFloat(item.jumlahHarga) < 0 ? Math.abs(parseFloat(
-                item.jumlahHarga)) : 0), 0);
+            const totalPenerimaan = data.reduce((sum, item) => sum + (item.penerimaan || 0), 0);
+            const totalPengeluaran = data.reduce((sum, item) => sum + (item.pengeluaran || 0), 0);
 
             html += `
                         <tr class="total-row">
@@ -993,10 +1048,10 @@
             closingTanggal.textContent = lastDay.getDate();
             closingTahun.textContent = tahun;
 
-            // Hitung saldo
+            // Hitung total saldo akhir
             let totalSaldo = 0;
             data.forEach(item => {
-                totalSaldo += parseFloat(item.jumlahHarga) || 0;
+                totalSaldo += (item.penerimaan || 0) - (item.pengeluaran || 0);
             });
 
             // Untuk demo, saldo bank dan tunai dibagi 2
@@ -1109,6 +1164,7 @@
         // ─────────────────────────────────────────────
         // 17. Init
         // ─────────────────────────────────────────────
+        // Load settings dulu
         loadSettings();
 
         // Load data default (bulan saat ini)
@@ -1117,10 +1173,12 @@
         bulanSelect.value = currentMonth;
         // Tahun sudah di-set di populate
 
-        // Load data otomatis
-        setTimeout(loadKasData, 300);
+        // Load data otomatis dengan delay agar settings sempat ter-load
+        setTimeout(() => {
+            loadKasData();
+        }, 500);
 
-        console.log('📋 BOS-NBS · Buku Kas siap (menggunakan tanggal bayar)');
+        console.log('📋 BOS-NBS · Buku Kas siap (pengeluaran dari data_bos, pemasukan dari settings)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
