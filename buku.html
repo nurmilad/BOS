@@ -848,7 +848,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 9.  Load data for Buku Kas (tanpa orderBy untuk menghindari index)
+        // 9.  Load data for Buku Kas (menggunakan tglPembayaran)
         // ─────────────────────────────────────────────
         function loadKasData() {
             const bulan = bulanSelect.value;
@@ -868,47 +868,38 @@
                     snapshot.forEach(doc => {
                         const d = doc.data();
                         d._id = doc.id;
-                        console.log('📄 Data:', d);
-                        // Filter berdasarkan bulan dari tglPelaksanaan
-                        const tgl = d.tglPelaksanaan;
+                        // Gunakan tglPembayaran sebagai acuan
+                        const tgl = d.tglPembayaran;
                         if (tgl) {
-                            // Coba parsing dengan berbagai format
                             let dateParts = null;
-                            // Format YYYY-MM-DD
                             if (tgl.includes('-')) {
                                 dateParts = tgl.split('-');
                             } else if (tgl.includes('/')) {
                                 dateParts = tgl.split('/');
                             }
                             if (dateParts && dateParts.length === 3) {
-                                // Pastikan urutan: tahun, bulan, tanggal
-                                let year, month, day;
-                                // Jika tahun di posisi 0 (YYYY-MM-DD)
+                                let year, month;
                                 if (dateParts[0].length === 4) {
                                     year = dateParts[0];
                                     month = dateParts[1];
                                 } else {
-                                    // Jika format DD/MM/YYYY atau MM/DD/YYYY
-                                    // Asumsikan DD/MM/YYYY
                                     year = dateParts[2];
                                     month = dateParts[1];
                                 }
-                                // Pad month with leading zero
                                 month = month.padStart(2, '0');
                                 if (month === bulan && year === tahun) {
                                     data.push(d);
                                 }
                             } else {
-                                // Jika format tanggal tidak dikenali, lewati
-                                console.warn('⚠️ Format tanggal tidak dikenali:', tgl);
+                                console.warn('⚠️ Format tanggal tidak dikenali (tglPembayaran):', tgl);
                             }
                         } else {
-                            console.warn('⚠️ Data tanpa tglPelaksanaan:', d);
+                            console.warn('⚠️ Data tanpa tglPembayaran:', d);
                         }
                     });
 
                     allKasData = data;
-                    console.log('✅ Data setelah filter bulan:', data.length);
+                    console.log('✅ Data setelah filter bulan (tglPembayaran):', data.length);
                     renderKasTable(data);
                     updateClosingStatement(data);
                 })
@@ -935,15 +926,15 @@
 
             let saldo = 0;
             let html = '';
-            // Urutkan berdasarkan tanggal (client-side)
+            // Urutkan berdasarkan tglPembayaran (client-side)
             const sorted = [...data].sort((a, b) => {
-                const tglA = a.tglPelaksanaan || '9999-99-99';
-                const tglB = b.tglPelaksanaan || '9999-99-99';
+                const tglA = a.tglPembayaran || '9999-99-99';
+                const tglB = b.tglPembayaran || '9999-99-99';
                 return tglA.localeCompare(tglB);
             });
 
             sorted.forEach(item => {
-                const tgl = item.tglPelaksanaan || '';
+                const tgl = item.tglPembayaran || '';
                 const kode = item.kodeKegiatan || '';
                 const rek = item.noRek || '';
                 const bukti = item.noBukti || '';
@@ -1129,7 +1120,7 @@
         // Load data otomatis
         setTimeout(loadKasData, 300);
 
-        console.log('📋 BOS-NBS · Buku Kas siap');
+        console.log('📋 BOS-NBS · Buku Kas siap (menggunakan tanggal bayar)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
