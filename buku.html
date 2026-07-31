@@ -31,7 +31,6 @@
             min-height: 100vh;
         }
 
-        /* ── Header ── */
         .app-header {
             display: flex;
             align-items: center;
@@ -139,7 +138,6 @@
             border-color: #b0c4d8;
         }
 
-        /* ── Toolbar ── */
         .toolbar {
             display: flex;
             align-items: center;
@@ -215,7 +213,6 @@
             background: #123f72;
         }
 
-        /* ── Tabs ── */
         .tabs {
             display: flex;
             gap: 4px;
@@ -262,7 +259,6 @@
             display: block;
         }
 
-        /* ── Filter ── */
         .filter-row {
             display: flex;
             align-items: center;
@@ -291,7 +287,6 @@
             border-color: #0a2e5c;
         }
 
-        /* ── Header Buku ── */
         .book-header {
             text-align: center;
             margin-bottom: 24px;
@@ -334,7 +329,6 @@
             font-weight: 600;
         }
 
-        /* ── Table ── */
         .table-wrapper {
             overflow-x: auto;
             margin-bottom: 20px;
@@ -383,7 +377,6 @@
             font-weight: 600;
         }
 
-        /* ── Closing Statement ── */
         .closing-statement {
             margin-top: 20px;
             padding: 16px 20px;
@@ -449,7 +442,6 @@
             margin-top: 2px;
         }
 
-        /* ── Toast ── */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -481,7 +473,6 @@
             background: #b00020;
         }
 
-        /* ── Responsive ── */
         @media (max-width: 768px) {
             body {
                 padding: 12px;
@@ -506,7 +497,6 @@
             }
         }
 
-        /* ── Print / PDF ── */
         @media print {
             body {
                 background: #fff;
@@ -892,7 +882,6 @@
                             // Transaksi yang terjadi pada atau sebelum bulan yang dimaksud
                             if ((parseInt(month) < parseInt(bulan) && parseInt(year) <= parseInt(tahun)) ||
                                 (parseInt(month) === parseInt(bulan) && parseInt(year) === parseInt(tahun))) {
-                                // Pengeluaran mengurangi saldo
                                 totalSaldo -= parseFloat(d.jumlahHarga) || 0;
                             }
                         }
@@ -961,9 +950,7 @@
 
             const transaksi = [];
 
-            // 1. Baris pertama: Saldo Bank Bulan [bulan lalu]
-            // 2. Baris kedua: Saldo Tunai Bulan [bulan lalu]
-            // Karena semua transaksi non-tunai, saldo bank = total saldo, tunai = 0
+            // 1. Baris pertama: Saldo Bank Bulan [bulan lalu] - dimasukkan di kolom Penerimaan
             const bulanLaluNama = getMonthName(prev.month);
 
             transaksi.push({
@@ -972,13 +959,14 @@
                 kodeRekening: '',
                 noBukti: '',
                 uraian: `Saldo Bank Bulan ${bulanLaluNama}`,
-                penerimaan: 0,
+                penerimaan: saldoAkhirBulanLalu, // DIMASUKKAN KE PENERIMAAN
                 pengeluaran: 0,
                 saldo: saldoAkhirBulanLalu,
                 isSaldoAwal: true,
                 jenis: 'saldo_awal'
             });
 
+            // Saldo Tunai = 0 (semua non-tunai)
             transaksi.push({
                 tanggal: '',
                 kodeKegiatan: '',
@@ -987,7 +975,7 @@
                 uraian: `Saldo Tunai Bulan ${bulanLaluNama}`,
                 penerimaan: 0,
                 pengeluaran: 0,
-                saldo: 0, // Tidak ada transaksi tunai
+                saldo: 0,
                 isSaldoAwal: true,
                 jenis: 'saldo_awal'
             });
@@ -1059,9 +1047,9 @@
                     if (month === bulan && year === tahun) {
                         transaksi.push({
                             tanggal: tgl,
-                            kodeKegiatan: '', // kosong
-                            kodeRekening: '', // kosong
-                            noBukti: '', // kosong
+                            kodeKegiatan: '',
+                            kodeRekening: '',
+                            noBukti: '',
                             uraian: keterangan,
                             penerimaan: jumlah,
                             pengeluaran: 0,
@@ -1094,7 +1082,7 @@
                 }
             });
 
-            // Tambahkan baris Bunga Bank dan Pajak Bunga di akhir (tidak merubah saldo)
+            // Tambahkan baris Bunga Bank dan Pajak Bunga di akhir
             transaksi.push({
                 tanggal: '',
                 kodeKegiatan: '',
@@ -1143,7 +1131,7 @@
 
             let html = '';
 
-            data.forEach((item, index) => {
+            data.forEach((item) => {
                 const tgl = item.tanggal || '';
                 const kode = item.kodeKegiatan || '';
                 const rek = item.kodeRekening || '';
