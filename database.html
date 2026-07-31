@@ -920,7 +920,7 @@
     <div class="modal-overlay" id="settingsModal">
         <div class="modal">
             <h2>⚙️ Pengaturan Sekolah</h2>
-            <div class="sub">Data kepala sekolah, bendahara, NPSN, dan anggaran per tahap untuk <span id="modalSessionLabel">SMP · 2025</span>.</div>
+            <div class="sub">Data kepala sekolah, bendahara, NPSN, anggaran, dan tanggal pemasukan per tahap untuk <span id="modalSessionLabel">SMP · 2025</span>.</div>
 
             <div class="form-group">
                 <label for="modalNpsn">NPSN</label>
@@ -939,8 +939,16 @@
                 <input type="number" id="modalAnggaran1" placeholder="0" step="1000" />
             </div>
             <div class="form-group">
+                <label for="modalTanggalPemasukan1">Tanggal Pemasukan Anggaran Tahap 1</label>
+                <input type="date" id="modalTanggalPemasukan1" />
+            </div>
+            <div class="form-group">
                 <label for="modalAnggaran2">Anggaran Tahap 2 (Rp)</label>
                 <input type="number" id="modalAnggaran2" placeholder="0" step="1000" />
+            </div>
+            <div class="form-group">
+                <label for="modalTanggalPemasukan2">Tanggal Pemasukan Anggaran Tahap 2</label>
+                <input type="date" id="modalTanggalPemasukan2" />
             </div>
 
             <div class="modal-actions">
@@ -1184,6 +1192,8 @@
         const modalBendahara = document.getElementById('modalBendahara');
         const modalAnggaran1 = document.getElementById('modalAnggaran1');
         const modalAnggaran2 = document.getElementById('modalAnggaran2');
+        const modalTanggalPemasukan1 = document.getElementById('modalTanggalPemasukan1');
+        const modalTanggalPemasukan2 = document.getElementById('modalTanggalPemasukan2');
 
         const sumAnggaran1 = document.getElementById('sumAnggaran1');
         const sumAnggaran2 = document.getElementById('sumAnggaran2');
@@ -1921,7 +1931,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 23. Load settings (per jenjang & tahun) + NPSN
+        // 23. Load settings (per jenjang & tahun) + NPSN + tanggal pemasukan
         // ─────────────────────────────────────────────
         function loadSettings() {
             const docId = `${sessionJenjang}_${sessionTahun}`;
@@ -1930,13 +1940,23 @@
                     if (doc.exists) {
                         settingsData = doc.data();
                     } else {
-                        settingsData = { npsn: '', kepalaSekolah: '', bendahara: '', anggaran1: 0, anggaran2: 0 };
+                        settingsData = {
+                            npsn: '',
+                            kepalaSekolah: '',
+                            bendahara: '',
+                            anggaran1: 0,
+                            anggaran2: 0,
+                            tanggalPemasukan1: '',
+                            tanggalPemasukan2: ''
+                        };
                     }
                     modalNpsn.value = settingsData.npsn || '';
                     modalKepalaSekolah.value = settingsData.kepalaSekolah || '';
                     modalBendahara.value = settingsData.bendahara || '';
                     modalAnggaran1.value = settingsData.anggaran1 || 0;
                     modalAnggaran2.value = settingsData.anggaran2 || 0;
+                    modalTanggalPemasukan1.value = settingsData.tanggalPemasukan1 || '';
+                    modalTanggalPemasukan2.value = settingsData.tanggalPemasukan2 || '';
                     updateSummary();
                 }, (error) => {
                     console.error('Settings read error:', error);
@@ -2033,6 +2053,8 @@
             const bendahara = modalBendahara.value.trim();
             const anggaran1 = parseFloat(modalAnggaran1.value) || 0;
             const anggaran2 = parseFloat(modalAnggaran2.value) || 0;
+            const tanggalPemasukan1 = modalTanggalPemasukan1.value || '';
+            const tanggalPemasukan2 = modalTanggalPemasukan2.value || '';
 
             const docId = `${sessionJenjang}_${sessionTahun}`;
             try {
@@ -2042,6 +2064,8 @@
                     bendahara,
                     anggaran1,
                     anggaran2,
+                    tanggalPemasukan1,
+                    tanggalPemasukan2,
                     jenjang: sessionJenjang,
                     tahun: sessionTahun,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -2065,7 +2089,6 @@
                 e.stopPropagation();
                 const menu = item.dataset.menu;
                 if (menu === 'buku') {
-                    // Redirect ke buku.html
                     window.location.href = 'buku.html';
                 } else if (menu === 'kwitansi') {
                     showToast('🧾 Halaman Kwitansi (coming soon)', 'info');
@@ -2111,7 +2134,7 @@
 
         loadData();
 
-        console.log('📋 BOS-NBS · Database siap (menu: Buku & Kwitansi, +NPSN)');
+        console.log('📋 BOS-NBS · Database siap (dengan tanggal pemasukan anggaran)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
         console.log('ℹ️  Klik "Buku" untuk menuju halaman buku.');
     </script>
