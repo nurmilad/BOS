@@ -974,7 +974,8 @@
         </div>
         <div class="toolbar-right">
             <button class="btn-save saved" id="saveBtn" disabled>✓ Tersimpan</button>
-            <button class="btn-icon" id="addRowBtn" title="Tambah baris">➕</button>
+            <button class="btn-icon" id="addRowBtn" title="Tambah baris pengeluaran">➕ Pengeluaran</button>
+            <button class="btn-icon" id="addPemasukanBtn" title="Tambah baris pemasukan" style="border-color:#1a7a3a;color:#1a7a3a;">💰 Pemasukan</button>
             <button class="btn-icon" id="settingsBtn" title="Pengaturan">⚙️</button>
 
             <!-- Tombol Hide/Unhide Kolom -->
@@ -1004,6 +1005,8 @@
                 <thead>
                     <tr id="headerRow">
                         <th style="width:32px;min-width:32px;text-align:center;" data-col="no" data-sort="no" data-required="true">No</th>
+                        <th data-col="jenisTransaksi" data-sort="jenisTransaksi">Jenis <span class="sort-hint">↕</span></th>
+                        <th data-col="metode" data-sort="metode">Metode <span class="sort-hint">↕</span></th>
                         <th data-col="noBukti" data-sort="noBukti">No. Bukti <span class="sort-hint">↕</span></th>
                         <th data-col="kodeKegiatan" data-sort="kodeKegiatan" data-required="true">Kode Kegiatan <span class="sort-hint">↕</span></th>
                         <th data-col="noRek" data-sort="noRek">No. Rek <span class="sort-hint">↕</span></th>
@@ -1031,7 +1034,7 @@
                 </thead>
                 <tbody id="tableBody">
                     <tr class="empty-row">
-                        <td colspan="24">Belum ada data. Klik ➕ untuk menambah baris.</td>
+                        <td colspan="26">Belum ada data. Klik ➕ Pengeluaran atau 💰 Pemasukan untuk menambah.</td>
                     </tr>
                 </tbody>
             </table>
@@ -1168,6 +1171,7 @@
         const filterInput = document.getElementById('filterInput');
         const saveBtn = document.getElementById('saveBtn');
         const addRowBtn = document.getElementById('addRowBtn');
+        const addPemasukanBtn = document.getElementById('addPemasukanBtn');
         const settingsBtn = document.getElementById('settingsBtn');
         const menuBtn = document.getElementById('menuBtn');
         const menuWrapper = document.getElementById('menuWrapper');
@@ -1198,6 +1202,8 @@
         // ─────────────────────────────────────────────
         const COLUMN_DEFS = [
             { key: 'no', label: 'No', required: true },
+            { key: 'jenisTransaksi', label: 'Jenis' },
+            { key: 'metode', label: 'Metode' },
             { key: 'noBukti', label: 'No. Bukti' },
             { key: 'kodeKegiatan', label: 'Kode Kegiatan', required: true },
             { key: 'noRek', label: 'No. Rek' },
@@ -1450,6 +1456,8 @@
         // 11. Column definitions
         // ─────────────────────────────────────────────
         const COLUMNS = [
+            { key: 'jenisTransaksi', type: 'select', options: ['Pemasukan', 'Pengeluaran'], label: 'Jenis' },
+            { key: 'metode', type: 'select', options: ['Tunai', 'Bank'], label: 'Metode' },
             { key: 'noBukti', type: 'text', label: 'No. Bukti' },
             { key: 'kodeKegiatan', type: 'text', label: 'Kode Kegiatan' },
             { key: 'noRek', type: 'text', label: 'No. Rek' },
@@ -1481,10 +1489,12 @@
         // ─────────────────────────────────────────────
         // 12. Generate empty row data
         // ─────────────────────────────────────────────
-        function createEmptyRow() {
+        function createEmptyRow(jenis = 'Pengeluaran') {
             const row = {};
             COLUMN_KEYS.forEach(key => {
-                if (key === 'siplah') row[key] = 'Siplah';
+                if (key === 'jenisTransaksi') row[key] = jenis;
+                else if (key === 'metode') row[key] = 'Bank';
+                else if (key === 'siplah') row[key] = 'Siplah';
                 else if (key === 'jenisBelanja') row[key] = 'Pegawai';
                 else if (key === 'tahap') row[key] = 'Tahap 1';
                 else if (key === 'komponen' || key === 'standar') row[key] = '';
@@ -1549,7 +1559,7 @@
 
             if (data.length === 0) {
                 tableBody.innerHTML =
-                    `<tr class="empty-row"><td colspan="24">Tidak ada data untuk ${sessionJenjang} · ${sessionTahun}. Klik ➕ untuk menambah.</td></tr>`;
+                    `<tr class="empty-row"><td colspan="26">Tidak ada data untuk ${sessionJenjang} · ${sessionTahun}. Klik ➕ Pengeluaran atau 💰 Pemasukan untuk menambah.</td></tr>`;
                 updateCount();
                 updateSummary();
                 applyHiddenColumns();
@@ -1604,7 +1614,7 @@
             });
 
             html += `<tr class="add-row-row">
-                        <td colspan="24" class="add-row-cell">
+                        <td colspan="26" class="add-row-cell">
                             <button class="btn-add-row" id="addRowBottomBtn">➕ Tambah Baris</button>
                         </td>
                     </tr>`;
@@ -1771,10 +1781,10 @@
         }
 
         // ─────────────────────────────────────────────
-        // 18. Add row
+        // 18. Add row (pengeluaran)
         // ─────────────────────────────────────────────
         function addRow() {
-            const newRow = createEmptyRow();
+            const newRow = createEmptyRow('Pengeluaran');
             newRow._id = '_temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
             allData.push(newRow);
             markUnsaved();
@@ -1786,7 +1796,24 @@
         }
 
         // ─────────────────────────────────────────────
-        // 19. Delete row
+        // 19. Add pemasukan
+        // ─────────────────────────────────────────────
+        function addPemasukan() {
+            const newRow = createEmptyRow('Pemasukan');
+            newRow._id = '_temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            // Set default metode menjadi Bank untuk pemasukan
+            newRow.metode = 'Bank';
+            allData.push(newRow);
+            markUnsaved();
+            renderTable();
+            setTimeout(() => {
+                const lastRow = tableBody.querySelector('tr:last-child');
+                if (lastRow) lastRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        // ─────────────────────────────────────────────
+        // 20. Delete row
         // ─────────────────────────────────────────────
         function deleteRow(id, rowIdx) {
             const displayData = getDisplayData();
@@ -1810,7 +1837,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 20. Save / unsaved state
+        // 21. Save / unsaved state
         // ─────────────────────────────────────────────
         function markUnsaved() {
             hasUnsavedChanges = true;
@@ -1835,7 +1862,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 21. Save all to Firestore
+        // 22. Save all to Firestore
         // ─────────────────────────────────────────────
         async function saveAll() {
             if (!hasUnsavedChanges) return;
@@ -1890,7 +1917,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 22. Load data from Firestore
+        // 23. Load data from Firestore
         // ─────────────────────────────────────────────
         function loadData() {
             db.collection(COLLECTION)
@@ -1921,7 +1948,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 23. Load settings (per jenjang & tahun) + NPSN
+        // 24. Load settings (per jenjang & tahun) + NPSN
         // ─────────────────────────────────────────────
         function loadSettings() {
             const docId = `${sessionJenjang}_${sessionTahun}`;
@@ -1944,7 +1971,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 24. Update count
+        // 25. Update count
         // ─────────────────────────────────────────────
         function updateCount() {
             const data = getDisplayData();
@@ -1952,7 +1979,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 25. Update Summary
+        // 26. Update Summary (hanya pengeluaran yang dihitung)
         // ─────────────────────────────────────────────
         function updateSummary() {
             const data = getDisplayData();
@@ -1960,9 +1987,12 @@
             let total1 = 0,
                 total2 = 0;
             data.forEach(item => {
-                const jml = parseFloat(item.jumlahHarga) || 0;
-                if (item.tahap === 'Tahap 1') total1 += jml;
-                else if (item.tahap === 'Tahap 2') total2 += jml;
+                // Hanya Pengeluaran yang dihitung dalam anggaran
+                if (item.jenisTransaksi === 'Pengeluaran') {
+                    const jml = parseFloat(item.jumlahHarga) || 0;
+                    if (item.tahap === 'Tahap 1') total1 += jml;
+                    else if (item.tahap === 'Tahap 2') total2 += jml;
+                }
             });
 
             const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
@@ -1982,7 +2012,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 26. Filter
+        // 27. Filter
         // ─────────────────────────────────────────────
         filterInput.addEventListener('input', () => {
             filterText = filterInput.value;
@@ -1990,7 +2020,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 27. Sort handlers
+        // 28. Sort handlers
         // ─────────────────────────────────────────────
         function setupSortHandlers() {
             const headers = headerRow.querySelectorAll('th[data-sort]');
@@ -2016,9 +2046,10 @@
         }
 
         // ─────────────────────────────────────────────
-        // 28. Event listeners
+        // 29. Event listeners
         // ─────────────────────────────────────────────
         addRowBtn.addEventListener('click', addRow);
+        addPemasukanBtn.addEventListener('click', addPemasukan);
         saveBtn.addEventListener('click', saveAll);
 
         settingsBtn.addEventListener('click', () => settingsModal.classList.add('active'));
@@ -2065,7 +2096,6 @@
                 e.stopPropagation();
                 const menu = item.dataset.menu;
                 if (menu === 'buku') {
-                    // Redirect ke buku.html
                     window.location.href = 'buku.html';
                 } else if (menu === 'kwitansi') {
                     showToast('🧾 Halaman Kwitansi (coming soon)', 'info');
@@ -2089,7 +2119,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 29. Init
+        // 30. Init
         // ─────────────────────────────────────────────
         document.querySelectorAll('thead th[data-sort]').forEach(th => {
             const icon = document.createElement('span');
@@ -2111,9 +2141,9 @@
 
         loadData();
 
-        console.log('📋 BOS-NBS · Database siap (menu: Buku & Kwitansi, +NPSN)');
+        console.log('📋 BOS-NBS · Database siap (dengan Pemasukan & Metode Tunai/Bank)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
-        console.log('ℹ️  Klik "Buku" untuk menuju halaman buku.');
+        console.log('ℹ️  Klik "Pemasukan" untuk mencatat dana masuk, "Pengeluaran" untuk belanja.');
     </script>
 
 </body>
