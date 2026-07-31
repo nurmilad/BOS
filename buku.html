@@ -858,7 +858,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 9.  Hitung saldo akhir bulan tertentu (PERBAIKAN: pengeluaran dikurangi)
+        // 9.  Hitung saldo akhir bulan tertentu
         // ─────────────────────────────────────────────
         async function getSaldoAkhirBulan(bulan, tahun) {
             try {
@@ -889,10 +889,10 @@
                                 month = dateParts[1];
                             }
                             month = month.padStart(2, '0');
-                            // Jika transaksi terjadi pada atau sebelum bulan yang dimaksud
+                            // Transaksi yang terjadi pada atau sebelum bulan yang dimaksud
                             if ((parseInt(month) < parseInt(bulan) && parseInt(year) <= parseInt(tahun)) ||
                                 (parseInt(month) === parseInt(bulan) && parseInt(year) === parseInt(tahun))) {
-                                // KOREKSI: pengeluaran dikurangi (bukan ditambah)
+                                // Pengeluaran mengurangi saldo
                                 totalSaldo -= parseFloat(d.jumlahHarga) || 0;
                             }
                         }
@@ -949,9 +949,9 @@
             displayBulan.textContent = getMonthName(bulan);
             displayTahun.textContent = tahun;
 
-            // Ambil saldo akhir bulan lalu
+            // Ambil saldo akhir bulan lalu (saldo Bank = total saldo)
             const prev = getPreviousMonth(bulan, tahun);
-            const saldoAwal = await getSaldoAkhirBulan(prev.month, prev.year);
+            const saldoAkhirBulanLalu = await getSaldoAkhirBulan(prev.month, prev.year);
 
             // Ambil semua data pengeluaran dari data_bos untuk bulan ini
             const snapshot = await db.collection(COLLECTION)
@@ -963,9 +963,8 @@
 
             // 1. Baris pertama: Saldo Bank Bulan [bulan lalu]
             // 2. Baris kedua: Saldo Tunai Bulan [bulan lalu]
+            // Karena semua transaksi non-tunai, saldo bank = total saldo, tunai = 0
             const bulanLaluNama = getMonthName(prev.month);
-            const saldoBankAwal = Math.round(saldoAwal * 0.6);
-            const saldoTunaiAwal = Math.round(saldoAwal * 0.4);
 
             transaksi.push({
                 tanggal: '',
@@ -975,7 +974,7 @@
                 uraian: `Saldo Bank Bulan ${bulanLaluNama}`,
                 penerimaan: 0,
                 pengeluaran: 0,
-                saldo: saldoBankAwal,
+                saldo: saldoAkhirBulanLalu,
                 isSaldoAwal: true,
                 jenis: 'saldo_awal'
             });
@@ -988,12 +987,12 @@
                 uraian: `Saldo Tunai Bulan ${bulanLaluNama}`,
                 penerimaan: 0,
                 pengeluaran: 0,
-                saldo: saldoTunaiAwal,
+                saldo: 0, // Tidak ada transaksi tunai
                 isSaldoAwal: true,
                 jenis: 'saldo_awal'
             });
 
-            // Proses data pengeluaran dari data_bos
+            // Proses data pengeluaran dari data_bos (non-tunai)
             snapshot.forEach(doc => {
                 const d = doc.data();
                 d._id = doc.id;
@@ -1033,7 +1032,7 @@
                 }
             });
 
-            // Proses pemasukan anggaran dari settings
+            // Proses pemasukan anggaran dari settings (non-tunai)
             const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
             const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
             const tgl1 = settingsData.tanggalPemasukan1 || '';
@@ -1085,7 +1084,7 @@
             });
 
             // Hitung saldo kumulatif
-            let saldoKumulatif = saldoAwal;
+            let saldoKumulatif = saldoAkhirBulanLalu;
             transaksi.forEach(item => {
                 if (item.isSaldoAwal) {
                     item.saldo = item.saldo; // sudah di-set
@@ -1095,7 +1094,7 @@
                 }
             });
 
-            // Tambahkan baris Bunga Bank dan Pajak Bunga di akhir
+            // Tambahkan baris Bunga Bank dan Pajak Bunga di akhir (tidak merubah saldo)
             transaksi.push({
                 tanggal: '',
                 kodeKegiatan: '',
@@ -1211,11 +1210,9 @@
                 saldoAkhir = last.saldo || 0;
             }
 
-            const saldoBankVal = Math.round(saldoAkhir * 0.6);
-            const saldoTunaiVal = Math.round(saldoAkhir * 0.4);
-
-            saldoBank.textContent = formatRupiah(saldoBankVal);
-            saldoTunai.textContent = formatRupiah(saldoTunaiVal);
+            // Karena semua transaksi non-tunai, saldo bank = total saldo, tunai = 0
+            saldoBank.textContent = formatRupiah(saldoAkhir);
+            saldoTunai.textContent = formatRupiah(0);
             saldoTotal.textContent = formatRupiah(saldoAkhir);
 
             const today = new Date();
@@ -1325,7 +1322,7 @@
             loadKasData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Buku Kas siap (perbaikan saldo awal)');
+        console.log('📋 BOS-NBS · Buku Kas siap (saldo bank = total, tunai = 0)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
