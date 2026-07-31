@@ -716,7 +716,8 @@
             margin-bottom: 4px;
         }
 
-        .modal .form-group input {
+        .modal .form-group input,
+        .modal .form-group select {
             width: 100%;
             padding: 9px 14px;
             font-size: 14px;
@@ -727,7 +728,8 @@
             transition: border-color 0.2s;
         }
 
-        .modal .form-group input:focus {
+        .modal .form-group input:focus,
+        .modal .form-group select:focus {
             border-color: #0a2e5c;
         }
 
@@ -909,6 +911,11 @@
         .dragging-active * {
             cursor: col-resize !important;
         }
+
+        /* ── Modal Pemasukan ── */
+        .modal-pemasukan .modal {
+            max-width: 500px;
+        }
     </style>
 </head>
 <body>
@@ -950,6 +957,51 @@
         </div>
     </div>
 
+    <!-- ─── Modal Pemasukan ─── -->
+    <div class="modal-overlay modal-pemasukan" id="pemasukanModal">
+        <div class="modal">
+            <h2>💰 Pemasukan Dana</h2>
+            <div class="sub">Catat pemasukan dana BOS ke rekening sekolah atau kas.</div>
+
+            <div class="form-group">
+                <label for="pmTanggal">Tanggal</label>
+                <input type="date" id="pmTanggal" />
+            </div>
+            <div class="form-group">
+                <label for="pmKodeKegiatan">Kode Kegiatan</label>
+                <input type="text" id="pmKodeKegiatan" placeholder="07.01.00" />
+            </div>
+            <div class="form-group">
+                <label for="pmUraian">Uraian</label>
+                <input type="text" id="pmUraian" placeholder="Penerimaan Dana BOS Tahap 1" />
+            </div>
+            <div class="form-group">
+                <label for="pmJumlah">Jumlah (Rp)</label>
+                <input type="number" id="pmJumlah" placeholder="0" step="1000" />
+            </div>
+            <div class="form-group">
+                <label for="pmMetode">Metode</label>
+                <select id="pmMetode">
+                    <option value="Bank">Bank (Transfer)</option>
+                    <option value="Tunai">Tunai (Kas)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="pmNoBukti">No. Bukti</label>
+                <input type="text" id="pmNoBukti" placeholder="BKM-001" />
+            </div>
+            <div class="form-group">
+                <label for="pmKeterangan">Keterangan</label>
+                <input type="text" id="pmKeterangan" placeholder="Opsional" />
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" id="pmCancelBtn">Batal</button>
+                <button class="btn-primary" id="pmSaveBtn">Simpan Pemasukan</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ─── Header ─── -->
     <header class="app-header">
         <div class="brand">
@@ -974,8 +1026,8 @@
         </div>
         <div class="toolbar-right">
             <button class="btn-save saved" id="saveBtn" disabled>✓ Tersimpan</button>
-            <button class="btn-icon" id="addRowBtn" title="Tambah baris pengeluaran">➕ Pengeluaran</button>
-            <button class="btn-icon" id="addPemasukanBtn" title="Tambah baris pemasukan" style="border-color:#1a7a3a;color:#1a7a3a;">💰 Pemasukan</button>
+            <button class="btn-icon" id="addRowBtn" title="Tambah pengeluaran">➕ Pengeluaran</button>
+            <button class="btn-icon" id="pemasukanBtn" title="Tambah pemasukan" style="border-color:#1a7a3a;color:#1a7a3a;">💰 Pemasukan</button>
             <button class="btn-icon" id="settingsBtn" title="Pengaturan">⚙️</button>
 
             <!-- Tombol Hide/Unhide Kolom -->
@@ -1005,7 +1057,6 @@
                 <thead>
                     <tr id="headerRow">
                         <th style="width:32px;min-width:32px;text-align:center;" data-col="no" data-sort="no" data-required="true">No</th>
-                        <th data-col="jenisTransaksi" data-sort="jenisTransaksi">Jenis <span class="sort-hint">↕</span></th>
                         <th data-col="metode" data-sort="metode">Metode <span class="sort-hint">↕</span></th>
                         <th data-col="noBukti" data-sort="noBukti">No. Bukti <span class="sort-hint">↕</span></th>
                         <th data-col="kodeKegiatan" data-sort="kodeKegiatan" data-required="true">Kode Kegiatan <span class="sort-hint">↕</span></th>
@@ -1034,7 +1085,7 @@
                 </thead>
                 <tbody id="tableBody">
                     <tr class="empty-row">
-                        <td colspan="26">Belum ada data. Klik ➕ Pengeluaran atau 💰 Pemasukan untuk menambah.</td>
+                        <td colspan="25">Belum ada data pengeluaran. Klik ➕ Pengeluaran untuk menambah.</td>
                     </tr>
                 </tbody>
             </table>
@@ -1157,6 +1208,7 @@
         let hiddenColumns = new Set();
 
         const COLLECTION = 'data_bos';
+        const PEMASUKAN_COLLECTION = 'data_pemasukan';
         const SETTINGS_COLLECTION = 'settings_bos';
         const COL_WIDTHS_KEY = 'bosnbs_col_widths';
         const HIDDEN_COLS_KEY = 'bosnbs_hidden_cols';
@@ -1171,7 +1223,7 @@
         const filterInput = document.getElementById('filterInput');
         const saveBtn = document.getElementById('saveBtn');
         const addRowBtn = document.getElementById('addRowBtn');
-        const addPemasukanBtn = document.getElementById('addPemasukanBtn');
+        const pemasukanBtn = document.getElementById('pemasukanBtn');
         const settingsBtn = document.getElementById('settingsBtn');
         const menuBtn = document.getElementById('menuBtn');
         const menuWrapper = document.getElementById('menuWrapper');
@@ -1189,6 +1241,17 @@
         const modalAnggaran1 = document.getElementById('modalAnggaran1');
         const modalAnggaran2 = document.getElementById('modalAnggaran2');
 
+        const pemasukanModal = document.getElementById('pemasukanModal');
+        const pmTanggal = document.getElementById('pmTanggal');
+        const pmKodeKegiatan = document.getElementById('pmKodeKegiatan');
+        const pmUraian = document.getElementById('pmUraian');
+        const pmJumlah = document.getElementById('pmJumlah');
+        const pmMetode = document.getElementById('pmMetode');
+        const pmNoBukti = document.getElementById('pmNoBukti');
+        const pmKeterangan = document.getElementById('pmKeterangan');
+        const pmCancelBtn = document.getElementById('pmCancelBtn');
+        const pmSaveBtn = document.getElementById('pmSaveBtn');
+
         const sumAnggaran1 = document.getElementById('sumAnggaran1');
         const sumAnggaran2 = document.getElementById('sumAnggaran2');
         const sumTeranggarkan1 = document.getElementById('sumTeranggarkan1');
@@ -1198,11 +1261,10 @@
         const sumTotal = document.getElementById('sumTotal');
 
         // ─────────────────────────────────────────────
-        // 6.  Column definitions (untuk hide/unhide)
+        // 6.  Column definitions (untuk hide/unhide) - tanpa Jenis
         // ─────────────────────────────────────────────
         const COLUMN_DEFS = [
             { key: 'no', label: 'No', required: true },
-            { key: 'jenisTransaksi', label: 'Jenis' },
             { key: 'metode', label: 'Metode' },
             { key: 'noBukti', label: 'No. Bukti' },
             { key: 'kodeKegiatan', label: 'Kode Kegiatan', required: true },
@@ -1453,10 +1515,9 @@
         }
 
         // ─────────────────────────────────────────────
-        // 11. Column definitions
+        // 11. Column definitions - tanpa jenisTransaksi
         // ─────────────────────────────────────────────
         const COLUMNS = [
-            { key: 'jenisTransaksi', type: 'select', options: ['Pemasukan', 'Pengeluaran'], label: 'Jenis' },
             { key: 'metode', type: 'select', options: ['Tunai', 'Bank'], label: 'Metode' },
             { key: 'noBukti', type: 'text', label: 'No. Bukti' },
             { key: 'kodeKegiatan', type: 'text', label: 'Kode Kegiatan' },
@@ -1487,13 +1548,12 @@
         const COLUMN_KEYS = COLUMNS.map(c => c.key);
 
         // ─────────────────────────────────────────────
-        // 12. Generate empty row data
+        // 12. Generate empty row data (pengeluaran)
         // ─────────────────────────────────────────────
-        function createEmptyRow(jenis = 'Pengeluaran') {
+        function createEmptyRow() {
             const row = {};
             COLUMN_KEYS.forEach(key => {
-                if (key === 'jenisTransaksi') row[key] = jenis;
-                else if (key === 'metode') row[key] = 'Bank';
+                if (key === 'metode') row[key] = 'Bank';
                 else if (key === 'siplah') row[key] = 'Siplah';
                 else if (key === 'jenisBelanja') row[key] = 'Pegawai';
                 else if (key === 'tahap') row[key] = 'Tahap 1';
@@ -1519,12 +1579,20 @@
         }
 
         // ─────────────────────────────────────────────
-        // 14. Get display data
+        // 14. Get display data (hanya pengeluaran)
         // ─────────────────────────────────────────────
         function getDisplayData() {
             let data = allData.filter(item =>
-                item.jenjang === sessionJenjang && item.tahun === sessionTahun
+                item.jenjang === sessionJenjang &&
+                item.tahun === sessionTahun &&
+                item.jenisTransaksi !== 'Pemasukan' // Filter pemasukan
             );
+
+            // Jika ada data lama tanpa jenisTransaksi, anggap pengeluaran
+            data = data.filter(item => {
+                // Jika tidak ada field jenisTransaksi, atau bukan 'Pemasukan'
+                return !item.jenisTransaksi || item.jenisTransaksi !== 'Pemasukan';
+            });
 
             if (filterText.trim()) {
                 const search = filterText.trim().toLowerCase();
@@ -1559,7 +1627,7 @@
 
             if (data.length === 0) {
                 tableBody.innerHTML =
-                    `<tr class="empty-row"><td colspan="26">Tidak ada data untuk ${sessionJenjang} · ${sessionTahun}. Klik ➕ Pengeluaran atau 💰 Pemasukan untuk menambah.</td></tr>`;
+                    `<tr class="empty-row"><td colspan="25">Tidak ada data pengeluaran untuk ${sessionJenjang} · ${sessionTahun}. Klik ➕ Pengeluaran untuk menambah.</td></tr>`;
                 updateCount();
                 updateSummary();
                 applyHiddenColumns();
@@ -1614,8 +1682,8 @@
             });
 
             html += `<tr class="add-row-row">
-                        <td colspan="26" class="add-row-cell">
-                            <button class="btn-add-row" id="addRowBottomBtn">➕ Tambah Baris</button>
+                        <td colspan="25" class="add-row-cell">
+                            <button class="btn-add-row" id="addRowBottomBtn">➕ Tambah Pengeluaran</button>
                         </td>
                     </tr>`;
 
@@ -1784,7 +1852,7 @@
         // 18. Add row (pengeluaran)
         // ─────────────────────────────────────────────
         function addRow() {
-            const newRow = createEmptyRow('Pengeluaran');
+            const newRow = createEmptyRow();
             newRow._id = '_temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
             allData.push(newRow);
             markUnsaved();
@@ -1796,24 +1864,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 19. Add pemasukan
-        // ─────────────────────────────────────────────
-        function addPemasukan() {
-            const newRow = createEmptyRow('Pemasukan');
-            newRow._id = '_temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-            // Set default metode menjadi Bank untuk pemasukan
-            newRow.metode = 'Bank';
-            allData.push(newRow);
-            markUnsaved();
-            renderTable();
-            setTimeout(() => {
-                const lastRow = tableBody.querySelector('tr:last-child');
-                if (lastRow) lastRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
-        }
-
-        // ─────────────────────────────────────────────
-        // 20. Delete row
+        // 19. Delete row
         // ─────────────────────────────────────────────
         function deleteRow(id, rowIdx) {
             const displayData = getDisplayData();
@@ -1837,7 +1888,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 21. Save / unsaved state
+        // 20. Save / unsaved state
         // ─────────────────────────────────────────────
         function markUnsaved() {
             hasUnsavedChanges = true;
@@ -1862,7 +1913,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 22. Save all to Firestore
+        // 21. Save all to Firestore
         // ─────────────────────────────────────────────
         async function saveAll() {
             if (!hasUnsavedChanges) return;
@@ -1876,6 +1927,8 @@
 
                 for (const item of allData) {
                     if (item.jenjang !== sessionJenjang || item.tahun !== sessionTahun) continue;
+                    // Skip pemasukan (disimpan terpisah)
+                    if (item.jenisTransaksi === 'Pemasukan') continue;
 
                     const hasData = COLUMN_KEYS.some(key => {
                         const val = item[key];
@@ -1905,7 +1958,7 @@
                 }
 
                 await Promise.all(promises);
-                showToast(`✅ ${savedCount} data berhasil disimpan!`, 'success');
+                showToast(`✅ ${savedCount} data pengeluaran berhasil disimpan!`, 'success');
                 markSaved();
                 loadData();
             } catch (error) {
@@ -1917,7 +1970,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 23. Load data from Firestore
+        // 22. Load data from Firestore
         // ─────────────────────────────────────────────
         function loadData() {
             db.collection(COLLECTION)
@@ -1948,7 +2001,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 24. Load settings (per jenjang & tahun) + NPSN
+        // 23. Load settings (per jenjang & tahun) + NPSN
         // ─────────────────────────────────────────────
         function loadSettings() {
             const docId = `${sessionJenjang}_${sessionTahun}`;
@@ -1971,7 +2024,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 25. Update count
+        // 24. Update count
         // ─────────────────────────────────────────────
         function updateCount() {
             const data = getDisplayData();
@@ -1979,7 +2032,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 26. Update Summary (hanya pengeluaran yang dihitung)
+        // 25. Update Summary (hanya pengeluaran yang dihitung)
         // ─────────────────────────────────────────────
         function updateSummary() {
             const data = getDisplayData();
@@ -1987,12 +2040,9 @@
             let total1 = 0,
                 total2 = 0;
             data.forEach(item => {
-                // Hanya Pengeluaran yang dihitung dalam anggaran
-                if (item.jenisTransaksi === 'Pengeluaran') {
-                    const jml = parseFloat(item.jumlahHarga) || 0;
-                    if (item.tahap === 'Tahap 1') total1 += jml;
-                    else if (item.tahap === 'Tahap 2') total2 += jml;
-                }
+                const jml = parseFloat(item.jumlahHarga) || 0;
+                if (item.tahap === 'Tahap 1') total1 += jml;
+                else if (item.tahap === 'Tahap 2') total2 += jml;
             });
 
             const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
@@ -2012,7 +2062,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 27. Filter
+        // 26. Filter
         // ─────────────────────────────────────────────
         filterInput.addEventListener('input', () => {
             filterText = filterInput.value;
@@ -2020,7 +2070,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 28. Sort handlers
+        // 27. Sort handlers
         // ─────────────────────────────────────────────
         function setupSortHandlers() {
             const headers = headerRow.querySelectorAll('th[data-sort]');
@@ -2046,10 +2096,84 @@
         }
 
         // ─────────────────────────────────────────────
+        // 28. Modal Pemasukan
+        // ─────────────────────────────────────────────
+        function openPemasukanModal() {
+            // Set default tanggal hari ini
+            const today = new Date().toISOString().split('T')[0];
+            pmTanggal.value = today;
+            pmKodeKegiatan.value = '';
+            pmUraian.value = '';
+            pmJumlah.value = '';
+            pmMetode.value = 'Bank';
+            pmNoBukti.value = '';
+            pmKeterangan.value = '';
+            pemasukanModal.classList.add('active');
+        }
+
+        function closePemasukanModal() {
+            pemasukanModal.classList.remove('active');
+        }
+
+        async function savePemasukan() {
+            const tanggal = pmTanggal.value;
+            const kodeKegiatan = pmKodeKegiatan.value.trim();
+            const uraian = pmUraian.value.trim();
+            const jumlah = parseFloat(pmJumlah.value) || 0;
+            const metode = pmMetode.value;
+            const noBukti = pmNoBukti.value.trim();
+            const keterangan = pmKeterangan.value.trim();
+
+            if (!tanggal) {
+                showToast('Tanggal wajib diisi!', 'error');
+                return;
+            }
+            if (!kodeKegiatan) {
+                showToast('Kode Kegiatan wajib diisi!', 'error');
+                return;
+            }
+            if (jumlah <= 0) {
+                showToast('Jumlah pemasukan harus lebih dari 0!', 'error');
+                return;
+            }
+
+            try {
+                const data = {
+                    tanggal: tanggal,
+                    kodeKegiatan: kodeKegiatan,
+                    uraian: uraian,
+                    jumlah: jumlah,
+                    metode: metode,
+                    noBukti: noBukti,
+                    keterangan: keterangan,
+                    jenjang: sessionJenjang,
+                    tahun: sessionTahun,
+                    jenisTransaksi: 'Pemasukan',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection(PEMASUKAN_COLLECTION).add(data);
+                showToast('✅ Pemasukan berhasil dicatat!', 'success');
+                closePemasukanModal();
+                // Refresh data
+                loadData();
+            } catch (error) {
+                console.error('Error saving pemasukan:', error);
+                showToast('Gagal menyimpan pemasukan: ' + error.message, 'error');
+            }
+        }
+
+        // ─────────────────────────────────────────────
         // 29. Event listeners
         // ─────────────────────────────────────────────
         addRowBtn.addEventListener('click', addRow);
-        addPemasukanBtn.addEventListener('click', addPemasukan);
+        pemasukanBtn.addEventListener('click', openPemasukanModal);
+        pmCancelBtn.addEventListener('click', closePemasukanModal);
+        pemasukanModal.addEventListener('click', (e) => {
+            if (e.target === pemasukanModal) closePemasukanModal();
+        });
+        pmSaveBtn.addEventListener('click', savePemasukan);
+
         saveBtn.addEventListener('click', saveAll);
 
         settingsBtn.addEventListener('click', () => settingsModal.classList.add('active'));
@@ -2141,7 +2265,7 @@
 
         loadData();
 
-        console.log('📋 BOS-NBS · Database siap (dengan Pemasukan & Metode Tunai/Bank)');
+        console.log('📋 BOS-NBS · Database siap (dengan Pemasukan via modal terpisah)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
         console.log('ℹ️  Klik "Pemasukan" untuk mencatat dana masuk, "Pengeluaran" untuk belanja.');
     </script>
