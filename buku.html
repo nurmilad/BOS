@@ -27,7 +27,6 @@
             min-height: 100vh;
         }
 
-        /* ── Header ── */
         .app-header {
             display: flex;
             align-items: center;
@@ -39,13 +38,11 @@
             padding-bottom: 12px;
             border-bottom: 2px solid #e2edf6;
         }
-
         .app-header .brand {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
         .app-header .brand img {
             height: 38px;
             width: 38px;
@@ -54,7 +51,6 @@
             background: #f0f4fa;
             padding: 4px;
         }
-
         .app-header .brand .fallback-icon {
             display: inline-flex;
             align-items: center;
@@ -67,26 +63,22 @@
             font-weight: 700;
             font-size: 18px;
         }
-
         .app-header h1 {
             font-size: 20px;
             font-weight: 700;
             color: #0a2e5c;
         }
-
         .app-header .sub {
             font-size: 12px;
             color: #7a8fa6;
             font-weight: 400;
         }
-
         .header-actions {
             display: flex;
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
         }
-
         .header-actions .user-badge {
             font-size: 12px;
             color: #1f3a5f;
@@ -95,7 +87,6 @@
             border-radius: 16px;
             font-weight: 500;
         }
-
         .btn-outline {
             background: transparent;
             border: 1.5px solid #d0dde9;
@@ -111,12 +102,10 @@
             align-items: center;
             gap: 5px;
         }
-
         .btn-outline:hover {
             background: #f0f4fa;
             border-color: #b0c4d8;
         }
-
         .btn-logout {
             background: transparent;
             border: 1.5px solid #d0dde9;
@@ -129,13 +118,11 @@
             transition: all 0.2s ease;
             font-family: inherit;
         }
-
         .btn-logout:hover {
             background: #f0f4fa;
             border-color: #b0c4d8;
         }
 
-        /* ── Toolbar ── */
         .toolbar {
             display: flex;
             align-items: center;
@@ -148,21 +135,18 @@
             margin-bottom: 16px;
             box-shadow: 0 2px 8px rgba(0, 20, 40, 0.06);
         }
-
         .toolbar-left {
             display: flex;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
         }
-
         .toolbar-right {
             display: flex;
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
         }
-
         .btn-icon {
             background: transparent;
             border: 1.5px solid #dce6ef;
@@ -178,22 +162,18 @@
             font-size: 13px;
             font-weight: 500;
         }
-
         .btn-icon:hover {
             background: #f0f4fa;
             border-color: #b0c4d8;
         }
-
         .btn-icon.active {
             background: #0a2e5c;
             color: #fff;
             border-color: #0a2e5c;
         }
-
         .btn-icon.active:hover {
             background: #123f72;
         }
-
         .btn-primary {
             background: #0a2e5c;
             color: #fff;
@@ -206,12 +186,10 @@
             cursor: pointer;
             transition: background 0.2s ease;
         }
-
         .btn-primary:hover {
             background: #123f72;
         }
 
-        /* ── Tabs ── */
         .tabs {
             display: flex;
             gap: 4px;
@@ -222,7 +200,6 @@
             box-shadow: 0 2px 8px rgba(0, 20, 40, 0.06);
             flex-wrap: wrap;
         }
-
         .tab-btn {
             padding: 8px 18px;
             border: none;
@@ -235,17 +212,14 @@
             background: transparent;
             color: #5a7a9a;
         }
-
         .tab-btn:hover {
             background: #f2f7fc;
             color: #0a2e5c;
         }
-
         .tab-btn.active {
             background: #0a2e5c;
             color: #fff;
         }
-
         .tab-content {
             display: none;
             background: #ffffff;
@@ -253,12 +227,10 @@
             padding: 24px 28px;
             box-shadow: 0 2px 12px rgba(0, 20, 40, 0.06);
         }
-
         .tab-content.active {
             display: block;
         }
 
-        /* ── Filter ── */
         .filter-row {
             display: flex;
             align-items: center;
@@ -266,13 +238,11 @@
             flex-wrap: wrap;
             margin-bottom: 20px;
         }
-
         .filter-row label {
             font-size: 13px;
             font-weight: 500;
             color: #1f3a5f;
         }
-
         .filter-row select {
             padding: 6px 12px;
             font-size: 13px;
@@ -282,17 +252,14 @@
             font-family: inherit;
             background: #fafcfe;
         }
-
         .filter-row select:focus {
             border-color: #0a2e5c;
         }
 
-        /* ── Header Buku ── */
         .book-header {
             text-align: center;
             margin-bottom: 24px;
         }
-
         .book-header h2 {
             font-size: 20px;
             font-weight: 700;
@@ -300,17 +267,14 @@
             letter-spacing: 1px;
             margin-bottom: 4px;
         }
-
         .book-header .sub-info {
             font-size: 13px;
             color: #5a7a9a;
         }
-
         .book-header .sub-info span {
             margin: 0 8px;
         }
 
-        /* ── Book Meta ── */
         .book-meta {
             display: grid;
             grid-template-columns: auto 1fr;
@@ -322,40 +286,33 @@
             border: 1px solid #eef4f9;
             align-items: center;
         }
-
         .book-meta .meta-row {
             display: contents;
         }
-
         .book-meta .meta-label {
             text-align: right;
             font-weight: 600;
             color: #1f3a5f;
             white-space: nowrap;
         }
-
         .book-meta .meta-value {
             text-align: left;
             color: #0a1e33;
         }
 
-        /* ── Table ── */
         .table-wrapper {
             overflow-x: auto;
             margin-bottom: 20px;
         }
-
         table.book-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
             border: 1px solid #dce6ef;
         }
-
         table.book-table thead {
             background: #f2f7fc;
         }
-
         table.book-table th {
             padding: 8px 8px;
             text-align: center;
@@ -368,7 +325,6 @@
             word-break: break-word;
             position: relative;
         }
-
         table.book-table td {
             padding: 6px 8px;
             text-align: center;
@@ -376,21 +332,17 @@
             vertical-align: middle;
             font-size: 12px;
         }
-
         table.book-table td.left {
             text-align: left;
         }
-
         table.book-table td.right {
             text-align: right;
         }
-
         table.book-table .total-row {
             background: #f8fafc;
             font-weight: 600;
         }
 
-        /* ── Column resizer (untuk preview) ── */
         .col-resizer {
             position: absolute;
             top: 0;
@@ -402,18 +354,15 @@
             background: transparent;
             transition: background 0.15s ease;
         }
-
         .col-resizer:hover,
         .col-resizer.active {
             background: #0a2e5c;
             opacity: 0.25;
         }
-
         .col-resizer.active {
             opacity: 0.5;
         }
 
-        /* ── Closing Statement ── */
         .closing-statement {
             margin-top: 20px;
             padding: 16px 20px;
@@ -423,8 +372,6 @@
             font-size: 13px;
             line-height: 1.8;
         }
-
-        /* === PERBAIKAN CLOSING GRID === */
         .closing-statement .closing-grid {
             display: grid;
             grid-template-columns: auto auto;
@@ -432,32 +379,26 @@
             width: fit-content;
             max-width: 100%;
         }
-
         .closing-statement .closing-grid .item {
             display: contents;
         }
-
         .closing-statement .closing-grid .item span:first-child {
             text-align: left;
             font-weight: 400;
         }
-
         .closing-statement .closing-grid .item span:last-child {
             text-align: left;
             font-weight: 400;
         }
-
         .closing-statement .closing-grid .item.total {
             font-weight: 600;
             border-top: 1px solid #dce6ef;
             padding-top: 4px;
             margin-top: 4px;
         }
-
         .closing-statement .closing-grid .item.total span:first-child {
             font-weight: 600;
         }
-
         .closing-statement .closing-grid .item.total span:last-child {
             font-weight: 600;
         }
@@ -469,19 +410,15 @@
             padding-top: 20px;
             border-top: 1px solid #eef4f9;
         }
-
         .signature .sign-block {
             text-align: center;
             min-width: 180px;
         }
-
         .signature .sign-block .label {
             font-size: 12px;
             color: #5a7a9a;
             margin-bottom: 4px;
         }
-
-        /* Jarak tanda tangan 2x enter (48px) */
         .signature .sign-block .name {
             font-weight: 600;
             font-size: 14px;
@@ -491,14 +428,12 @@
             display: inline-block;
             min-width: 160px;
         }
-
         .signature .sign-block .title {
             font-size: 12px;
             color: #5a7a9a;
             margin-top: 2px;
         }
 
-        /* ── Toast ── */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -516,13 +451,11 @@
             transition: opacity 0.3s ease, transform 0.3s ease;
             pointer-events: none;
         }
-
         .toast.show {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
         }
-
         .toast.success {
             background: #1a7a3a;
         }
@@ -530,7 +463,6 @@
             background: #b00020;
         }
 
-        /* ── Responsive ── */
         @media (max-width: 768px) {
             body {
                 padding: 12px;
@@ -556,11 +488,7 @@
             }
         }
 
-        /* ────────────────────────────────────────────────
-           PRINT STYLES — A4 with 1cm margins
-           ──────────────────────────────────────────────── */
         @media print {
-            /* Sembunyikan semua elemen yang tidak perlu */
             .app-header,
             .toolbar,
             .tabs,
@@ -577,8 +505,6 @@
             .header-actions .user-badge {
                 display: none !important;
             }
-
-            /* Atur body dan html untuk print */
             html,
             body {
                 margin: 0 !important;
@@ -588,8 +514,6 @@
                 overflow: visible !important;
                 width: 100% !important;
             }
-
-            /* Tampilkan overlay preview sebagai latar putih */
             .print-preview-overlay {
                 display: flex !important;
                 position: fixed !important;
@@ -605,7 +529,6 @@
                 justify-content: center !important;
                 visibility: visible !important;
             }
-
             .print-preview-modal {
                 display: flex !important;
                 flex-direction: column !important;
@@ -619,7 +542,6 @@
                 height: 100% !important;
                 visibility: visible !important;
             }
-
             .print-preview-body {
                 display: flex !important;
                 justify-content: center !important;
@@ -631,8 +553,6 @@
                 width: 100% !important;
                 visibility: visible !important;
             }
-
-            /* Atur ukuran A4 untuk konten */
             #a4PreviewContent {
                 width: 210mm !important;
                 min-height: 297mm !important;
@@ -652,18 +572,14 @@
                 flex-shrink: 0 !important;
                 visibility: visible !important;
             }
-
             #a4PreviewContent * {
                 box-sizing: border-box !important;
                 visibility: visible !important;
             }
-
             @page {
                 size: A4 portrait;
                 margin: 0 !important;
             }
-
-            /* Header buku */
             #a4PreviewContent .book-header h2 {
                 font-size: 14pt !important;
                 font-weight: 700 !important;
@@ -678,8 +594,6 @@
                 text-align: center !important;
                 margin: 0 0 6pt 0 !important;
             }
-
-            /* Meta buku */
             #a4PreviewContent .book-meta {
                 display: grid !important;
                 grid-template-columns: auto 1fr !important;
@@ -705,13 +619,10 @@
                 text-align: left !important;
                 color: #000 !important;
             }
-
-            /* Tabel */
             #a4PreviewContent .table-wrapper {
                 overflow: visible !important;
                 margin: 0 0 8pt 0 !important;
             }
-
             #a4PreviewContent table.book-table {
                 width: 100% !important;
                 border-collapse: collapse !important;
@@ -722,12 +633,10 @@
                 line-height: 1.2 !important;
                 margin: 0 !important;
             }
-
             #a4PreviewContent table.book-table thead {
                 background: #f0f0f0 !important;
                 display: table-header-group !important;
             }
-
             #a4PreviewContent table.book-table th {
                 font-size: 8pt !important;
                 padding: 3pt 4pt !important;
@@ -742,7 +651,6 @@
                 line-height: 1.2 !important;
                 position: relative !important;
             }
-
             #a4PreviewContent table.book-table td {
                 font-size: 8.5pt !important;
                 padding: 3pt 4pt !important;
@@ -751,7 +659,6 @@
                 line-height: 1.2 !important;
                 color: #000 !important;
             }
-
             #a4PreviewContent table.book-table td.left {
                 text-align: left !important;
             }
@@ -761,7 +668,6 @@
             #a4PreviewContent table.book-table td.center {
                 text-align: center !important;
             }
-
             #a4PreviewContent table.book-table tr {
                 page-break-inside: avoid !important;
             }
@@ -773,8 +679,6 @@
                 font-weight: 600 !important;
                 background: #f9f9f9 !important;
             }
-
-            /* Closing statement — PERBAIKAN */
             #a4PreviewContent .closing-statement {
                 margin: 10pt 0 0 0 !important;
                 padding: 8pt 12pt !important;
@@ -809,8 +713,6 @@
             #a4PreviewContent .closing-statement .closing-grid .item.total span:last-child {
                 font-weight: 700 !important;
             }
-
-            /* Signature — jarak 2x enter (28pt) */
             #a4PreviewContent .signature {
                 margin: 16pt 0 0 0 !important;
                 padding: 10pt 0 0 0 !important;
@@ -846,8 +748,6 @@
                 color: #555 !important;
                 margin: 1pt 0 0 0 !important;
             }
-
-            /* Hilangkan margin dan padding berlebih */
             #a4PreviewContent * {
                 margin-top: 0 !important;
                 margin-bottom: 0 !important;
@@ -858,19 +758,14 @@
             #a4PreviewContent .book-meta {
                 margin-bottom: 6pt !important;
             }
-
-            /* Sembunyikan resizer di print */
             #a4PreviewContent .col-resizer {
                 display: none !important;
             }
-
-            /* Sembunyikan halaman utama Buku Kas */
             #tab-buku-kas {
                 display: none !important;
             }
         }
 
-        /* ── Print preview modal ── */
         .print-preview-overlay {
             position: fixed;
             top: 0;
@@ -885,11 +780,9 @@
             justify-content: center;
             padding: 20px;
         }
-
         .print-preview-overlay.active {
             display: flex;
         }
-
         .print-preview-modal {
             background: #fff;
             border-radius: 16px;
@@ -901,7 +794,6 @@
             box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
             overflow: hidden;
         }
-
         .print-preview-toolbar {
             display: flex;
             align-items: center;
@@ -911,18 +803,15 @@
             border-bottom: 1px solid #e2edf6;
             flex-shrink: 0;
         }
-
         .print-preview-toolbar .title {
             font-weight: 600;
             font-size: 14px;
             color: #0a2e5c;
         }
-
         .print-preview-toolbar .actions {
             display: flex;
             gap: 8px;
         }
-
         .print-preview-toolbar .actions button {
             padding: 6px 16px;
             border: none;
@@ -933,25 +822,20 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-
         .print-preview-toolbar .actions .btn-close-preview {
             background: #e9f0f7;
             color: #1f3a5f;
         }
-
         .print-preview-toolbar .actions .btn-close-preview:hover {
             background: #dce6f0;
         }
-
         .print-preview-toolbar .actions .btn-print-pdf {
             background: #0a2e5c;
             color: #fff;
         }
-
         .print-preview-toolbar .actions .btn-print-pdf:hover {
             background: #123f72;
         }
-
         .print-preview-body {
             flex: 1;
             overflow-y: auto;
@@ -960,7 +844,6 @@
             display: flex;
             justify-content: center;
         }
-
         .print-preview-body .a4-page {
             background: #fff;
             width: 210mm;
@@ -975,7 +858,6 @@
             line-height: 1.4 !important;
             color: #000 !important;
         }
-
         .print-preview-body .a4-page .col-resizer {
             position: absolute;
             top: 0;
@@ -987,17 +869,14 @@
             background: transparent;
             transition: background 0.15s ease;
         }
-
         .print-preview-body .a4-page .col-resizer:hover,
         .print-preview-body .a4-page .col-resizer.active {
             background: #0a2e5c;
             opacity: 0.25;
         }
-
         .print-preview-body .a4-page .col-resizer.active {
             opacity: 0.5;
         }
-
         .print-preview-body .a4-page .book-header h2 {
             font-size: 14pt !important;
             font-weight: 700 !important;
@@ -1006,14 +885,11 @@
             margin-bottom: 2pt !important;
             text-align: center !important;
         }
-
         .print-preview-body .a4-page .book-header .sub-info {
             font-size: 10pt !important;
             color: #333 !important;
             text-align: center !important;
         }
-
-        /* Meta di preview */
         .print-preview-body .a4-page .book-meta {
             display: grid !important;
             grid-template-columns: auto 1fr !important;
@@ -1039,7 +915,6 @@
             text-align: left !important;
             color: #000 !important;
         }
-
         .print-preview-body .a4-page table.book-table {
             font-size: 9pt !important;
             border-collapse: collapse !important;
@@ -1048,7 +923,6 @@
             line-height: 1.2 !important;
             table-layout: fixed !important;
         }
-
         .print-preview-body .a4-page table.book-table th {
             font-size: 8pt !important;
             padding: 3pt 4pt !important;
@@ -1062,7 +936,6 @@
             white-space: normal !important;
             word-break: break-word !important;
         }
-
         .print-preview-body .a4-page table.book-table td {
             font-size: 8.5pt !important;
             padding: 3pt 4pt !important;
@@ -1071,14 +944,12 @@
             line-height: 1.2 !important;
             color: #000 !important;
         }
-
         .print-preview-body .a4-page table.book-table td.left {
             text-align: left !important;
         }
         .print-preview-body .a4-page table.book-table td.right {
             text-align: right !important;
         }
-
         .print-preview-body .a4-page .closing-statement {
             margin-top: 10pt !important;
             padding: 8pt 12pt !important;
@@ -1088,8 +959,6 @@
             font-size: 9pt !important;
             line-height: 1.4 !important;
         }
-
-        /* PERBAIKAN closing-grid di preview */
         .print-preview-body .a4-page .closing-statement .closing-grid {
             max-width: 100% !important;
             grid-template-columns: auto auto !important;
@@ -1115,7 +984,6 @@
         .print-preview-body .a4-page .closing-statement .closing-grid .item.total span:last-child {
             font-weight: 700 !important;
         }
-
         .print-preview-body .a4-page .signature {
             margin-top: 16pt !important;
             padding-top: 10pt !important;
@@ -1124,18 +992,15 @@
             justify-content: space-between !important;
             gap: 20pt !important;
         }
-
         .print-preview-body .a4-page .signature .sign-block {
             min-width: 120pt !important;
             text-align: center !important;
         }
-
         .print-preview-body .a4-page .signature .sign-block .label {
             font-size: 8pt !important;
             color: #555 !important;
             margin-bottom: 2pt !important;
         }
-
         .print-preview-body .a4-page .signature .sign-block .name {
             font-weight: 700 !important;
             font-size: 10pt !important;
@@ -1146,18 +1011,15 @@
             min-width: 120pt !important;
             color: #000 !important;
         }
-
         .print-preview-body .a4-page .signature .sign-block .title {
             font-size: 8pt !important;
             color: #555 !important;
             margin-top: 1pt !important;
         }
-
         .print-preview-body .a4-page * {
             margin-top: 0 !important;
             margin-bottom: 0 !important;
         }
-
         .print-preview-body .a4-page .book-header {
             margin-bottom: 6pt !important;
         }
@@ -1175,7 +1037,6 @@
                 grid-template-columns: auto 1fr !important;
             }
         }
-
         @media (max-width: 600px) {
             .print-preview-body .a4-page .book-meta {
                 grid-template-columns: auto 1fr !important;
@@ -1261,7 +1122,6 @@
 
     <!-- ─── Tab Content: Buku Kas ─── -->
     <div class="tab-content active" id="tab-buku-kas">
-        <!-- Filter -->
         <div class="filter-row">
             <label>Bulan:</label>
             <select id="bulanSelect">
@@ -1283,7 +1143,6 @@
             <button class="btn-primary" id="loadDataBtn" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
         </div>
 
-        <!-- Buku Kas -->
         <div id="bukuKasContent">
             <div class="book-header">
                 <h2>BUKU KAS UMUM</h2>
@@ -1324,7 +1183,6 @@
                 </table>
             </div>
 
-            <!-- Closing Statement -->
             <div class="closing-statement" id="closingStatement">
                 <div style="font-size:13px;margin-bottom:8px;">
                     Pada hari ini <span id="closingHari">-</span>, tanggal <span id="closingTanggal">-</span> bulan <span id="closingBulan">-</span> Tahun <span id="closingTahun">-</span>, Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut:
@@ -1355,20 +1213,27 @@
 
     <!-- ─── Tab Content: Buku Tunai ─── -->
     <div class="tab-content" id="tab-buku-tunai">
-        <!-- Filter (sama dengan buku kas, tetapi akan diisi ulang) -->
         <div class="filter-row">
             <label>Bulan:</label>
             <select id="bulanSelectTunai">
-                <!-- diisi dari JS -->
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
             </select>
             <label>Tahun:</label>
-            <select id="tahunSelectTunai">
-                <!-- diisi dari JS -->
-            </select>
+            <select id="tahunSelectTunai"></select>
             <button class="btn-primary" id="loadDataBtnTunai" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
         </div>
 
-        <!-- Buku Tunai -->
         <div id="bukuTunaiContent">
             <div class="book-header">
                 <h2>BUKU KAS PEMBANTU TUNAI</h2>
@@ -1409,7 +1274,6 @@
                 </table>
             </div>
 
-            <!-- Closing Statement -->
             <div class="closing-statement" id="closingStatementTunai">
                 <div style="font-size:13px;margin-bottom:8px;">
                     Pada hari ini <span id="closingHariTunai">-</span>, tanggal <span id="closingTanggalTunai">-</span> bulan <span id="closingBulanTunai">-</span> Tahun <span id="closingTahunTunai">-</span> Buku Kas Tunai ditutup dengan keadaan/posisi buku sebagai berikut :
@@ -1462,7 +1326,6 @@
             messagingSenderId: "691310998051",
             appId: "1:691310998051:web:fe576f0c14f37f84c6f796"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
@@ -1471,7 +1334,6 @@
         // ─────────────────────────────────────────────
         const sessionJenjang = localStorage.getItem('bosnbs_jenjang');
         const sessionTahun = localStorage.getItem('bosnbs_tahun');
-
         if (!sessionJenjang || !sessionTahun) {
             window.location.href = 'index.html';
         }
@@ -1482,7 +1344,6 @@
         // ─────────────────────────────────────────────
         let settingsData = {};
         let allKasData = [];
-
         const COLLECTION = 'data_bos';
         const SETTINGS_COLLECTION = 'settings_bos';
 
@@ -1509,7 +1370,6 @@
         const signBendahara = document.getElementById('signBendahara');
         const toast = document.getElementById('toast');
 
-        // Buku Tunai DOM refs
         const bulanSelectTunai = document.getElementById('bulanSelectTunai');
         const tahunSelectTunai = document.getElementById('tahunSelectTunai');
         const loadDataBtnTunai = document.getElementById('loadDataBtnTunai');
@@ -1527,7 +1387,6 @@
         const signKepsekTunai = document.getElementById('signKepsekTunai');
         const signBendaharaTunai = document.getElementById('signBendaharaTunai');
 
-        // Print preview elements
         const printPreviewOverlay = document.getElementById('printPreviewOverlay');
         const a4PreviewContent = document.getElementById('a4PreviewContent');
         const closePreviewBtn = document.getElementById('closePreviewBtn');
@@ -1537,7 +1396,6 @@
         // 5.  Toast
         // ─────────────────────────────────────────────
         let toastTimer = null;
-
         function showToast(msg, type = 'info') {
             toast.textContent = msg;
             toast.className = 'toast show ' + type;
@@ -1548,7 +1406,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 6.  Populate tahun (untuk kedua filter)
+        // 6.  Populate tahun
         // ─────────────────────────────────────────────
         function populateTahun(selectElement) {
             const currentYear = new Date().getFullYear();
@@ -1652,13 +1510,11 @@
                     const kepala = settingsData.kepalaSekolah || '-';
                     const bendahara = settingsData.bendahara || '-';
 
-                    // Update Buku Kas
                     metaNpsn.textContent = npsn;
                     metaSekolah.textContent = namaSekolah;
                     signKepsek.textContent = kepala;
                     signBendahara.textContent = bendahara;
 
-                    // Update Buku Tunai
                     metaNpsnTunai.textContent = npsn;
                     metaSekolahTunai.textContent = namaSekolah;
                     signKepsekTunai.textContent = kepala;
@@ -1677,9 +1533,7 @@
                     .where('jenjang', '==', sessionJenjang)
                     .where('tahun', '==', sessionTahun)
                     .get();
-
                 let totalSaldo = 0;
-
                 snapshot.forEach(doc => {
                     const d = doc.data();
                     const tgl = d.tglPembayaran;
@@ -1736,10 +1590,8 @@
                         }
                     }
                 }
-
                 addAnggaran(tgl1, anggaran1);
                 addAnggaran(tgl2, anggaran2);
-
                 return totalSaldo;
             } catch (error) {
                 console.error('Error getting saldo:', error);
@@ -1753,7 +1605,6 @@
         async function loadKasData() {
             const bulan = bulanSelect.value;
             const tahun = tahunSelect.value;
-
             displayBulan.textContent = getMonthName(bulan);
             displayTahun.textContent = tahun;
 
@@ -1766,7 +1617,6 @@
                 .get();
 
             const transaksi = [];
-
             const bulanLaluNama = getMonthName(prev.month);
 
             transaksi.push({
@@ -1781,7 +1631,6 @@
                 isSaldoAwal: true,
                 jenis: 'saldo_awal'
             });
-
             transaksi.push({
                 tanggal: '',
                 kodeKegiatan: '',
@@ -1873,7 +1722,6 @@
                     }
                 }
             }
-
             addPemasukan(tgl1, anggaran1, 'Penerimaan Anggaran Tahap 1');
             addPemasukan(tgl2, anggaran2, 'Penerimaan Anggaran Tahap 2');
 
@@ -1905,7 +1753,6 @@
                 isSaldoAwal: false,
                 jenis: 'bunga'
             });
-
             transaksi.push({
                 tanggal: '',
                 kodeKegiatan: '',
@@ -1925,23 +1772,16 @@
         }
 
         // ─────────────────────────────────────────────
-        // 11. Render Buku Kas Table (di halaman utama)
+        // 11. Render Buku Kas Table
         // ─────────────────────────────────────────────
         function renderKasTable(data) {
             if (data.length === 0) {
-                kasTableBody.innerHTML = `
-                            <tr>
-                                <td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">
-                                    Tidak ada data untuk bulan ini.
-                                </td>
-                            </tr>
-                        `;
+                kasTableBody.innerHTML =
+                    `<tr><td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada data untuk bulan ini.</td></tr>`;
                 return;
             }
-
             let html = '';
-
-            data.forEach((item, index) => {
+            data.forEach((item) => {
                 const tgl = item.tanggal || '';
                 const kode = item.kodeKegiatan || '';
                 const rek = item.kodeRekening || '';
@@ -1951,49 +1791,38 @@
                 const pengeluaran = item.pengeluaran || 0;
                 const saldo = item.saldo || 0;
 
-                let displayKode = kode;
-                let displayRek = rek;
-                let displayBukti = bukti;
-                if (item.jenis === 'pemasukan') {
+                let displayKode = kode,
+                    displayRek = rek,
+                    displayBukti = bukti;
+                if (item.jenis === 'pemasukan' || item.isSaldoAwal || item.jenis === 'bunga' || item.jenis === 'pajak') {
                     displayKode = '';
                     displayRek = '';
                     displayBukti = '';
                 }
-
-                if (item.isSaldoAwal || item.jenis === 'bunga' || item.jenis === 'pajak') {
-                    displayKode = '';
-                    displayRek = '';
-                    displayBukti = '';
-                }
-
                 const isBold = item.isSaldoAwal || item.jenis === 'bunga' || item.jenis === 'pajak';
-
                 const tanggalFormatted = formatDateToDDMMYY(tgl);
-
                 html += `
-                            <tr style="${isBold ? 'font-weight:600;' : ''}">
-                                <td>${tanggalFormatted}</td>
-                                <td>${displayKode}</td>
-                                <td>${displayRek}</td>
-                                <td>${displayBukti}</td>
-                                <td class="left">${uraian}</td>
-                                <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
-                                <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
-                                <td class="right">${formatRupiah(saldo)}</td>
-                            </tr>
-                        `;
+                    <tr style="${isBold ? 'font-weight:600;' : ''}">
+                        <td>${tanggalFormatted}</td>
+                        <td>${displayKode}</td>
+                        <td>${displayRek}</td>
+                        <td>${displayBukti}</td>
+                        <td class="left">${uraian}</td>
+                        <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                        <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                        <td class="right">${formatRupiah(saldo)}</td>
+                    </tr>
+                `;
             });
-
             kasTableBody.innerHTML = html;
         }
 
         // ─────────────────────────────────────────────
-        // 12. Update Closing Statement (Buku Kas)
+        // 12. Update Closing Statement (Buku Kas) — tanggal akhir bulan
         // ─────────────────────────────────────────────
         function updateClosingStatement(data) {
             const bulan = parseInt(bulanSelect.value);
             const tahun = parseInt(tahunSelect.value);
-
             const lastDay = new Date(tahun, bulan, 0);
             const dayName = getDayName(lastDay);
 
@@ -2007,13 +1836,13 @@
                 const last = data[data.length - 1];
                 saldoAkhir = last.saldo || 0;
             }
-
             saldoBank.textContent = formatRupiah(saldoAkhir);
             saldoTunai.textContent = formatRupiah(0);
             saldoTotal.textContent = formatRupiah(saldoAkhir);
 
-            const today = new Date();
-            signTanggal.textContent = today.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            // Tanggal tanda tangan = akhir bulan yang difilter
+            const signDate = new Date(tahun, bulan, 0);
+            signTanggal.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
         }
 
         // ─────────────────────────────────────────────
@@ -2022,14 +1851,12 @@
         function loadTunaiData() {
             const bulan = bulanSelectTunai.value;
             const tahun = tahunSelectTunai.value;
-
             displayBulanTunai.textContent = getMonthName(bulan);
             displayTahunTunai.textContent = tahun;
 
             const prev = getPreviousMonth(bulan, tahun);
             const bulanLaluNama = getMonthName(prev.month);
 
-            // Hanya satu baris: tanggal 1, uraian saldo tunai bulan lalu, saldo 0
             const transaksi = [{
                 tanggal: `${tahun}-${bulan}-01`,
                 kodeKegiatan: '',
@@ -2052,18 +1879,12 @@
         // ─────────────────────────────────────────────
         function renderTunaiTable(data) {
             if (data.length === 0) {
-                tunaiTableBody.innerHTML = `
-                            <tr>
-                                <td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">
-                                    Tidak ada data untuk bulan ini.
-                                </td>
-                            </tr>
-                        `;
+                tunaiTableBody.innerHTML =
+                    `<tr><td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada data untuk bulan ini.</td></tr>`;
                 return;
             }
-
             let html = '';
-            data.forEach((item, index) => {
+            data.forEach((item) => {
                 const tgl = item.tanggal || '';
                 const kode = item.kodeKegiatan || '';
                 const rek = item.kodeRekening || '';
@@ -2072,34 +1893,30 @@
                 const penerimaan = item.penerimaan || 0;
                 const pengeluaran = item.pengeluaran || 0;
                 const saldo = item.saldo || 0;
-
                 const isBold = item.isSaldoAwal;
                 const tanggalFormatted = formatDateToDDMMYY(tgl);
-
                 html += `
-                            <tr style="${isBold ? 'font-weight:600;' : ''}">
-                                <td>${tanggalFormatted}</td>
-                                <td>${kode}</td>
-                                <td>${rek}</td>
-                                <td>${bukti}</td>
-                                <td class="left">${uraian}</td>
-                                <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
-                                <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
-                                <td class="right">${formatRupiah(saldo)}</td>
-                            </tr>
-                        `;
+                    <tr style="${isBold ? 'font-weight:600;' : ''}">
+                        <td>${tanggalFormatted}</td>
+                        <td>${kode}</td>
+                        <td>${rek}</td>
+                        <td>${bukti}</td>
+                        <td class="left">${uraian}</td>
+                        <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                        <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                        <td class="right">${formatRupiah(saldo)}</td>
+                    </tr>
+                `;
             });
-
             tunaiTableBody.innerHTML = html;
         }
 
         // ─────────────────────────────────────────────
-        // 15. Update Closing Tunai
+        // 15. Update Closing Tunai — tanggal akhir bulan
         // ─────────────────────────────────────────────
         function updateClosingTunai(data) {
             const bulan = parseInt(bulanSelectTunai.value);
             const tahun = parseInt(tahunSelectTunai.value);
-
             const lastDay = new Date(tahun, bulan, 0);
             const dayName = getDayName(lastDay);
 
@@ -2108,11 +1925,10 @@
             closingBulanTunai.textContent = getMonthName(String(bulan));
             closingTahunTunai.textContent = tahun;
 
-            // saldo selalu 0
             saldoTunaiFinal.textContent = formatRupiah(0);
 
-            const today = new Date();
-            signTanggalTunai.textContent = today.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            const signDate = new Date(tahun, bulan, 0);
+            signTanggalTunai.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
         }
 
         // ─────────────────────────────────────────────
@@ -2122,12 +1938,9 @@
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-
                 document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
                 const target = document.getElementById('tab-' + this.dataset.tab);
                 if (target) target.classList.add('active');
-
-                // Jika tab yang diaktifkan adalah buku tunai, muat data
                 if (this.dataset.tab === 'buku-tunai') {
                     loadTunaiData();
                 }
@@ -2141,18 +1954,12 @@
             const bulan = bulanSelect.value;
             const tahun = tahunSelect.value;
             const bulanNama = getMonthName(bulan);
-
             const saldoAkhir = allKasData.length > 0 ? (allKasData[allKasData.length - 1].saldo || 0) : 0;
 
             let tableRows = '';
             if (allKasData.length === 0) {
-                tableRows = `
-                            <tr>
-                                <td colspan="8" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">
-                                    Tidak ada data untuk bulan ini.
-                                </td>
-                            </tr>
-                        `;
+                tableRows =
+                    `<tr><td colspan="8" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada data untuk bulan ini.</td></tr>`;
             } else {
                 allKasData.forEach(item => {
                     const tgl = item.tanggal || '';
@@ -2164,37 +1971,29 @@
                     const pengeluaran = item.pengeluaran || 0;
                     const saldo = item.saldo || 0;
 
-                    let displayKode = kode;
-                    let displayRek = rek;
-                    let displayBukti = bukti;
-                    if (item.jenis === 'pemasukan') {
+                    let displayKode = kode,
+                        displayRek = rek,
+                        displayBukti = bukti;
+                    if (item.jenis === 'pemasukan' || item.isSaldoAwal || item.jenis === 'bunga' || item.jenis === 'pajak') {
                         displayKode = '';
                         displayRek = '';
                         displayBukti = '';
                     }
-                    if (item.isSaldoAwal || item.jenis === 'bunga' || item.jenis === 'pajak') {
-                        displayKode = '';
-                        displayRek = '';
-                        displayBukti = '';
-                    }
-
                     const isBold = item.isSaldoAwal || item.jenis === 'bunga' || item.jenis === 'pajak';
                     const boldStyle = isBold ? 'font-weight:600;' : '';
-
                     const tanggalFormatted = formatDateToDDMMYY(tgl);
-
                     tableRows += `
-                                <tr style="${boldStyle}">
-                                    <td>${tanggalFormatted}</td>
-                                    <td>${displayKode}</td>
-                                    <td>${displayRek}</td>
-                                    <td>${displayBukti}</td>
-                                    <td class="left">${uraian}</td>
-                                    <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
-                                    <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
-                                    <td class="right">${formatRupiah(saldo)}</td>
-                                </tr>
-                            `;
+                        <tr style="${boldStyle}">
+                            <td>${tanggalFormatted}</td>
+                            <td>${displayKode}</td>
+                            <td>${displayRek}</td>
+                            <td>${displayBukti}</td>
+                            <td class="left">${uraian}</td>
+                            <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                            <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                            <td class="right">${formatRupiah(saldo)}</td>
+                        </tr>
+                    `;
                 });
             }
 
@@ -2208,79 +2007,71 @@
             const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
             const kepalaSekolah = settingsData.kepalaSekolah || '-';
             const bendahara = settingsData.bendahara || '-';
-            const today = new Date();
-            const signDate = today.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
-            const html = `
-                        <div class="book-header">
-                            <h2>BUKU KAS UMUM</h2>
-                            <div class="sub-info">
-                                Bulan: ${bulanNama}
-                                <span>|</span> Tahun: ${tahun}
-                            </div>
+            return `
+                <div class="book-header">
+                    <h2>BUKU KAS UMUM</h2>
+                    <div class="sub-info">
+                        Bulan: ${bulanNama}
+                        <span>|</span> Tahun: ${tahun}
+                    </div>
+                </div>
+                <div class="book-meta">
+                    <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                    <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                    <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                    <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                    <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                    <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                </div>
+                <div class="table-wrapper">
+                    <table class="book-table" id="previewTable">
+                        <thead>
+                            <tr>
+                                <th style="width:80px;">TANGGAL</th>
+                                <th style="width:100px;">KODE KEGIATAN</th>
+                                <th style="width:100px;">KODE REKENING</th>
+                                <th style="width:100px;">NO. BUKTI</th>
+                                <th style="width:200px;">URAIAN</th>
+                                <th style="width:120px;">PENERIMAAN</th>
+                                <th style="width:120px;">PENGELUARAN</th>
+                                <th style="width:120px;">SALDO</th>
+                            </tr>
+                        </thead>
+                        <tbody>${tableRows}</tbody>
+                    </table>
+                </div>
+                <div class="closing-statement">
+                    <div style="margin-bottom:6pt;">
+                        Pada hari ini ${dayName}, tanggal ${tglClosing} bulan ${bulanClosing} Tahun ${tahunClosing}, Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut:
+                    </div>
+                    <div class="closing-grid">
+                        <div class="item"><span>Saldo Bank</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                        <div class="item"><span>Saldo Tunai</span> <span>Rp 0</span></div>
+                        <div class="item total"><span>Jumlah</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                    </div>
+                    <div class="signature">
+                        <div class="sign-block">
+                            <div class="label">Menyetujui,</div>
+                            <div class="label" style="margin-top:2pt;">Kec. Bola, ${signDateStr}</div>
+                            <div class="name">${kepalaSekolah}</div>
+                            <div class="title">Kepala Sekolah</div>
                         </div>
-
-                        <div class="book-meta">
-                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
-                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
-                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        <div class="sign-block">
+                            <div class="label">&nbsp;</div>
+                            <div class="label" style="margin-top:2pt;">&nbsp;</div>
+                            <div class="name">${bendahara}</div>
+                            <div class="title">Bendahara BOS</div>
                         </div>
-
-                        <div class="table-wrapper">
-                            <table class="book-table" id="previewTable">
-                                <thead>
-                                    <tr>
-                                        <th style="width:80px;">TANGGAL</th>
-                                        <th style="width:100px;">KODE KEGIATAN</th>
-                                        <th style="width:100px;">KODE REKENING</th>
-                                        <th style="width:100px;">NO. BUKTI</th>
-                                        <th style="width:200px;">URAIAN</th>
-                                        <th style="width:120px;">PENERIMAAN</th>
-                                        <th style="width:120px;">PENGELUARAN</th>
-                                        <th style="width:120px;">SALDO</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${tableRows}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="closing-statement">
-                            <div style="margin-bottom:6pt;">
-                                Pada hari ini ${dayName}, tanggal ${tglClosing} bulan ${bulanClosing} Tahun ${tahunClosing}, Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut:
-                            </div>
-                            <div class="closing-grid">
-                                <div class="item"><span>Saldo Bank</span> <span>${formatRupiah(saldoAkhir)}</span></div>
-                                <div class="item"><span>Saldo Tunai</span> <span>Rp 0</span></div>
-                                <div class="item total"><span>Jumlah</span> <span>${formatRupiah(saldoAkhir)}</span></div>
-                            </div>
-
-                            <div class="signature">
-                                <div class="sign-block">
-                                    <div class="label">Menyetujui,</div>
-                                    <div class="label" style="margin-top:2pt;">Kec. Bola, ${signDate}</div>
-                                    <div class="name">${kepalaSekolah}</div>
-                                    <div class="title">Kepala Sekolah</div>
-                                </div>
-                                <div class="sign-block">
-                                    <div class="label">&nbsp;</div>
-                                    <div class="label" style="margin-top:2pt;">&nbsp;</div>
-                                    <div class="name">${bendahara}</div>
-                                    <div class="title">Bendahara BOS</div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-
-            return html;
+                    </div>
+                </div>
+            `;
         }
 
         // ─────────────────────────────────────────────
-        // 18. Show print preview + init resizer
+        // 18. Print preview
         // ─────────────────────────────────────────────
         function showPrintPreview() {
             a4PreviewContent.innerHTML = '';
@@ -2288,10 +2079,7 @@
             a4PreviewContent.innerHTML = content;
             printPreviewOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
-
-            setTimeout(() => {
-                initPreviewResizers();
-            }, 100);
+            setTimeout(() => initPreviewResizers(), 100);
         }
 
         function closePrintPreview() {
@@ -2300,29 +2088,21 @@
         }
 
         // ─────────────────────────────────────────────
-        // 19. Resize kolom di preview
+        // 19. Resize kolom
         // ─────────────────────────────────────────────
         let previewColumnWidths = {};
-
         function loadPreviewColumnWidths() {
             try {
                 const saved = localStorage.getItem('bosnbs_preview_col_widths');
-                if (saved) {
-                    previewColumnWidths = JSON.parse(saved);
-                } else {
-                    previewColumnWidths = {};
-                }
-            } catch (e) {
-                previewColumnWidths = {};
-            }
+                if (saved) previewColumnWidths = JSON.parse(saved);
+                else previewColumnWidths = {};
+            } catch (e) { previewColumnWidths = {}; }
         }
-
         function savePreviewColumnWidths() {
             try {
                 localStorage.setItem('bosnbs_preview_col_widths', JSON.stringify(previewColumnWidths));
             } catch (e) { /* ignore */ }
         }
-
         function initPreviewResizers() {
             const table = document.getElementById('previewTable');
             if (!table) return;
@@ -2331,27 +2111,21 @@
                 const colKey = th.textContent.trim();
                 const oldResizer = th.querySelector('.col-resizer');
                 if (oldResizer) oldResizer.remove();
-
                 const resizer = document.createElement('span');
                 resizer.className = 'col-resizer';
                 resizer.dataset.col = colKey;
                 th.style.position = 'relative';
                 th.appendChild(resizer);
-
                 if (previewColumnWidths[colKey]) {
                     th.style.width = previewColumnWidths[colKey] + 'px';
                     th.style.minWidth = previewColumnWidths[colKey] + 'px';
                 }
-
                 resizer.addEventListener('mousedown', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-
                     const startX = e.clientX;
                     const startWidth = th.offsetWidth;
-
                     document.body.classList.add('dragging-active');
-
                     const onMouseMove = (ev) => {
                         const diff = ev.clientX - startX;
                         const newWidth = Math.max(40, startWidth + diff);
@@ -2360,13 +2134,11 @@
                         previewColumnWidths[colKey] = newWidth;
                         savePreviewColumnWidths();
                     };
-
                     const onMouseUp = () => {
                         document.body.classList.remove('dragging-active');
                         document.removeEventListener('mousemove', onMouseMove);
                         document.removeEventListener('mouseup', onMouseUp);
                     };
-
                     document.addEventListener('mousemove', onMouseMove);
                     document.addEventListener('mouseup', onMouseUp);
                 });
@@ -2374,18 +2146,15 @@
         }
 
         // ─────────────────────────────────────────────
-        // 20. Print / PDF — mempertahankan overlay dan menyembunyikan toolbar
+        // 20. Print / PDF
         // ─────────────────────────────────────────────
         function doPrint() {
             const toolbar = document.querySelector('.print-preview-toolbar');
             if (toolbar) toolbar.style.display = 'none';
-
             const overlay = printPreviewOverlay;
             overlay.style.background = '#fff';
             overlay.style.backdropFilter = 'none';
-
             window.print();
-
             setTimeout(() => {
                 if (toolbar) toolbar.style.display = 'flex';
                 overlay.style.background = '';
@@ -2396,14 +2165,9 @@
         // ─────────────────────────────────────────────
         // 21. Event listeners
         // ─────────────────────────────────────────────
-
-        // Tombol Tampilkan untuk Buku Kas
         loadDataBtn.addEventListener('click', loadKasData);
-
-        // Tombol Tampilkan untuk Buku Tunai
         loadDataBtnTunai.addEventListener('click', loadTunaiData);
 
-        // Print button
         document.getElementById('printBtn').addEventListener('click', () => {
             if (allKasData.length === 0) {
                 showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
@@ -2417,7 +2181,6 @@
         printPreviewOverlay.addEventListener('click', (e) => {
             if (e.target === printPreviewOverlay) closePrintPreview();
         });
-
         confirmPrintBtn.addEventListener('click', doPrint);
 
         document.addEventListener('keydown', (e) => {
@@ -2429,7 +2192,6 @@
         document.getElementById('backBtn').addEventListener('click', () => {
             window.location.href = 'database.html';
         });
-
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('bosnbs_jenjang');
             localStorage.removeItem('bosnbs_tahun');
@@ -2440,19 +2202,17 @@
         // 22. Init
         // ─────────────────────────────────────────────
         loadSettings();
-
         const now = new Date();
         const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
         bulanSelect.value = currentMonth;
         bulanSelectTunai.value = currentMonth;
 
-        // Muat data awal
         setTimeout(() => {
             loadKasData();
-            loadTunaiData(); // juga muat tunai
+            loadTunaiData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Buku Kas dan Buku Tunai siap');
+        console.log('📋 BOS-NBS · Buku Kas dan Buku Tunai siap (tanggal tanda tangan = akhir bulan)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
