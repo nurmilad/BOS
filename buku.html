@@ -310,24 +310,33 @@
             margin: 0 8px;
         }
 
+        /* ── Book Meta (grid 2 kolom, label kanan, nilai kiri) ── */
         .book-meta {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 6px 20px;
+            grid-template-columns: auto 1fr;
+            gap: 4px 20px;
             background: #f8fafc;
             padding: 12px 18px;
             border-radius: 10px;
             margin-bottom: 20px;
             border: 1px solid #eef4f9;
+            align-items: center;
         }
 
-        .book-meta .meta-item {
-            font-size: 13px;
+        .book-meta .meta-row {
+            display: contents;
         }
 
-        .book-meta .meta-item strong {
-            color: #1f3a5f;
+        .book-meta .meta-label {
+            text-align: right;
             font-weight: 600;
+            color: #1f3a5f;
+            white-space: nowrap;
+        }
+
+        .book-meta .meta-value {
+            text-align: left;
+            color: #0a1e33;
         }
 
         /* ── Table ── */
@@ -419,7 +428,7 @@
             display: grid;
             grid-template-columns: auto 1fr;
             gap: 4px 16px;
-            max-width: 280px;
+            max-width: 320px;
         }
 
         .closing-statement .closing-grid .item {
@@ -535,7 +544,8 @@
                 max-width: 100%;
             }
             .book-meta {
-                grid-template-columns: 1fr;
+                grid-template-columns: auto 1fr;
+                gap: 4px 12px;
             }
             .filter-row {
                 flex-direction: column;
@@ -669,7 +679,7 @@
             /* Meta buku */
             #a4PreviewContent .book-meta {
                 display: grid !important;
-                grid-template-columns: 1fr 1fr 1fr !important;
+                grid-template-columns: auto 1fr !important;
                 gap: 2pt 12pt !important;
                 background: #f9f9f9 !important;
                 padding: 6pt 10pt !important;
@@ -677,13 +687,19 @@
                 border-radius: 0 !important;
                 margin: 0 0 10pt 0 !important;
                 font-size: 9pt !important;
+                align-items: center !important;
             }
-            #a4PreviewContent .book-meta .meta-item {
-                font-size: 9pt !important;
-                line-height: 1.3 !important;
+            #a4PreviewContent .book-meta .meta-row {
+                display: contents !important;
             }
-            #a4PreviewContent .book-meta .meta-item strong {
+            #a4PreviewContent .book-meta .meta-label {
+                text-align: right !important;
                 font-weight: 600 !important;
+                color: #000 !important;
+                white-space: nowrap !important;
+            }
+            #a4PreviewContent .book-meta .meta-value {
+                text-align: left !important;
                 color: #000 !important;
             }
 
@@ -993,9 +1009,10 @@
             text-align: center !important;
         }
 
+        /* Meta di preview */
         .print-preview-body .a4-page .book-meta {
             display: grid !important;
-            grid-template-columns: 1fr 1fr 1fr !important;
+            grid-template-columns: auto 1fr !important;
             gap: 2pt 12pt !important;
             background: #f9f9f9 !important;
             padding: 6pt 10pt !important;
@@ -1003,15 +1020,19 @@
             border: 1px solid #ccc !important;
             margin-bottom: 10pt !important;
             font-size: 9pt !important;
+            align-items: center !important;
         }
-
-        .print-preview-body .a4-page .book-meta .meta-item {
-            font-size: 9pt !important;
-            line-height: 1.3 !important;
+        .print-preview-body .a4-page .book-meta .meta-row {
+            display: contents !important;
         }
-
-        .print-preview-body .a4-page .book-meta .meta-item strong {
+        .print-preview-body .a4-page .book-meta .meta-label {
+            text-align: right !important;
             font-weight: 600 !important;
+            color: #000 !important;
+            white-space: nowrap !important;
+        }
+        .print-preview-body .a4-page .book-meta .meta-value {
+            text-align: left !important;
             color: #000 !important;
         }
 
@@ -1145,13 +1166,13 @@
                 padding: 1cm !important;
             }
             .print-preview-body .a4-page .book-meta {
-                grid-template-columns: 1fr 1fr !important;
+                grid-template-columns: auto 1fr !important;
             }
         }
 
         @media (max-width: 600px) {
             .print-preview-body .a4-page .book-meta {
-                grid-template-columns: 1fr !important;
+                grid-template-columns: auto 1fr !important;
             }
             .print-preview-body .a4-page .closing-statement .closing-grid {
                 grid-template-columns: auto 1fr !important;
@@ -1267,12 +1288,12 @@
             </div>
 
             <div class="book-meta" id="bookMeta">
-                <div class="meta-item"><strong>NPSN</strong>: <span id="metaNpsn">-</span></div>
-                <div class="meta-item"><strong>Nama Sekolah</strong>: <span id="metaSekolah">-</span></div>
-                <div class="meta-item"><strong>Desa / Kec</strong>: Lempong / Bola</div>
-                <div class="meta-item"><strong>Kabupaten</strong>: Wajo</div>
-                <div class="meta-item"><strong>Provinsi</strong>: Sulawesi Selatan</div>
-                <div class="meta-item"><strong>Sumber Dana</strong>: BOS Reguler</div>
+                <div class="meta-row"><span class="meta-label">NPSN</span><span class="meta-value" id="metaNpsn">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah</span><span class="meta-value" id="metaSekolah">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana</span><span class="meta-value">BOS Reguler</span></div>
             </div>
 
             <div class="table-wrapper">
@@ -1892,7 +1913,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 14. Build A4 preview content
+        // 14. Build A4 preview content (dengan struktur meta & closing yang diperbaiki)
         // ─────────────────────────────────────────────
         function buildA4Preview() {
             const bulan = bulanSelect.value;
@@ -1978,12 +1999,12 @@
                         </div>
 
                         <div class="book-meta">
-                            <div class="meta-item"><strong>NPSN</strong>: ${npsn}</div>
-                            <div class="meta-item"><strong>Nama Sekolah</strong>: ${namaSekolah}</div>
-                            <div class="meta-item"><strong>Desa / Kec</strong>: Lempong / Bola</div>
-                            <div class="meta-item"><strong>Kabupaten</strong>: Wajo</div>
-                            <div class="meta-item"><strong>Provinsi</strong>: Sulawesi Selatan</div>
-                            <div class="meta-item"><strong>Sumber Dana</strong>: BOS Reguler</div>
+                            <div class="meta-row"><span class="meta-label">NPSN</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana</span><span class="meta-value">BOS Reguler</span></div>
                         </div>
 
                         <div class="table-wrapper">
@@ -2206,7 +2227,7 @@
             loadKasData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Buku Kas siap (layout closing statement diperbaiki)');
+        console.log('📋 BOS-NBS · Buku Kas siap (layout meta & closing statement diperbaiki)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
