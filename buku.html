@@ -417,22 +417,38 @@
 
         .closing-statement .closing-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px 20px;
-            max-width: 400px;
+            grid-template-columns: auto 1fr;
+            gap: 4px 16px;
+            max-width: 280px;
         }
 
         .closing-statement .closing-grid .item {
-            display: flex;
-            justify-content: space-between;
-            padding: 2px 0;
+            display: contents;
         }
 
-        .closing-statement .closing-grid .total {
+        .closing-statement .closing-grid .item span:first-child {
+            text-align: left;
+            font-weight: 400;
+        }
+
+        .closing-statement .closing-grid .item span:last-child {
+            text-align: right;
+            font-weight: 400;
+        }
+
+        .closing-statement .closing-grid .item.total {
             font-weight: 600;
             border-top: 1px solid #dce6ef;
             padding-top: 4px;
             margin-top: 4px;
+        }
+
+        .closing-statement .closing-grid .item.total span:first-child {
+            font-weight: 600;
+        }
+
+        .closing-statement .closing-grid .item.total span:last-child {
+            font-weight: 600;
         }
 
         .signature {
@@ -516,7 +532,7 @@
                 align-items: center;
             }
             .closing-statement .closing-grid {
-                grid-template-columns: 1fr;
+                max-width: 100%;
             }
             .book-meta {
                 grid-template-columns: 1fr;
@@ -751,21 +767,30 @@
             }
             #a4PreviewContent .closing-statement .closing-grid {
                 max-width: 100% !important;
-                grid-template-columns: 1fr 1fr !important;
-                gap: 2pt 16pt !important;
+                grid-template-columns: auto 1fr !important;
+                gap: 2pt 12pt !important;
             }
             #a4PreviewContent .closing-statement .closing-grid .item {
-                font-size: 9pt !important;
-                padding: 1pt 0 !important;
+                display: contents !important;
             }
-            #a4PreviewContent .closing-statement .closing-grid .total {
+            #a4PreviewContent .closing-statement .closing-grid .item span:first-child {
+                text-align: left !important;
+            }
+            #a4PreviewContent .closing-statement .closing-grid .item span:last-child {
+                text-align: right !important;
+            }
+            #a4PreviewContent .closing-statement .closing-grid .item.total {
                 font-weight: 700 !important;
                 border-top: 1px solid #000 !important;
                 padding-top: 3pt !important;
                 margin-top: 3pt !important;
             }
+            #a4PreviewContent .closing-statement .closing-grid .item.total span:first-child,
+            #a4PreviewContent .closing-statement .closing-grid .item.total span:last-child {
+                font-weight: 700 !important;
+            }
 
-            /* Signature — pastikan sejajar secara horizontal */
+            /* Signature */
             #a4PreviewContent .signature {
                 margin: 16pt 0 0 0 !important;
                 padding: 10pt 0 0 0 !important;
@@ -1041,20 +1066,27 @@
 
         .print-preview-body .a4-page .closing-statement .closing-grid {
             max-width: 100% !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 2pt 16pt !important;
+            grid-template-columns: auto 1fr !important;
+            gap: 2pt 12pt !important;
         }
-
         .print-preview-body .a4-page .closing-statement .closing-grid .item {
-            font-size: 9pt !important;
-            padding: 1pt 0 !important;
+            display: contents !important;
         }
-
-        .print-preview-body .a4-page .closing-statement .closing-grid .total {
+        .print-preview-body .a4-page .closing-statement .closing-grid .item span:first-child {
+            text-align: left !important;
+        }
+        .print-preview-body .a4-page .closing-statement .closing-grid .item span:last-child {
+            text-align: right !important;
+        }
+        .print-preview-body .a4-page .closing-statement .closing-grid .item.total {
             font-weight: 700 !important;
             border-top: 1px solid #000 !important;
             padding-top: 3pt !important;
             margin-top: 3pt !important;
+        }
+        .print-preview-body .a4-page .closing-statement .closing-grid .item.total span:first-child,
+        .print-preview-body .a4-page .closing-statement .closing-grid .item.total span:last-child {
+            font-weight: 700 !important;
         }
 
         .print-preview-body .a4-page .signature {
@@ -1122,7 +1154,7 @@
                 grid-template-columns: 1fr !important;
             }
             .print-preview-body .a4-page .closing-statement .closing-grid {
-                grid-template-columns: 1fr !important;
+                grid-template-columns: auto 1fr !important;
             }
             .print-preview-body .a4-page .signature {
                 flex-direction: column !important;
@@ -2174,7 +2206,7 @@
             loadKasData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Buku Kas siap (print fixed)');
+        console.log('📋 BOS-NBS · Buku Kas siap (layout closing statement diperbaiki)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
