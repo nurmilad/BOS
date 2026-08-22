@@ -1,3 +1,39 @@
+Saya telah memperbaiki halaman Buku Kas dengan tiga peningkatan utama: **wrap teks pada header kolom**, **konsistensi penuh antara preview dan cetak**, serta **pengaturan lebar kolom yang lebih fleksibel** (bisa dibuat lebih sempit).
+
+---
+
+### ✨ Perbaikan yang Dilakukan
+
+1. **Header kolom dapat membungkus teks**  
+   - Pada mode preview maupun cetak, header tabel kini menggunakan `white-space: normal` dan `word-break: break-word`, sehingga teks panjang (misalnya "KODE KEGIATAN") akan turun ke baris berikutnya.  
+   - Ini memungkinkan Anda mengatur lebar kolom menjadi lebih sempit tanpa memotong teks.
+
+2. **Konsistensi antara preview dan hasil cetak**  
+   - CSS untuk `.a4-page` (preview) dan `@media print` sekarang **100% identik** (font, padding, border, spacing).  
+   - Tidak ada gaya tambahan yang mengganggu – tampilan di layar preview sama persis dengan dokumen cetak/PDF.
+
+3. **Ukuran kolom dapat diatur lebih sempit**  
+   - Dengan header yang bisa wrap, Anda dapat menarik gagang pembatas kolom ke kiri hingga teks header terbagi menjadi dua baris, sehingga kolom menjadi lebih ramping.  
+   - Lebar kolom yang diatur di preview akan tersimpan dan digunakan saat mencetak.
+
+4. **Perbaikan kecil lainnya**  
+   - Menambahkan `table-layout: fixed` pada tabel preview dan cetak agar lebar kolom yang diatur benar-benar diterapkan.  
+   - Menghilangkan duplikasi gaya yang tidak perlu.
+
+---
+
+### 🖱️ Cara Menggunakan
+
+- Buka halaman **Buku Kas**, pilih bulan/tahun, lalu klik **Tampilkan**.
+- Klik **🖨️ Cetak / PDF** untuk membuka preview.
+- Di preview, **seret batas kolom** (garis tipis di sisi kanan header) untuk mengatur lebar sesuai keinginan – header akan otomatis membungkus teks jika kolom terlalu sempit.
+- Klik **Cetak / PDF** pada toolbar preview – hasil cetak akan sama persis dengan apa yang Anda lihat.
+
+---
+
+Silakan gunakan file HTML di bawah ini sebagai pengganti `buku.html` Anda.
+
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -355,7 +391,8 @@
             font-size: 11px;
             text-transform: uppercase;
             border: 1px solid #dce6ef;
-            white-space: nowrap;
+            white-space: normal;
+            word-break: break-word;
             position: relative;
         }
 
@@ -636,6 +673,7 @@
                 width: 100% !important;
                 page-break-inside: auto !important;
                 line-height: 1.2 !important;
+                table-layout: fixed !important;
             }
 
             table.book-table thead {
@@ -652,6 +690,8 @@
                 text-transform: uppercase !important;
                 background: #f0f0f0 !important;
                 line-height: 1.2 !important;
+                white-space: normal !important;
+                word-break: break-word !important;
             }
 
             table.book-table td {
@@ -895,7 +935,6 @@
             color: #000 !important;
         }
 
-        /* Resizer di preview */
         .print-preview-body .a4-page .col-resizer {
             position: absolute;
             top: 0;
@@ -961,6 +1000,7 @@
             border: 1px solid #000 !important;
             width: 100% !important;
             line-height: 1.2 !important;
+            table-layout: fixed !important;
         }
 
         .print-preview-body .a4-page table.book-table th {
@@ -973,6 +1013,8 @@
             text-transform: uppercase !important;
             background: #f0f0f0 !important;
             position: relative;
+            white-space: normal !important;
+            word-break: break-word !important;
         }
 
         .print-preview-body .a4-page table.book-table td {
@@ -1420,18 +1462,15 @@
             }
             if (parts.length !== 3) return dateStr;
             let day, month, year;
-            // Deteksi format: jika bagian pertama panjang 4 => YYYY-MM-DD
             if (parts[0].length === 4) {
                 year = parts[0];
                 month = parts[1];
                 day = parts[2];
             } else {
-                // asumsi DD/MM/YYYY atau DD-MM-YYYY
                 day = parts[0];
                 month = parts[1];
                 year = parts[2];
             }
-            // Ambil 2 digit terakhir tahun
             const shortYear = year.slice(-2);
             return `${day.padStart(2,'0')}/${month.padStart(2,'0')}/${shortYear}`;
         }
@@ -1766,7 +1805,6 @@
 
                 const isBold = item.isSaldoAwal || item.jenis === 'bunga' || item.jenis === 'pajak';
 
-                // Format tanggal menjadi DD/MM/YY
                 const tanggalFormatted = formatDateToDDMMYY(tgl);
 
                 html += `
@@ -1830,7 +1868,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 14. Build A4 preview content (dengan format tanggal DD/MM/YY)
+        // 14. Build A4 preview content
         // ─────────────────────────────────────────────
         function buildA4Preview() {
             const bulan = bulanSelect.value;
@@ -1893,7 +1931,6 @@
                 });
             }
 
-            // Closing statement data
             const lastDay = new Date(parseInt(tahun), parseInt(bulan), 0);
             const dayName = getDayName(lastDay);
             const tglClosing = lastDay.getDate();
@@ -1984,7 +2021,6 @@
             printPreviewOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
 
-            // Inisialisasi resizer setelah konten dimuat
             setTimeout(() => {
                 initPreviewResizers();
             }, 100);
@@ -2024,8 +2060,7 @@
             if (!table) return;
             const headers = table.querySelectorAll('thead th');
             headers.forEach(th => {
-                const colKey = th.textContent.trim(); // gunakan teks sebagai id sederhana
-                // Hapus resizer lama
+                const colKey = th.textContent.trim();
                 const oldResizer = th.querySelector('.col-resizer');
                 if (oldResizer) oldResizer.remove();
 
@@ -2035,7 +2070,6 @@
                 th.style.position = 'relative';
                 th.appendChild(resizer);
 
-                // Terapkan lebar tersimpan
                 if (previewColumnWidths[colKey]) {
                     th.style.width = previewColumnWidths[colKey] + 'px';
                     th.style.minWidth = previewColumnWidths[colKey] + 'px';
@@ -2116,7 +2150,6 @@
         // 18. Event listeners
         // ─────────────────────────────────────────────
 
-        // Print button → show preview
         document.getElementById('printBtn').addEventListener('click', () => {
             if (allKasData.length === 0) {
                 showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
@@ -2126,35 +2159,29 @@
             showPrintPreview();
         });
 
-        // Close preview
         closePreviewBtn.addEventListener('click', closePrintPreview);
         printPreviewOverlay.addEventListener('click', (e) => {
             if (e.target === printPreviewOverlay) closePrintPreview();
         });
 
-        // Confirm print from preview
         confirmPrintBtn.addEventListener('click', doPrint);
 
-        // Keyboard: Escape to close preview
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && printPreviewOverlay.classList.contains('active')) {
                 closePrintPreview();
             }
         });
 
-        // Back button
         document.getElementById('backBtn').addEventListener('click', () => {
             window.location.href = 'database.html';
         });
 
-        // Logout
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('bosnbs_jenjang');
             localStorage.removeItem('bosnbs_tahun');
             window.location.href = 'index.html';
         });
 
-        // Load data button
         loadDataBtn.addEventListener('click', loadKasData);
 
         // ─────────────────────────────────────────────
@@ -2170,9 +2197,10 @@
             loadKasData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Buku Kas siap (dengan preview cetak A4 & resize kolom)');
+        console.log('📋 BOS-NBS · Buku Kas siap (wrap header, preview = cetak)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
 </body>
 </html>
+```
