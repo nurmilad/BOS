@@ -310,11 +310,11 @@
             margin: 0 8px;
         }
 
-        /* ── Book Meta (grid 2 kolom, label kanan, nilai kiri) ── */
+        /* ── Book Meta ── */
         .book-meta {
             display: grid;
             grid-template-columns: auto 1fr;
-            gap: 4px 20px;
+            gap: 4px 16px;
             background: #f8fafc;
             padding: 12px 18px;
             border-radius: 10px;
@@ -428,7 +428,7 @@
             display: grid;
             grid-template-columns: auto 1fr;
             gap: 4px 16px;
-            max-width: 320px;
+            max-width: 280px;
         }
 
         .closing-statement .closing-grid .item {
@@ -1288,12 +1288,12 @@
             </div>
 
             <div class="book-meta" id="bookMeta">
-                <div class="meta-row"><span class="meta-label">NPSN</span><span class="meta-value" id="metaNpsn">-</span></div>
-                <div class="meta-row"><span class="meta-label">Nama Sekolah</span><span class="meta-value" id="metaSekolah">-</span></div>
-                <div class="meta-row"><span class="meta-label">Desa / Kec</span><span class="meta-value">Lempong / Bola</span></div>
-                <div class="meta-row"><span class="meta-label">Kabupaten</span><span class="meta-value">Wajo</span></div>
-                <div class="meta-row"><span class="meta-label">Provinsi</span><span class="meta-value">Sulawesi Selatan</span></div>
-                <div class="meta-row"><span class="meta-label">Sumber Dana</span><span class="meta-value">BOS Reguler</span></div>
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsn">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolah">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
             </div>
 
             <div class="table-wrapper">
@@ -1541,8 +1541,10 @@
                             tanggalPemasukan2: ''
                         };
                     }
+                    // Nama sekolah dari session + " Nurmilad Boarding School"
+                    const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
                     metaNpsn.textContent = settingsData.npsn || '-';
-                    metaSekolah.textContent = settingsData.namaSekolah || '-';
+                    metaSekolah.textContent = namaSekolah;
                     signKepsek.textContent = settingsData.kepalaSekolah || '-';
                     signBendahara.textContent = settingsData.bendahara || '-';
                 }, (error) => {
@@ -1913,7 +1915,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 14. Build A4 preview content (dengan struktur meta & closing yang diperbaiki)
+        // 14. Build A4 preview content
         // ─────────────────────────────────────────────
         function buildA4Preview() {
             const bulan = bulanSelect.value;
@@ -1983,7 +1985,7 @@
             const tahunClosing = tahun;
 
             const npsn = settingsData.npsn || '-';
-            const namaSekolah = settingsData.namaSekolah || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
             const kepalaSekolah = settingsData.kepalaSekolah || '-';
             const bendahara = settingsData.bendahara || '-';
             const today = new Date();
@@ -1999,12 +2001,12 @@
                         </div>
 
                         <div class="book-meta">
-                            <div class="meta-row"><span class="meta-label">NPSN</span><span class="meta-value">${npsn}</span></div>
-                            <div class="meta-row"><span class="meta-label">Nama Sekolah</span><span class="meta-value">${namaSekolah}</span></div>
-                            <div class="meta-row"><span class="meta-label">Desa / Kec</span><span class="meta-value">Lempong / Bola</span></div>
-                            <div class="meta-row"><span class="meta-label">Kabupaten</span><span class="meta-value">Wajo</span></div>
-                            <div class="meta-row"><span class="meta-label">Provinsi</span><span class="meta-value">Sulawesi Selatan</span></div>
-                            <div class="meta-row"><span class="meta-label">Sumber Dana</span><span class="meta-value">BOS Reguler</span></div>
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
                         </div>
 
                         <div class="table-wrapper">
