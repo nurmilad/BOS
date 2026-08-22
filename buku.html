@@ -1353,10 +1353,90 @@
         </div>
     </div>
 
-    <!-- ─── Tab Lainnya (Placeholder) ─── -->
+    <!-- ─── Tab Content: Buku Tunai ─── -->
     <div class="tab-content" id="tab-buku-tunai">
-        <div style="text-align:center;padding:60px 0;color:#8aa0b8;font-size:16px;">📕 Buku Tunai (Coming Soon)</div>
+        <!-- Filter (sama dengan buku kas, tetapi akan diisi ulang) -->
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelectTunai">
+                <!-- diisi dari JS -->
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelectTunai">
+                <!-- diisi dari JS -->
+            </select>
+            <button class="btn-primary" id="loadDataBtnTunai" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
+        </div>
+
+        <!-- Buku Tunai -->
+        <div id="bukuTunaiContent">
+            <div class="book-header">
+                <h2>BUKU KAS PEMBANTU TUNAI</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulanTunai">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahunTunai">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMetaTunai">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnTunai">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahTunai">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="tunaiTable">
+                    <thead>
+                        <tr>
+                            <th style="width:80px;">TANGGAL</th>
+                            <th style="width:100px;">KODE KEGIATAN</th>
+                            <th style="width:100px;">KODE REKENING</th>
+                            <th style="width:100px;">NO. BUKTI</th>
+                            <th style="width:200px;">URAIAN</th>
+                            <th style="width:120px;">PENERIMAAN</th>
+                            <th style="width:120px;">PENGELUARAN</th>
+                            <th style="width:120px;">SALDO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tunaiTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Closing Statement -->
+            <div class="closing-statement" id="closingStatementTunai">
+                <div style="font-size:13px;margin-bottom:8px;">
+                    Pada hari ini <span id="closingHariTunai">-</span>, tanggal <span id="closingTanggalTunai">-</span> bulan <span id="closingBulanTunai">-</span> Tahun <span id="closingTahunTunai">-</span> Buku Kas Tunai ditutup dengan keadaan/posisi buku sebagai berikut :
+                </div>
+                <div class="closing-grid">
+                    <div class="item"><span>Saldo Buku Kas Tunai</span> <span id="saldoTunaiFinal">Rp 0</span></div>
+                </div>
+
+                <div class="signature">
+                    <div class="sign-block">
+                        <div class="label">Menyetujui,</div>
+                        <div class="label" style="margin-top:4px;">Kec. Bola, <span id="signTanggalTunai">-</span></div>
+                        <div class="name" id="signKepsekTunai">-</div>
+                        <div class="title">Kepala Sekolah</div>
+                    </div>
+                    <div class="sign-block">
+                        <div class="label">&nbsp;</div>
+                        <div class="label" style="margin-top:4px;">&nbsp;</div>
+                        <div class="name" id="signBendaharaTunai">-</div>
+                        <div class="title">Bendahara BOS</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- ─── Tab Lainnya (Placeholder) ─── -->
     <div class="tab-content" id="tab-buku-bank">
         <div style="text-align:center;padding:60px 0;color:#8aa0b8;font-size:16px;">🏦 Buku Bank (Coming Soon)</div>
     </div>
@@ -1429,6 +1509,24 @@
         const signBendahara = document.getElementById('signBendahara');
         const toast = document.getElementById('toast');
 
+        // Buku Tunai DOM refs
+        const bulanSelectTunai = document.getElementById('bulanSelectTunai');
+        const tahunSelectTunai = document.getElementById('tahunSelectTunai');
+        const loadDataBtnTunai = document.getElementById('loadDataBtnTunai');
+        const tunaiTableBody = document.getElementById('tunaiTableBody');
+        const displayBulanTunai = document.getElementById('displayBulanTunai');
+        const displayTahunTunai = document.getElementById('displayTahunTunai');
+        const metaNpsnTunai = document.getElementById('metaNpsnTunai');
+        const metaSekolahTunai = document.getElementById('metaSekolahTunai');
+        const closingHariTunai = document.getElementById('closingHariTunai');
+        const closingTanggalTunai = document.getElementById('closingTanggalTunai');
+        const closingBulanTunai = document.getElementById('closingBulanTunai');
+        const closingTahunTunai = document.getElementById('closingTahunTunai');
+        const saldoTunaiFinal = document.getElementById('saldoTunaiFinal');
+        const signTanggalTunai = document.getElementById('signTanggalTunai');
+        const signKepsekTunai = document.getElementById('signKepsekTunai');
+        const signBendaharaTunai = document.getElementById('signBendaharaTunai');
+
         // Print preview elements
         const printPreviewOverlay = document.getElementById('printPreviewOverlay');
         const a4PreviewContent = document.getElementById('a4PreviewContent');
@@ -1450,24 +1548,26 @@
         }
 
         // ─────────────────────────────────────────────
-        // 6.  Populate tahun
+        // 6.  Populate tahun (untuk kedua filter)
         // ─────────────────────────────────────────────
-        function populateTahun() {
+        function populateTahun(selectElement) {
             const currentYear = new Date().getFullYear();
             const start = 2024;
             const end = 2034;
+            selectElement.innerHTML = '';
             for (let y = start; y <= end; y++) {
                 const opt = document.createElement('option');
                 opt.value = y;
                 opt.textContent = y;
                 if (y === currentYear) opt.selected = true;
-                tahunSelect.appendChild(opt);
+                selectElement.appendChild(opt);
             }
             if (currentYear < start || currentYear > end) {
-                tahunSelect.value = start;
+                selectElement.value = start;
             }
         }
-        populateTahun();
+        populateTahun(tahunSelect);
+        populateTahun(tahunSelectTunai);
 
         // ─────────────────────────────────────────────
         // 7.  Format number & date
@@ -1548,17 +1648,28 @@
                         };
                     }
                     const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
-                    metaNpsn.textContent = settingsData.npsn || '-';
+                    const npsn = settingsData.npsn || '-';
+                    const kepala = settingsData.kepalaSekolah || '-';
+                    const bendahara = settingsData.bendahara || '-';
+
+                    // Update Buku Kas
+                    metaNpsn.textContent = npsn;
                     metaSekolah.textContent = namaSekolah;
-                    signKepsek.textContent = settingsData.kepalaSekolah || '-';
-                    signBendahara.textContent = settingsData.bendahara || '-';
+                    signKepsek.textContent = kepala;
+                    signBendahara.textContent = bendahara;
+
+                    // Update Buku Tunai
+                    metaNpsnTunai.textContent = npsn;
+                    metaSekolahTunai.textContent = namaSekolah;
+                    signKepsekTunai.textContent = kepala;
+                    signBendaharaTunai.textContent = bendahara;
                 }, (error) => {
                     console.error('Settings read error:', error);
                 });
         }
 
         // ─────────────────────────────────────────────
-        // 9.  Hitung saldo akhir bulan tertentu
+        // 9.  Hitung saldo akhir bulan tertentu (untuk kas)
         // ─────────────────────────────────────────────
         async function getSaldoAkhirBulan(bulan, tahun) {
             try {
@@ -1877,7 +1988,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 12. Update Closing Statement
+        // 12. Update Closing Statement (Buku Kas)
         // ─────────────────────────────────────────────
         function updateClosingStatement(data) {
             const bulan = parseInt(bulanSelect.value);
@@ -1906,7 +2017,106 @@
         }
 
         // ─────────────────────────────────────────────
-        // 13. Tabs
+        // 13. Load Buku Tunai Data
+        // ─────────────────────────────────────────────
+        function loadTunaiData() {
+            const bulan = bulanSelectTunai.value;
+            const tahun = tahunSelectTunai.value;
+
+            displayBulanTunai.textContent = getMonthName(bulan);
+            displayTahunTunai.textContent = tahun;
+
+            const prev = getPreviousMonth(bulan, tahun);
+            const bulanLaluNama = getMonthName(prev.month);
+
+            // Hanya satu baris: tanggal 1, uraian saldo tunai bulan lalu, saldo 0
+            const transaksi = [{
+                tanggal: `${tahun}-${bulan}-01`,
+                kodeKegiatan: '',
+                kodeRekening: '',
+                noBukti: '',
+                uraian: `Saldo Tunai Bulan ${bulanLaluNama}`,
+                penerimaan: 0,
+                pengeluaran: 0,
+                saldo: 0,
+                isSaldoAwal: true,
+                jenis: 'saldo_awal'
+            }];
+
+            renderTunaiTable(transaksi);
+            updateClosingTunai(transaksi);
+        }
+
+        // ─────────────────────────────────────────────
+        // 14. Render Buku Tunai Table
+        // ─────────────────────────────────────────────
+        function renderTunaiTable(data) {
+            if (data.length === 0) {
+                tunaiTableBody.innerHTML = `
+                            <tr>
+                                <td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">
+                                    Tidak ada data untuk bulan ini.
+                                </td>
+                            </tr>
+                        `;
+                return;
+            }
+
+            let html = '';
+            data.forEach((item, index) => {
+                const tgl = item.tanggal || '';
+                const kode = item.kodeKegiatan || '';
+                const rek = item.kodeRekening || '';
+                const bukti = item.noBukti || '';
+                const uraian = item.uraian || '';
+                const penerimaan = item.penerimaan || 0;
+                const pengeluaran = item.pengeluaran || 0;
+                const saldo = item.saldo || 0;
+
+                const isBold = item.isSaldoAwal;
+                const tanggalFormatted = formatDateToDDMMYY(tgl);
+
+                html += `
+                            <tr style="${isBold ? 'font-weight:600;' : ''}">
+                                <td>${tanggalFormatted}</td>
+                                <td>${kode}</td>
+                                <td>${rek}</td>
+                                <td>${bukti}</td>
+                                <td class="left">${uraian}</td>
+                                <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                                <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                                <td class="right">${formatRupiah(saldo)}</td>
+                            </tr>
+                        `;
+            });
+
+            tunaiTableBody.innerHTML = html;
+        }
+
+        // ─────────────────────────────────────────────
+        // 15. Update Closing Tunai
+        // ─────────────────────────────────────────────
+        function updateClosingTunai(data) {
+            const bulan = parseInt(bulanSelectTunai.value);
+            const tahun = parseInt(tahunSelectTunai.value);
+
+            const lastDay = new Date(tahun, bulan, 0);
+            const dayName = getDayName(lastDay);
+
+            closingHariTunai.textContent = dayName;
+            closingTanggalTunai.textContent = lastDay.getDate();
+            closingBulanTunai.textContent = getMonthName(String(bulan));
+            closingTahunTunai.textContent = tahun;
+
+            // saldo selalu 0
+            saldoTunaiFinal.textContent = formatRupiah(0);
+
+            const today = new Date();
+            signTanggalTunai.textContent = today.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        // ─────────────────────────────────────────────
+        // 16. Tabs
         // ─────────────────────────────────────────────
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -1916,11 +2126,16 @@
                 document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
                 const target = document.getElementById('tab-' + this.dataset.tab);
                 if (target) target.classList.add('active');
+
+                // Jika tab yang diaktifkan adalah buku tunai, muat data
+                if (this.dataset.tab === 'buku-tunai') {
+                    loadTunaiData();
+                }
             });
         });
 
         // ─────────────────────────────────────────────
-        // 14. Build A4 preview content
+        // 17. Build A4 preview content
         // ─────────────────────────────────────────────
         function buildA4Preview() {
             const bulan = bulanSelect.value;
@@ -2065,7 +2280,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 15. Show print preview + init resizer
+        // 18. Show print preview + init resizer
         // ─────────────────────────────────────────────
         function showPrintPreview() {
             a4PreviewContent.innerHTML = '';
@@ -2085,7 +2300,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 16. Resize kolom di preview
+        // 19. Resize kolom di preview
         // ─────────────────────────────────────────────
         let previewColumnWidths = {};
 
@@ -2159,7 +2374,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 17. Print / PDF — mempertahankan overlay dan menyembunyikan toolbar
+        // 20. Print / PDF — mempertahankan overlay dan menyembunyikan toolbar
         // ─────────────────────────────────────────────
         function doPrint() {
             const toolbar = document.querySelector('.print-preview-toolbar');
@@ -2179,9 +2394,16 @@
         }
 
         // ─────────────────────────────────────────────
-        // 18. Event listeners
+        // 21. Event listeners
         // ─────────────────────────────────────────────
 
+        // Tombol Tampilkan untuk Buku Kas
+        loadDataBtn.addEventListener('click', loadKasData);
+
+        // Tombol Tampilkan untuk Buku Tunai
+        loadDataBtnTunai.addEventListener('click', loadTunaiData);
+
+        // Print button
         document.getElementById('printBtn').addEventListener('click', () => {
             if (allKasData.length === 0) {
                 showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
@@ -2214,22 +2436,23 @@
             window.location.href = 'index.html';
         });
 
-        loadDataBtn.addEventListener('click', loadKasData);
-
         // ─────────────────────────────────────────────
-        // 19. Init
+        // 22. Init
         // ─────────────────────────────────────────────
         loadSettings();
 
         const now = new Date();
         const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
         bulanSelect.value = currentMonth;
+        bulanSelectTunai.value = currentMonth;
 
+        // Muat data awal
         setTimeout(() => {
             loadKasData();
+            loadTunaiData(); // juga muat tunai
         }, 500);
 
-        console.log('📋 BOS-NBS · Buku Kas siap (closing-grid & tanda tangan diperbaiki)');
+        console.log('📋 BOS-NBS · Buku Kas dan Buku Tunai siap');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
