@@ -1,3 +1,5 @@
+Saya perbaiki kalimat penutupan dan format tanggal di `buku.html` sesuai permintaan.
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -660,8 +662,7 @@
             <!-- Closing Statement -->
             <div class="closing-statement" id="closingStatement">
                 <div style="font-size:13px;margin-bottom:8px;">
-                    Pada hari ini <span id="closingHari">-</span>, tanggal <span id="closingTanggal">-</span> Tahun <span id="closingTahun">-</span>, 
-                    Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut:
+                    Pada hari ini <span id="closingHari">-</span>, tanggal <span id="closingTanggal">-</span> bulan <span id="closingBulan">-</span> Tahun <span id="closingTahun">-</span>, Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut:
                 </div>
                 <div class="closing-grid">
                     <div class="item"><span>Saldo Bank</span> <span id="saldoBank">Rp 0</span></div>
@@ -753,6 +754,7 @@
         const metaSekolah = document.getElementById('metaSekolah');
         const closingHari = document.getElementById('closingHari');
         const closingTanggal = document.getElementById('closingTanggal');
+        const closingBulan = document.getElementById('closingBulan');
         const closingTahun = document.getElementById('closingTahun');
         const saldoBank = document.getElementById('saldoBank');
         const saldoTunai = document.getElementById('saldoTunai');
@@ -892,7 +894,6 @@
                             // Transaksi yang terjadi pada atau sebelum bulan yang dimaksud
                             if ((parseInt(month) < parseInt(bulan) && parseInt(year) <= parseInt(tahun)) ||
                                 (parseInt(month) === parseInt(bulan) && parseInt(year) === parseInt(tahun))) {
-                                // Pengeluaran mengurangi saldo
                                 totalSaldo -= parseFloat(d.jumlahHarga) || 0;
                             }
                         }
@@ -1201,6 +1202,7 @@
 
             closingHari.textContent = dayName;
             closingTanggal.textContent = lastDay.getDate();
+            closingBulan.textContent = getMonthName(String(bulan));
             closingTahun.textContent = tahun;
 
             // Ambil saldo terakhir dari data
@@ -1322,9 +1324,10 @@
             loadKasData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Buku Kas siap (saldo bank = total, tunai = 0)');
+        console.log('📋 BOS-NBS · Buku Kas siap (format penutupan diperbaiki)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
 </body>
 </html>
+```
