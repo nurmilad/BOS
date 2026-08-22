@@ -536,68 +536,30 @@
                 visibility: hidden !important;
             }
 
-            /* Tampilkan overlay, modal, body, dan konten A4 */
-            .print-preview-overlay,
-            .print-preview-modal,
-            .print-preview-body,
+            /* Tampilkan hanya #a4PreviewContent dan anak-anaknya */
             #a4PreviewContent,
             #a4PreviewContent * {
                 visibility: visible !important;
             }
 
-            /* Atur ulang posisi dan tampilan overlay agar menjadi latar putih */
-            .print-preview-overlay {
-                display: flex !important;
-                position: fixed !important;
+            /* Reset body dan html untuk print */
+            html,
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #fff !important;
+                height: auto !important;
+                overflow: visible !important;
+                width: 100% !important;
+            }
+
+            #a4PreviewContent {
+                position: absolute !important;
                 top: 0 !important;
                 left: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-                background: #fff !important;
-                backdrop-filter: none !important;
-                padding: 0 !important;
-                z-index: 9999 !important;
-                align-items: flex-start !important;
-                justify-content: center !important;
-            }
-
-            .print-preview-modal {
-                display: flex !important;
-                flex-direction: column !important;
-                max-width: 100% !important;
-                max-height: 100% !important;
-                border-radius: 0 !important;
-                box-shadow: none !important;
-                background: #fff !important;
-                overflow: visible !important;
-                width: 100% !important;
-                height: 100% !important;
-            }
-
-            .print-preview-body {
-                display: flex !important;
-                justify-content: center !important;
-                align-items: flex-start !important;
-                padding: 0 !important;
-                background: #fff !important;
-                overflow: visible !important;
-                flex: 1 !important;
-                width: 100% !important;
-            }
-
-            /* Sembunyikan toolbar preview */
-            .print-preview-toolbar {
-                display: none !important;
-            }
-
-            /* Atur ukuran A4 untuk konten */
-            #a4PreviewContent {
-                position: relative !important;
-                top: auto !important;
-                left: auto !important;
                 width: 210mm !important;
                 min-height: 297mm !important;
-                margin: 0 auto !important;
+                margin: 0 !important;
                 padding: 10mm !important;
                 box-sizing: border-box !important;
                 background: #fff !important;
@@ -610,7 +572,6 @@
                 border-radius: 0 !important;
                 page-break-after: avoid !important;
                 page-break-inside: avoid !important;
-                flex-shrink: 0 !important;
             }
 
             #a4PreviewContent * {
@@ -753,18 +714,21 @@
                 margin-top: 3pt !important;
             }
 
-            /* Signature */
+            /* Signature — pastikan sejajar secara horizontal */
             #a4PreviewContent .signature {
                 margin: 16pt 0 0 0 !important;
                 padding: 10pt 0 0 0 !important;
                 border-top: 1px solid #ccc !important;
                 display: flex !important;
+                flex-direction: row !important;
                 justify-content: space-between !important;
                 gap: 20pt !important;
+                align-items: flex-start !important;
             }
             #a4PreviewContent .signature .sign-block {
                 min-width: 120pt !important;
                 text-align: center !important;
+                flex: 1 !important;
             }
             #a4PreviewContent .signature .sign-block .label {
                 font-size: 8pt !important;
@@ -809,11 +773,11 @@
             .toolbar,
             .tabs,
             .filter-row,
-            .tab-content:not(.active) {
-                display: none !important;
-            }
-            /* Sembunyikan halaman utama Buku Kas */
-            #tab-buku-kas {
+            .tab-content:not(.active),
+            .print-preview-overlay,
+            .print-preview-modal,
+            .print-preview-body,
+            .print-preview-toolbar {
                 display: none !important;
             }
         }
