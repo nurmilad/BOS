@@ -1,39 +1,3 @@
-Saya telah memperbaiki halaman Buku Kas dengan tiga peningkatan utama: **wrap teks pada header kolom**, **konsistensi penuh antara preview dan cetak**, serta **pengaturan lebar kolom yang lebih fleksibel** (bisa dibuat lebih sempit).
-
----
-
-### ✨ Perbaikan yang Dilakukan
-
-1. **Header kolom dapat membungkus teks**  
-   - Pada mode preview maupun cetak, header tabel kini menggunakan `white-space: normal` dan `word-break: break-word`, sehingga teks panjang (misalnya "KODE KEGIATAN") akan turun ke baris berikutnya.  
-   - Ini memungkinkan Anda mengatur lebar kolom menjadi lebih sempit tanpa memotong teks.
-
-2. **Konsistensi antara preview dan hasil cetak**  
-   - CSS untuk `.a4-page` (preview) dan `@media print` sekarang **100% identik** (font, padding, border, spacing).  
-   - Tidak ada gaya tambahan yang mengganggu – tampilan di layar preview sama persis dengan dokumen cetak/PDF.
-
-3. **Ukuran kolom dapat diatur lebih sempit**  
-   - Dengan header yang bisa wrap, Anda dapat menarik gagang pembatas kolom ke kiri hingga teks header terbagi menjadi dua baris, sehingga kolom menjadi lebih ramping.  
-   - Lebar kolom yang diatur di preview akan tersimpan dan digunakan saat mencetak.
-
-4. **Perbaikan kecil lainnya**  
-   - Menambahkan `table-layout: fixed` pada tabel preview dan cetak agar lebar kolom yang diatur benar-benar diterapkan.  
-   - Menghilangkan duplikasi gaya yang tidak perlu.
-
----
-
-### 🖱️ Cara Menggunakan
-
-- Buka halaman **Buku Kas**, pilih bulan/tahun, lalu klik **Tampilkan**.
-- Klik **🖨️ Cetak / PDF** untuk membuka preview.
-- Di preview, **seret batas kolom** (garis tipis di sisi kanan header) untuk mengatur lebar sesuai keinginan – header akan otomatis membungkus teks jika kolom terlalu sempit.
-- Klik **Cetak / PDF** pada toolbar preview – hasil cetak akan sama persis dengan apa yang Anda lihat.
-
----
-
-Silakan gunakan file HTML di bawah ini sebagai pengganti `buku.html` Anda.
-
-```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -2203,4 +2167,3 @@ Silakan gunakan file HTML di bawah ini sebagai pengganti `buku.html` Anda.
 
 </body>
 </html>
-```
