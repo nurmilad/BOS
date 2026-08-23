@@ -1,3 +1,16 @@
+Saya telah memperbaiki struktur tanda tangan agar:
+
+- **Tempat, Tanggal** (Kec. Bola, tgl) berada di atas Bendahara (sebelah kanan).
+- **Label "Kepala Sekolah"** dan **label "Bendahara BOS"** sejajar secara horizontal.
+- **Nama Kepala Sekolah** dan **nama Bendahara** juga sejajar.
+
+Perubahan diterapkan di semua tab (Buku Kas, Buku Tunai, Buku Bank) serta pada preview dan cetak.
+
+---
+
+### 📄 File `buku.html` Lengkap
+
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -275,7 +288,6 @@
             margin: 0 8px;
         }
 
-        /* ── Book Meta ── rata kiri */
         .book-meta {
             display: grid;
             grid-template-columns: auto 1fr;
@@ -405,36 +417,50 @@
             font-weight: 600;
         }
 
-        /* ── Signature ── dengan jarak 4x enter antara label dan nama ── */
+        /* ── Signature baru ── */
         .signature {
-            display: flex;
-            justify-content: space-between;
             margin-top: 32px;
             padding-top: 20px;
             border-top: 1px solid #eef4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
         }
-        .signature .sign-block {
-            text-align: center;
-            min-width: 180px;
-        }
-        .signature .sign-block .label {
+        .signature .sign-place-date {
             font-size: 12px;
             color: #5a7a9a;
-            margin-bottom: 4px;
-            display: block;
+            text-align: right;
+            margin-bottom: 8px;
+            width: 100%;
         }
-        .signature .sign-block .name {
+        .signature .sign-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 40px;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+        }
+        .signature .sign-grid .sign-label {
+            font-size: 12px;
+            color: #5a7a9a;
+            text-align: center;
+            margin-bottom: 4px;
+            font-weight: 400;
+        }
+        .signature .sign-grid .sign-name {
             font-weight: 600;
             font-size: 14px;
-            margin-top: 56px; /* 4x enter (sekitar 4 baris) */
+            text-align: center;
             padding-top: 4px;
             border-top: 1px solid #0a2e5c;
             display: inline-block;
             min-width: 160px;
+            margin-top: 8px;
         }
-        /* Untuk bendahara, label kedua (Bendahara BOS) diletakkan di bawah tempat/tanggal */
-        .signature .sign-block .label + .label {
-            margin-top: 0;
+        /* Jarak 4x enter antara label dan nama (sudah diatur dengan margin-top pada .sign-name) */
+        .signature .sign-grid .sign-name {
+            margin-top: 56px; /* 4x enter */
         }
 
         .toast {
@@ -473,10 +499,9 @@
             .tab-content {
                 padding: 16px;
             }
-            .signature {
-                flex-direction: column;
-                gap: 24px;
-                align-items: center;
+            .signature .sign-grid {
+                gap: 0 20px;
+                max-width: 100%;
             }
             .closing-statement .closing-grid {
                 max-width: 100%;
@@ -715,37 +740,46 @@
             #a4PreviewContent .closing-statement .closing-grid .item.total span:last-child {
                 font-weight: 700 !important;
             }
-            /* Signature print - jarak 4x enter (≈32pt) */
+            /* Signature print */
             #a4PreviewContent .signature {
                 margin: 16pt 0 0 0 !important;
                 padding: 10pt 0 0 0 !important;
                 border-top: 1px solid #ccc !important;
                 display: flex !important;
-                flex-direction: row !important;
-                justify-content: space-between !important;
-                gap: 20pt !important;
-                align-items: flex-start !important;
+                flex-direction: column !important;
+                align-items: flex-end !important;
             }
-            #a4PreviewContent .signature .sign-block {
-                min-width: 120pt !important;
-                text-align: center !important;
-                flex: 1 !important;
-            }
-            #a4PreviewContent .signature .sign-block .label {
+            #a4PreviewContent .signature .sign-place-date {
                 font-size: 8pt !important;
                 color: #555 !important;
-                margin: 0 0 2pt 0 !important;
-                display: block !important;
+                text-align: right !important;
+                margin-bottom: 4pt !important;
+                width: 100% !important;
             }
-            #a4PreviewContent .signature .sign-block .name {
+            #a4PreviewContent .signature .sign-grid {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 0 20pt !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            #a4PreviewContent .signature .sign-grid .sign-label {
+                font-size: 8pt !important;
+                color: #555 !important;
+                text-align: center !important;
+                margin-bottom: 2pt !important;
+                font-weight: 400 !important;
+            }
+            #a4PreviewContent .signature .sign-grid .sign-name {
                 font-weight: 700 !important;
                 font-size: 10pt !important;
-                margin: 32pt 0 0 0 !important; /* 4x enter */
-                padding: 3pt 0 0 0 !important;
+                text-align: center !important;
+                padding-top: 3pt !important;
                 border-top: 1px solid #000 !important;
                 display: inline-block !important;
                 min-width: 120pt !important;
                 color: #000 !important;
+                margin-top: 32pt !important; /* 4x enter */
             }
             #a4PreviewContent * {
                 margin-top: 0 !important;
@@ -991,28 +1025,40 @@
             padding-top: 10pt !important;
             border-top: 1px solid #ccc !important;
             display: flex !important;
-            justify-content: space-between !important;
-            gap: 20pt !important;
+            flex-direction: column !important;
+            align-items: flex-end !important;
         }
-        .print-preview-body .a4-page .signature .sign-block {
-            min-width: 120pt !important;
-            text-align: center !important;
-        }
-        .print-preview-body .a4-page .signature .sign-block .label {
+        .print-preview-body .a4-page .signature .sign-place-date {
             font-size: 8pt !important;
             color: #555 !important;
-            margin-bottom: 2pt !important;
-            display: block !important;
+            text-align: right !important;
+            margin-bottom: 4pt !important;
+            width: 100% !important;
         }
-        .print-preview-body .a4-page .signature .sign-block .name {
+        .print-preview-body .a4-page .signature .sign-grid {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 0 20pt !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        .print-preview-body .a4-page .signature .sign-grid .sign-label {
+            font-size: 8pt !important;
+            color: #555 !important;
+            text-align: center !important;
+            margin-bottom: 2pt !important;
+            font-weight: 400 !important;
+        }
+        .print-preview-body .a4-page .signature .sign-grid .sign-name {
             font-weight: 700 !important;
             font-size: 10pt !important;
-            margin-top: 32pt !important; /* 4x enter */
+            text-align: center !important;
             padding-top: 3pt !important;
             border-top: 1px solid #000 !important;
             display: inline-block !important;
             min-width: 120pt !important;
             color: #000 !important;
+            margin-top: 32pt !important;
         }
         .print-preview-body .a4-page * {
             margin-top: 0 !important;
@@ -1043,9 +1089,11 @@
                 grid-template-columns: auto auto !important;
             }
             .print-preview-body .a4-page .signature {
-                flex-direction: column !important;
-                gap: 16pt !important;
                 align-items: center !important;
+            }
+            .print-preview-body .a4-page .signature .sign-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 0 10pt !important;
             }
             .print-preview-toolbar {
                 flex-wrap: wrap;
@@ -1191,16 +1239,14 @@
                     <div class="item total"><span>Jumlah</span> <span id="saldoTotal">Rp 0</span></div>
                 </div>
 
-                <!-- ── Tanda tangan dengan jarak 4x enter ── -->
+                <!-- ── Tanda tangan baru ── -->
                 <div class="signature">
-                    <div class="sign-block">
-                        <div class="label">Kepala Sekolah</div>
-                        <div class="name" id="signKepsek">-</div>
-                    </div>
-                    <div class="sign-block">
-                        <div class="label">Kec. Bola, <span id="signTanggal">-</span></div>
-                        <div class="label">Bendahara BOS</div>
-                        <div class="name" id="signBendahara">-</div>
+                    <div class="sign-place-date">Kec. Bola, <span id="signTanggal">-</span></div>
+                    <div class="sign-grid">
+                        <div class="sign-label">Kepala Sekolah</div>
+                        <div class="sign-label">Bendahara BOS</div>
+                        <div class="sign-name" id="signKepsek">-</div>
+                        <div class="sign-name" id="signBendahara">-</div>
                     </div>
                 </div>
             </div>
@@ -1280,14 +1326,12 @@
                 </div>
 
                 <div class="signature">
-                    <div class="sign-block">
-                        <div class="label">Kepala Sekolah</div>
-                        <div class="name" id="signKepsekTunai">-</div>
-                    </div>
-                    <div class="sign-block">
-                        <div class="label">Kec. Bola, <span id="signTanggalTunai">-</span></div>
-                        <div class="label">Bendahara BOS</div>
-                        <div class="name" id="signBendaharaTunai">-</div>
+                    <div class="sign-place-date">Kec. Bola, <span id="signTanggalTunai">-</span></div>
+                    <div class="sign-grid">
+                        <div class="sign-label">Kepala Sekolah</div>
+                        <div class="sign-label">Bendahara BOS</div>
+                        <div class="sign-name" id="signKepsekTunai">-</div>
+                        <div class="sign-name" id="signBendaharaTunai">-</div>
                     </div>
                 </div>
             </div>
@@ -1367,14 +1411,12 @@
                 </div>
 
                 <div class="signature">
-                    <div class="sign-block">
-                        <div class="label">Kepala Sekolah</div>
-                        <div class="name" id="signKepsekBank">-</div>
-                    </div>
-                    <div class="sign-block">
-                        <div class="label">Kec. Bola, <span id="signTanggalBank">-</span></div>
-                        <div class="label">Bendahara BOS</div>
-                        <div class="name" id="signBendaharaBank">-</div>
+                    <div class="sign-place-date">Kec. Bola, <span id="signTanggalBank">-</span></div>
+                    <div class="sign-grid">
+                        <div class="sign-label">Kepala Sekolah</div>
+                        <div class="sign-label">Bendahara BOS</div>
+                        <div class="sign-name" id="signKepsekBank">-</div>
+                        <div class="sign-name" id="signBendaharaBank">-</div>
                     </div>
                 </div>
             </div>
@@ -2195,14 +2237,12 @@
                         <div class="item total"><span>Jumlah</span> <span>${formatRupiah(saldoAkhir)}</span></div>
                     </div>
                     <div class="signature">
-                        <div class="sign-block">
-                            <div class="label">Kepala Sekolah</div>
-                            <div class="name">${kepalaSekolah}</div>
-                        </div>
-                        <div class="sign-block">
-                            <div class="label">Kec. Bola, ${signDateStr}</div>
-                            <div class="label">Bendahara BOS</div>
-                            <div class="name">${bendahara}</div>
+                        <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                        <div class="sign-grid">
+                            <div class="sign-label">Kepala Sekolah</div>
+                            <div class="sign-label">Bendahara BOS</div>
+                            <div class="sign-name">${kepalaSekolah}</div>
+                            <div class="sign-name">${bendahara}</div>
                         </div>
                     </div>
                 </div>
@@ -2301,14 +2341,12 @@
                         <div class="item"><span>Saldo Buku Kas Tunai</span> <span>${formatRupiah(saldoAkhir)}</span></div>
                     </div>
                     <div class="signature">
-                        <div class="sign-block">
-                            <div class="label">Kepala Sekolah</div>
-                            <div class="name">${kepalaSekolah}</div>
-                        </div>
-                        <div class="sign-block">
-                            <div class="label">Kec. Bola, ${signDateStr}</div>
-                            <div class="label">Bendahara BOS</div>
-                            <div class="name">${bendahara}</div>
+                        <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                        <div class="sign-grid">
+                            <div class="sign-label">Kepala Sekolah</div>
+                            <div class="sign-label">Bendahara BOS</div>
+                            <div class="sign-name">${kepalaSekolah}</div>
+                            <div class="sign-name">${bendahara}</div>
                         </div>
                     </div>
                 </div>
@@ -2416,14 +2454,12 @@
                         <div class="item"><span>Saldo Bank</span> <span>${formatRupiah(saldoAkhir)}</span></div>
                     </div>
                     <div class="signature">
-                        <div class="sign-block">
-                            <div class="label">Kepala Sekolah</div>
-                            <div class="name">${kepalaSekolah}</div>
-                        </div>
-                        <div class="sign-block">
-                            <div class="label">Kec. Bola, ${signDateStr}</div>
-                            <div class="label">Bendahara BOS</div>
-                            <div class="name">${bendahara}</div>
+                        <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                        <div class="sign-grid">
+                            <div class="sign-label">Kepala Sekolah</div>
+                            <div class="sign-label">Bendahara BOS</div>
+                            <div class="sign-name">${kepalaSekolah}</div>
+                            <div class="sign-name">${bendahara}</div>
                         </div>
                     </div>
                 </div>
@@ -2597,9 +2633,10 @@
             loadBankData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank) siap dengan jarak 4x enter pada tanda tangan');
+        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank) siap dengan tanda tangan sejajar');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
 </body>
 </html>
+```
