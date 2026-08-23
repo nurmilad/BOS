@@ -404,7 +404,7 @@
             font-weight: 600;
         }
 
-        /* ── Signature baru ── */
+        /* ── Signature – tempat/tanggal di atas Bendahara, label dan nama sejajar ── */
         .signature {
             margin-top: 32px;
             padding-top: 20px;
@@ -416,10 +416,20 @@
         .signature .sign-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto auto;
             gap: 0 40px;
             width: 100%;
             max-width: 500px;
             margin-left: auto;
+        }
+        .signature .sign-grid .sign-place-date {
+            font-size: 12px;
+            color: #5a7a9a;
+            text-align: center;
+            margin-bottom: 0;
+            grid-column: 2;
+            grid-row: 1;
+            justify-self: center;
         }
         .signature .sign-grid .sign-label {
             font-size: 12px;
@@ -427,6 +437,15 @@
             text-align: center;
             margin-bottom: 4px;
             font-weight: 400;
+            align-self: end;
+        }
+        .signature .sign-grid .sign-label-kepsek {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        .signature .sign-grid .sign-label-bendahara {
+            grid-column: 2;
+            grid-row: 2;
         }
         .signature .sign-grid .sign-name {
             font-weight: 600;
@@ -437,41 +456,15 @@
             display: inline-block;
             min-width: 160px;
             margin-top: 56px; /* 4x enter */
-        }
-        /* Kolom kanan: tempat/tanggal di atas label Bendahara */
-        .signature .sign-grid .sign-place-date {
-            font-size: 12px;
-            color: #5a7a9a;
-            text-align: center;
-            margin-bottom: 4px;
-            grid-column: 2;
-            grid-row: 1;
-        }
-        .signature .sign-grid .sign-label-kepsek {
-            grid-column: 1;
-            grid-row: 2;
-        }
-        .signature .sign-grid .sign-label-bendahara {
-            grid-column: 2;
-            grid-row: 3;
+            align-self: start;
         }
         .signature .sign-grid .sign-name-kepsek {
             grid-column: 1;
-            grid-row: 4;
+            grid-row: 3;
         }
         .signature .sign-grid .sign-name-bendahara {
             grid-column: 2;
-            grid-row: 5;
-        }
-        /* Atur ulang urutan grid dengan explicit placement */
-        .signature .sign-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto auto auto auto auto;
-            gap: 0 40px;
-            width: 100%;
-            max-width: 500px;
-            margin-left: auto;
+            grid-row: 3;
         }
 
         .toast {
@@ -751,7 +744,7 @@
             #a4PreviewContent .closing-statement .closing-grid .item.total span:last-child {
                 font-weight: 700 !important;
             }
-            /* Signature print */
+            /* Signature print – 3 baris */
             #a4PreviewContent .signature {
                 margin: 16pt 0 0 0 !important;
                 padding: 10pt 0 0 0 !important;
@@ -763,10 +756,19 @@
             #a4PreviewContent .signature .sign-grid {
                 display: grid !important;
                 grid-template-columns: 1fr 1fr !important;
-                grid-template-rows: auto auto auto auto auto !important;
+                grid-template-rows: auto auto auto !important;
                 gap: 0 20pt !important;
                 width: 100% !important;
                 max-width: 100% !important;
+            }
+            #a4PreviewContent .signature .sign-grid .sign-place-date {
+                font-size: 8pt !important;
+                color: #555 !important;
+                text-align: center !important;
+                margin-bottom: 0 !important;
+                grid-column: 2 !important;
+                grid-row: 1 !important;
+                justify-self: center !important;
             }
             #a4PreviewContent .signature .sign-grid .sign-label {
                 font-size: 8pt !important;
@@ -774,6 +776,15 @@
                 text-align: center !important;
                 margin-bottom: 2pt !important;
                 font-weight: 400 !important;
+                align-self: end !important;
+            }
+            #a4PreviewContent .signature .sign-grid .sign-label-kepsek {
+                grid-column: 1 !important;
+                grid-row: 2 !important;
+            }
+            #a4PreviewContent .signature .sign-grid .sign-label-bendahara {
+                grid-column: 2 !important;
+                grid-row: 2 !important;
             }
             #a4PreviewContent .signature .sign-grid .sign-name {
                 font-weight: 700 !important;
@@ -784,31 +795,16 @@
                 display: inline-block !important;
                 min-width: 120pt !important;
                 color: #000 !important;
-                margin-top: 32pt !important; /* 4x enter */
-            }
-            #a4PreviewContent .signature .sign-grid .sign-place-date {
-                font-size: 8pt !important;
-                color: #555 !important;
-                text-align: center !important;
-                margin-bottom: 2pt !important;
-                grid-column: 2 !important;
-                grid-row: 1 !important;
-            }
-            #a4PreviewContent .signature .sign-grid .sign-label-kepsek {
-                grid-column: 1 !important;
-                grid-row: 2 !important;
-            }
-            #a4PreviewContent .signature .sign-grid .sign-label-bendahara {
-                grid-column: 2 !important;
-                grid-row: 3 !important;
+                margin-top: 32pt !important;
+                align-self: start !important;
             }
             #a4PreviewContent .signature .sign-grid .sign-name-kepsek {
                 grid-column: 1 !important;
-                grid-row: 4 !important;
+                grid-row: 3 !important;
             }
             #a4PreviewContent .signature .sign-grid .sign-name-bendahara {
                 grid-column: 2 !important;
-                grid-row: 5 !important;
+                grid-row: 3 !important;
             }
             #a4PreviewContent * {
                 margin-top: 0 !important;
@@ -1060,10 +1056,19 @@
         .print-preview-body .a4-page .signature .sign-grid {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
-            grid-template-rows: auto auto auto auto auto !important;
+            grid-template-rows: auto auto auto !important;
             gap: 0 20pt !important;
             width: 100% !important;
             max-width: 100% !important;
+        }
+        .print-preview-body .a4-page .signature .sign-grid .sign-place-date {
+            font-size: 8pt !important;
+            color: #555 !important;
+            text-align: center !important;
+            margin-bottom: 0 !important;
+            grid-column: 2 !important;
+            grid-row: 1 !important;
+            justify-self: center !important;
         }
         .print-preview-body .a4-page .signature .sign-grid .sign-label {
             font-size: 8pt !important;
@@ -1071,6 +1076,15 @@
             text-align: center !important;
             margin-bottom: 2pt !important;
             font-weight: 400 !important;
+            align-self: end !important;
+        }
+        .print-preview-body .a4-page .signature .sign-grid .sign-label-kepsek {
+            grid-column: 1 !important;
+            grid-row: 2 !important;
+        }
+        .print-preview-body .a4-page .signature .sign-grid .sign-label-bendahara {
+            grid-column: 2 !important;
+            grid-row: 2 !important;
         }
         .print-preview-body .a4-page .signature .sign-grid .sign-name {
             font-weight: 700 !important;
@@ -1082,30 +1096,15 @@
             min-width: 120pt !important;
             color: #000 !important;
             margin-top: 32pt !important;
-        }
-        .print-preview-body .a4-page .signature .sign-grid .sign-place-date {
-            font-size: 8pt !important;
-            color: #555 !important;
-            text-align: center !important;
-            margin-bottom: 2pt !important;
-            grid-column: 2 !important;
-            grid-row: 1 !important;
-        }
-        .print-preview-body .a4-page .signature .sign-grid .sign-label-kepsek {
-            grid-column: 1 !important;
-            grid-row: 2 !important;
-        }
-        .print-preview-body .a4-page .signature .sign-grid .sign-label-bendahara {
-            grid-column: 2 !important;
-            grid-row: 3 !important;
+            align-self: start !important;
         }
         .print-preview-body .a4-page .signature .sign-grid .sign-name-kepsek {
             grid-column: 1 !important;
-            grid-row: 4 !important;
+            grid-row: 3 !important;
         }
         .print-preview-body .a4-page .signature .sign-grid .sign-name-bendahara {
             grid-column: 2 !important;
-            grid-row: 5 !important;
+            grid-row: 3 !important;
         }
         .print-preview-body .a4-page * {
             margin-top: 0 !important;
@@ -1286,11 +1285,11 @@
                     <div class="item total"><span>Jumlah</span> <span id="saldoTotal">Rp 0</span></div>
                 </div>
 
-                <!-- ── Tanda tangan baru (tempat/tanggal di atas bendahara) ── -->
+                <!-- Tanda tangan: tempat/tanggal di atas Bendahara, label sejajar, nama sejajar -->
                 <div class="signature">
                     <div class="sign-grid">
-                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
                         <div class="sign-place-date">Kec. Bola, <span id="signTanggal">-</span></div>
+                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
                         <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
                         <div class="sign-name sign-name-kepsek" id="signKepsek">-</div>
                         <div class="sign-name sign-name-bendahara" id="signBendahara">-</div>
@@ -1374,8 +1373,8 @@
 
                 <div class="signature">
                     <div class="sign-grid">
-                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
                         <div class="sign-place-date">Kec. Bola, <span id="signTanggalTunai">-</span></div>
+                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
                         <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
                         <div class="sign-name sign-name-kepsek" id="signKepsekTunai">-</div>
                         <div class="sign-name sign-name-bendahara" id="signBendaharaTunai">-</div>
@@ -1459,8 +1458,8 @@
 
                 <div class="signature">
                     <div class="sign-grid">
-                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
                         <div class="sign-place-date">Kec. Bola, <span id="signTanggalBank">-</span></div>
+                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
                         <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
                         <div class="sign-name sign-name-kepsek" id="signKepsekBank">-</div>
                         <div class="sign-name sign-name-bendahara" id="signBendaharaBank">-</div>
@@ -2179,7 +2178,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 15. Build A4 preview untuk masing-masing tab (dengan signature baru)
+        // 15. Build A4 preview untuk masing-masing tab (dengan signature 3 baris)
         // ─────────────────────────────────────────────
         function buildA4PreviewKas() {
             const bulan = bulanSelect.value;
@@ -2285,8 +2284,8 @@
                     </div>
                     <div class="signature">
                         <div class="sign-grid">
-                            <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
                             <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                            <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
                             <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
                             <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
                             <div class="sign-name sign-name-bendahara">${bendahara}</div>
@@ -2389,8 +2388,8 @@
                     </div>
                     <div class="signature">
                         <div class="sign-grid">
-                            <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
                             <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                            <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
                             <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
                             <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
                             <div class="sign-name sign-name-bendahara">${bendahara}</div>
@@ -2502,8 +2501,8 @@
                     </div>
                     <div class="signature">
                         <div class="sign-grid">
-                            <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
                             <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                            <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
                             <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
                             <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
                             <div class="sign-name sign-name-bendahara">${bendahara}</div>
@@ -2680,7 +2679,7 @@
             loadBankData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank) siap dengan tempat/tanggal di atas bendahara');
+        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank) siap dengan layout tanda tangan yang benar');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
