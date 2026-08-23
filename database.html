@@ -1012,10 +1012,9 @@
                 <thead>
                     <tr id="headerRow">
                         <th style="width:32px;min-width:32px;text-align:center;" data-col="no" data-sort="no" data-required="true">No</th>
-                        <!-- KOLOM BARU: Debet/Kredit -->
                         <th data-col="debetKredit" data-sort="debetKredit" style="min-width:90px;">Debet/Kredit <span class="sort-hint">↕</span></th>
-                        <!-- KOLOM BARU: Jenis Berisi -->
-                        <th data-col="jenisBerisi" data-sort="jenisBerisi" style="min-width:90px;">Jenis Berisi <span class="sort-hint">↕</span></th>
+                        <th data-col="jenisBerisi" data-sort="jenisBerisi" style="min-width:90px;">Jenis Buku <span class="sort-hint">↕</span></th>
+                        <th data-col="jenisPajak" data-sort="jenisPajak" style="min-width:100px;">Jenis Pajak <span class="sort-hint">↕</span></th>
                         <th data-col="noBukti" data-sort="noBukti">No. Bukti <span class="sort-hint">↕</span></th>
                         <th data-col="kodeKegiatan" data-sort="kodeKegiatan" data-required="true">Kode Kegiatan <span class="sort-hint">↕</span></th>
                         <th data-col="noRek" data-sort="noRek">No. Rek <span class="sort-hint">↕</span></th>
@@ -1032,10 +1031,6 @@
                         <th data-col="jumlahHarga" data-sort="jumlahHarga">Jml Harga <span class="sort-hint">↕</span></th>
                         <th data-col="tglPelaksanaan" data-sort="tglPelaksanaan">Tgl Pelaks. <span class="sort-hint">↕</span></th>
                         <th data-col="tglPembayaran" data-sort="tglPembayaran">Tgl Bayar <span class="sort-hint">↕</span></th>
-                        <!-- KOLOM DIUBAH: Jenis Pajak menjadi dropdown -->
-                        <th data-col="jenisPajak" data-sort="jenisPajak" style="min-width:100px;">Jenis Pajak <span class="sort-hint">↕</span></th>
-                        <th data-col="persenPajak" data-sort="persenPajak">% Pajak <span class="sort-hint">↕</span></th>
-                        <th data-col="jmlPajak" data-sort="jmlPajak">Jml Pajak <span class="sort-hint">↕</span></th>
                         <th data-col="toko" data-sort="toko">Toko/Personal <span class="sort-hint">↕</span></th>
                         <th data-col="alamatToko" data-sort="alamatToko">Alamat <span class="sort-hint">↕</span></th>
                         <th data-col="telp" data-sort="telp">Telp. <span class="sort-hint">↕</span></th>
@@ -1044,7 +1039,7 @@
                 </thead>
                 <tbody id="tableBody">
                     <tr class="empty-row">
-                        <td colspan="27">Belum ada data. Klik ➕ untuk menambah baris.</td>
+                        <td colspan="24">Belum ada data. Klik ➕ untuk menambah baris.</td>
                     </tr>
                 </tbody>
             </table>
@@ -1209,12 +1204,14 @@
         const sumTotal = document.getElementById('sumTotal');
 
         // ─────────────────────────────────────────────
-        // 6.  Column definitions (untuk hide/unhide)
+        // 6.  Column definitions (untuk hide/unhide) dan display
         // ─────────────────────────────────────────────
-        const COLUMN_DEFS = [
+        // Kolom yang ditampilkan di tabel (urutan)
+        const COLUMN_DISPLAY = [
             { key: 'no', label: 'No', required: true },
             { key: 'debetKredit', label: 'Debet/Kredit' },
-            { key: 'jenisBerisi', label: 'Jenis Berisi' },
+            { key: 'jenisBerisi', label: 'Jenis Buku' },
+            { key: 'jenisPajak', label: 'Jenis Pajak' },
             { key: 'noBukti', label: 'No. Bukti' },
             { key: 'kodeKegiatan', label: 'Kode Kegiatan', required: true },
             { key: 'noRek', label: 'No. Rek' },
@@ -1231,13 +1228,22 @@
             { key: 'jumlahHarga', label: 'Jml Harga' },
             { key: 'tglPelaksanaan', label: 'Tgl Pelaks.' },
             { key: 'tglPembayaran', label: 'Tgl Bayar' },
-            { key: 'jenisPajak', label: 'Jenis Pajak' },
-            { key: 'persenPajak', label: '% Pajak' },
-            { key: 'jmlPajak', label: 'Jml Pajak' },
             { key: 'toko', label: 'Toko/Personal' },
             { key: 'alamatToko', label: 'Alamat' },
             { key: 'telp', label: 'Telp.' },
             { key: 'actions', label: 'Aksi', required: true }
+        ];
+
+        // Semua field yang disimpan (termasuk yang tidak ditampilkan)
+        const COLUMN_KEYS_ALL = [
+            'debetKredit', 'jenisBerisi', 'jenisPajak',
+            'noBukti', 'kodeKegiatan', 'noRek', 'siplah',
+            'jenisKegiatan', 'uraian', 'komponen', 'standar',
+            'jenisBelanja', 'tahap', 'vol', 'satuan',
+            'harga', 'jumlahHarga',
+            'tglPelaksanaan', 'tglPembayaran',
+            'persenPajak', 'jmlPajak',
+            'toko', 'alamatToko', 'telp'
         ];
 
         // ─────────────────────────────────────────────
@@ -1255,7 +1261,7 @@
             } catch (e) {
                 hiddenColumns = new Set();
             }
-            COLUMN_DEFS.forEach(col => {
+            COLUMN_DISPLAY.forEach(col => {
                 if (col.required && hiddenColumns.has(col.key)) {
                     hiddenColumns.delete(col.key);
                 }
@@ -1308,7 +1314,7 @@
 
         function updateColMenu() {
             let html = '';
-            COLUMN_DEFS.forEach(col => {
+            COLUMN_DISPLAY.forEach(col => {
                 const checked = !hiddenColumns.has(col.key) ? 'checked' : '';
                 const disabled = col.required ? 'disabled' : '';
                 html += `
@@ -1326,7 +1332,7 @@
                     if (e.target.checked) {
                         hiddenColumns.delete(col);
                     } else {
-                        const def = COLUMN_DEFS.find(c => c.key === col);
+                        const def = COLUMN_DISPLAY.find(c => c.key === col);
                         if (def && def.required) {
                             e.target.checked = true;
                             return;
@@ -1464,52 +1470,50 @@
         }
 
         // ─────────────────────────────────────────────
-        // 11. Column definitions untuk data entry
+        // 11. Column definitions untuk data entry (semua field)
         // ─────────────────────────────────────────────
-        const COLUMNS = [
-            { key: 'debetKredit', type: 'select', options: ['Debet', 'Kredit'] },
-            { key: 'jenisBerisi', type: 'select', options: ['Tunai', 'Bank', 'Pajak'] },
-            { key: 'noBukti', type: 'text', label: 'No. Bukti' },
-            { key: 'kodeKegiatan', type: 'text', label: 'Kode Kegiatan' },
-            { key: 'noRek', type: 'text', label: 'No. Rek' },
-            { key: 'siplah', type: 'select', options: ['Siplah', 'Non Siplah'] },
-            { key: 'jenisKegiatan', type: 'text', label: 'Jenis Kegiatan' },
-            { key: 'uraian', type: 'text', label: 'Uraian' },
-            { key: 'komponen', type: 'text', label: 'Komponen', readonly: true },
-            { key: 'standar', type: 'text', label: 'Standar', readonly: true },
-            { key: 'jenisBelanja', type: 'select', options: ['Pegawai', 'Barang dan Jasa', 'Peralatan dan Mesin',
-                    'Aset tetap lainnya'
-                ] },
-            { key: 'tahap', type: 'select', options: ['Tahap 1', 'Tahap 2'] },
-            { key: 'vol', type: 'number', label: 'Vol' },
-            { key: 'satuan', type: 'text', label: 'Satuan' },
-            { key: 'harga', type: 'number', label: 'Harga' },
-            { key: 'jumlahHarga', type: 'number', label: 'Jml Harga', readonly: true },
-            { key: 'tglPelaksanaan', type: 'date', label: 'Tgl Pelaksanaan' },
-            { key: 'tglPembayaran', type: 'date', label: 'Tgl Bayar' },
-            // Jenis Pajak sekarang dropdown
-            { key: 'jenisPajak', type: 'select', options: ['PPN', 'PPh 21', 'PPh 23', 'PPh 4', 'SSPD'] },
-            { key: 'persenPajak', type: 'number', label: '% Pajak' },
-            { key: 'jmlPajak', type: 'number', label: 'Jml Pajak', readonly: true },
-            { key: 'toko', type: 'text', label: 'Toko/Personal' },
-            { key: 'alamatToko', type: 'text', label: 'Alamat' },
-            { key: 'telp', type: 'text', label: 'Telp.' }
-        ];
-
-        const COLUMN_KEYS = COLUMNS.map(c => c.key);
+        // Untuk keperluan edit, kita tetap punya definisi tipe untuk semua field
+        const COLUMN_TYPES = {
+            debetKredit: { type: 'select', options: ['Debet', 'Kredit'] },
+            jenisBerisi: { type: 'select', options: ['Tunai', 'Bank', 'Pajak'] },
+            jenisPajak: { type: 'select', options: ['PPN', 'PPh 21', 'PPh 23', 'PPh 4', 'SSPD'] },
+            noBukti: { type: 'text' },
+            kodeKegiatan: { type: 'text' },
+            noRek: { type: 'text' },
+            siplah: { type: 'select', options: ['Siplah', 'Non Siplah'] },
+            jenisKegiatan: { type: 'text' },
+            uraian: { type: 'text' },
+            komponen: { type: 'text', readonly: true },
+            standar: { type: 'text', readonly: true },
+            jenisBelanja: { type: 'select', options: ['Pegawai', 'Barang dan Jasa', 'Peralatan dan Mesin', 'Aset tetap lainnya'] },
+            tahap: { type: 'select', options: ['Tahap 1', 'Tahap 2'] },
+            vol: { type: 'number' },
+            satuan: { type: 'text' },
+            harga: { type: 'number' },
+            jumlahHarga: { type: 'number', readonly: true },
+            tglPelaksanaan: { type: 'date' },
+            tglPembayaran: { type: 'date' },
+            persenPajak: { type: 'number', readonly: true }, // tidak ditampilkan
+            jmlPajak: { type: 'number', readonly: true },   // tidak ditampilkan
+            toko: { type: 'text' },
+            alamatToko: { type: 'text' },
+            telp: { type: 'text' }
+        };
 
         // ─────────────────────────────────────────────
         // 12. Generate empty row data
         // ─────────────────────────────────────────────
         function createEmptyRow() {
             const row = {};
-            COLUMN_KEYS.forEach(key => {
+            COLUMN_KEYS_ALL.forEach(key => {
                 if (key === 'debetKredit') row[key] = 'Kredit';
                 else if (key === 'jenisBerisi') row[key] = 'Tunai';
+                else if (key === 'jenisPajak') row[key] = 'PPN';
                 else if (key === 'siplah') row[key] = 'Siplah';
                 else if (key === 'jenisBelanja') row[key] = 'Pegawai';
                 else if (key === 'tahap') row[key] = 'Tahap 1';
-                else if (key === 'jenisPajak') row[key] = 'PPN';
+                else if (key === 'persenPajak') row[key] = 0;
+                else if (key === 'jmlPajak') row[key] = 0;
                 else if (key === 'komponen' || key === 'standar') row[key] = '';
                 else row[key] = '';
             });
@@ -1519,15 +1523,13 @@
         }
 
         // ─────────────────────────────────────────────
-        // 13. Auto-calc
+        // 13. Auto-calc (hanya jumlahHarga, persenPajak dan jmlPajak tetap 0)
         // ─────────────────────────────────────────────
         function autoCalcRow(row) {
             const vol = parseFloat(row.vol) || 0;
             const harga = parseFloat(row.harga) || 0;
-            const persenPajak = parseFloat(row.persenPajak) || 0;
-            const jml = vol * harga;
-            row.jumlahHarga = jml;
-            row.jmlPajak = jml * (persenPajak / 100);
+            row.jumlahHarga = vol * harga;
+            // persenPajak dan jmlPajak tidak dihitung otomatis, biarkan 0
             return row;
         }
 
@@ -1542,7 +1544,7 @@
             if (filterText.trim()) {
                 const search = filterText.trim().toLowerCase();
                 data = data.filter(item => {
-                    return COLUMN_KEYS.some(key => {
+                    return COLUMN_KEYS_ALL.some(key => {
                         const val = item[key] !== undefined ? String(item[key]) : '';
                         return val.toLowerCase().includes(search);
                     });
@@ -1572,7 +1574,7 @@
 
             if (data.length === 0) {
                 tableBody.innerHTML =
-                    `<tr class="empty-row"><td colspan="27">Tidak ada data untuk ${sessionJenjang} · ${sessionTahun}. Klik ➕ untuk menambah.</td></tr>`;
+                    `<tr class="empty-row"><td colspan="24">Tidak ada data untuk ${sessionJenjang} · ${sessionTahun}. Klik ➕ untuk menambah.</td></tr>`;
                 updateCount();
                 updateSummary();
                 applyHiddenColumns();
@@ -1585,28 +1587,24 @@
                 html += `<tr data-id="${item._id || ''}" data-rowidx="${idx}">`;
                 html += `<td class="row-num">${rowNum}</td>`;
 
-                // Debet/Kredit
-                const debetVal = item.debetKredit !== undefined ? item.debetKredit : 'Kredit';
-                html += `<td data-field="debetKredit" data-rowidx="${idx}" class="editable-cell">`;
-                html += `<span class="cell-value${!debetVal ? ' empty' : ''}">${escapeHtml(String(debetVal)) || '—'}</span>`;
-                html += `</td>`;
+                // Loop berdasarkan COLUMN_DISPLAY (urutan tampilan)
+                COLUMN_DISPLAY.forEach(col => {
+                    const key = col.key;
+                    if (key === 'no' || key === 'actions') return; // skip karena sudah di-handle terpisah
 
-                // Jenis Berisi
-                const jenisVal = item.jenisBerisi !== undefined ? item.jenisBerisi : 'Tunai';
-                html += `<td data-field="jenisBerisi" data-rowidx="${idx}" class="editable-cell">`;
-                html += `<span class="cell-value${!jenisVal ? ' empty' : ''}">${escapeHtml(String(jenisVal)) || '—'}</span>`;
-                html += `</td>`;
-
-                // Kolom data lainnya
-                COLUMN_KEYS.forEach(key => {
-                    if (key === 'debetKredit' || key === 'jenisBerisi') return;
-                    const col = COLUMNS.find(c => c.key === key);
+                    const colType = COLUMN_TYPES[key];
                     const val = item[key] !== undefined ? item[key] : '';
-                    let displayVal = val;
-                    const isReadonly = col && col.readonly;
+                    const isReadonly = colType && colType.readonly;
 
-                    if (col && (col.type === 'number' || key === 'harga' || key === 'jumlahHarga' || key ===
-                            'jmlPajak' || key === 'vol' || key === 'persenPajak')) {
+                    // Untuk jenisPajak, tambahkan kondisi readonly jika jenisBerisi !== 'Pajak'
+                    let extraReadonly = false;
+                    if (key === 'jenisPajak' && item.jenisBerisi !== 'Pajak') {
+                        extraReadonly = true;
+                    }
+
+                    let displayVal = val;
+                    if (colType && (colType.type === 'number' || key === 'harga' || key === 'jumlahHarga' ||
+                            key === 'vol' || key === 'persenPajak' || key === 'jmlPajak')) {
                         if (val !== '' && val !== null && val !== undefined) {
                             displayVal = formatNumber(val);
                         } else {
@@ -1622,18 +1620,19 @@
                     const displayText = isEmpty ? '' : escapeHtml(String(displayVal));
 
                     let cellContent = '';
-                    if (col && col.type === 'select' && !isReadonly) {
+                    if (colType && colType.type === 'select' && !isReadonly && !extraReadonly) {
                         cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
-                    } else if (isReadonly) {
+                    } else if (isReadonly || extraReadonly) {
                         cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
                     } else {
                         cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
                     }
 
-                    const readonlyClass = isReadonly ? 'readonly' : '';
+                    const readonlyClass = (isReadonly || extraReadonly) ? 'readonly' : '';
                     html += `<td data-field="${key}" data-rowidx="${idx}" class="editable-cell ${readonlyClass}">${cellContent}</td>`;
                 });
 
+                // Aksi
                 html += `<td class="actions-cell">
                             <button class="btn-delete-row" data-id="${item._id || ''}" data-rowidx="${idx}" title="Hapus baris">✕</button>
                         </td>`;
@@ -1641,7 +1640,7 @@
             });
 
             html += `<tr class="add-row-row">
-                        <td colspan="27" class="add-row-cell">
+                        <td colspan="24" class="add-row-cell">
                             <button class="btn-add-row" id="addRowBottomBtn">➕ Tambah Baris</button>
                         </td>
                     </tr>`;
@@ -1702,8 +1701,16 @@
             if (rowIdx >= data.length) return;
 
             const item = data[rowIdx];
-            const col = COLUMNS.find(c => c.key === field);
-            if (!col || col.readonly) return;
+            const colType = COLUMN_TYPES[field];
+            if (!colType) return;
+
+            // Jika field jenisPajak dan jenisBerisi bukan 'Pajak', tolak edit
+            if (field === 'jenisPajak' && item.jenisBerisi !== 'Pajak') {
+                showToast('Jenis Pajak hanya dapat diubah jika Jenis Buku = Pajak.', 'error');
+                return;
+            }
+
+            if (colType.readonly) return;
 
             const currentVal = item[field] !== undefined ? item[field] : '';
 
@@ -1711,23 +1718,23 @@
             cell.classList.add('editing');
 
             let input;
-            if (col.type === 'select') {
+            if (colType.type === 'select') {
                 input = document.createElement('select');
-                col.options.forEach(opt => {
+                colType.options.forEach(opt => {
                     const option = document.createElement('option');
                     option.value = opt;
                     option.textContent = opt;
                     if (opt === currentVal) option.selected = true;
                     input.appendChild(option);
                 });
-            } else if (col.type === 'date') {
+            } else if (colType.type === 'date') {
                 input = document.createElement('input');
                 input.type = 'date';
                 input.value = currentVal || '';
             } else {
                 input = document.createElement('input');
                 input.type = 'text';
-                if (col.type === 'number') {
+                if (colType.type === 'number') {
                     input.type = 'text';
                     input.value = currentVal !== '' && currentVal !== null ? formatNumber(currentVal) : '';
                 } else {
@@ -1752,9 +1759,9 @@
 
             const saveEdit = () => {
                 let newVal = input.value.trim();
-                if (col.type === 'number') {
+                if (colType.type === 'number') {
                     newVal = parseNumber(newVal);
-                } else if (col.type === 'date') {
+                } else if (colType.type === 'date') {
                     newVal = newVal || '';
                 }
 
@@ -1800,7 +1807,7 @@
                 }
             });
 
-            if (col.type === 'select') {
+            if (colType.type === 'select') {
                 input.addEventListener('change', () => setTimeout(() => input.blur(), 50));
             }
 
@@ -1887,19 +1894,17 @@
                 for (const item of allData) {
                     if (item.jenjang !== sessionJenjang || item.tahun !== sessionTahun) continue;
 
-                    const hasData = COLUMN_KEYS.some(key => {
+                    const hasData = COLUMN_KEYS_ALL.some(key => {
                         const val = item[key];
                         return val !== '' && val !== null && val !== undefined;
                     });
                     if (!hasData && !item._id) continue;
 
                     const dataToSave = {};
-                    COLUMN_KEYS.forEach(key => {
+                    COLUMN_KEYS_ALL.forEach(key => {
                         dataToSave[key] = item[key] !== undefined ? item[key] : '';
                     });
-                    // Simpan juga debetKredit dan jenisBerisi
-                    dataToSave.debetKredit = item.debetKredit || 'Kredit';
-                    dataToSave.jenisBerisi = item.jenisBerisi || 'Tunai';
+                    // Pastikan field tambahan tersimpan
                     dataToSave.jenjang = sessionJenjang;
                     dataToSave.tahun = sessionTahun;
                     dataToSave.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
@@ -1944,7 +1949,9 @@
                         if (data.debetKredit === undefined) data.debetKredit = 'Kredit';
                         if (data.jenisBerisi === undefined) data.jenisBerisi = 'Tunai';
                         if (data.jenisPajak === undefined) data.jenisPajak = 'PPN';
-                        COLUMN_KEYS.forEach(key => {
+                        if (data.persenPajak === undefined) data.persenPajak = 0;
+                        if (data.jmlPajak === undefined) data.jmlPajak = 0;
+                        COLUMN_KEYS_ALL.forEach(key => {
                             if (data[key] === undefined) data[key] = '';
                         });
                         if (!data.jenjang) data.jenjang = '';
@@ -2168,7 +2175,7 @@
 
         loadData();
 
-        console.log('📋 BOS-NBS · Database siap (dengan Debet/Kredit, Jenis Berisi, Jenis Pajak dropdown)');
+        console.log('📋 BOS-NBS · Database siap (kolom % Pajak & Jml Pajak disembunyikan, Jenis Pajak terkunci sesuai Jenis Buku)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
         console.log('ℹ️  Klik "Buku" untuk menuju halaman buku.');
     </script>
