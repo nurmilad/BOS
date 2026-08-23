@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BOS-NBS · Buku</title>
+    <title>BOS-NBS · Database</title>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
@@ -25,8 +25,10 @@
             color: #0a1e33;
             padding: 16px 24px 40px;
             min-height: 100vh;
+            user-select: none;
         }
 
+        /* ── Header ── */
         .app-header {
             display: flex;
             align-items: center;
@@ -38,11 +40,13 @@
             padding-bottom: 12px;
             border-bottom: 2px solid #e2edf6;
         }
+
         .app-header .brand {
             display: flex;
             align-items: center;
             gap: 10px;
         }
+
         .app-header .brand img {
             height: 38px;
             width: 38px;
@@ -51,6 +55,7 @@
             background: #f0f4fa;
             padding: 4px;
         }
+
         .app-header .brand .fallback-icon {
             display: inline-flex;
             align-items: center;
@@ -63,22 +68,26 @@
             font-weight: 700;
             font-size: 18px;
         }
+
         .app-header h1 {
             font-size: 20px;
             font-weight: 700;
             color: #0a2e5c;
         }
+
         .app-header .sub {
             font-size: 12px;
             color: #7a8fa6;
             font-weight: 400;
         }
+
         .header-actions {
             display: flex;
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
         }
+
         .header-actions .user-badge {
             font-size: 12px;
             color: #1f3a5f;
@@ -87,6 +96,7 @@
             border-radius: 16px;
             font-weight: 500;
         }
+
         .btn-outline {
             background: transparent;
             border: 1.5px solid #d0dde9;
@@ -102,10 +112,12 @@
             align-items: center;
             gap: 5px;
         }
+
         .btn-outline:hover {
             background: #f0f4fa;
             border-color: #b0c4d8;
         }
+
         .btn-logout {
             background: transparent;
             border: 1.5px solid #d0dde9;
@@ -118,11 +130,13 @@
             transition: all 0.2s ease;
             font-family: inherit;
         }
+
         .btn-logout:hover {
             background: #f0f4fa;
             border-color: #b0c4d8;
         }
 
+        /* ── Toolbar ── */
         .toolbar {
             display: flex;
             align-items: center;
@@ -135,23 +149,88 @@
             margin-bottom: 16px;
             box-shadow: 0 2px 8px rgba(0, 20, 40, 0.06);
         }
+
         .toolbar-left {
             display: flex;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
         }
+
         .toolbar-right {
             display: flex;
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
         }
+
+        .toolbar .filter-input {
+            padding: 6px 12px;
+            font-size: 13px;
+            border: 1.5px solid #dce6ef;
+            border-radius: 8px;
+            outline: none;
+            font-family: inherit;
+            background: #fafcfe;
+            min-width: 180px;
+            transition: border-color 0.2s;
+        }
+
+        .toolbar .filter-input:focus {
+            border-color: #0a2e5c;
+        }
+
+        .btn-save {
+            padding: 7px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #fff;
+        }
+
+        .btn-save.saved {
+            background: #1a7a3a;
+        }
+
+        .btn-save.saved:hover {
+            background: #146b30;
+        }
+
+        .btn-save.unsaved {
+            background: #b00020;
+            animation: pulse-red 1.2s ease-in-out infinite;
+        }
+
+        .btn-save.unsaved:hover {
+            background: #8a0018;
+        }
+
+        @keyframes pulse-red {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(176, 0, 32, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 0 6px rgba(176, 0, 32, 0.1);
+            }
+        }
+
+        .btn-save:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            animation: none;
+        }
+
         .btn-icon {
             background: transparent;
             border: 1.5px solid #dce6ef;
             border-radius: 8px;
-            padding: 6px 12px;
+            padding: 6px 10px;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: inherit;
@@ -160,190 +239,224 @@
             align-items: center;
             gap: 4px;
             font-size: 13px;
-            font-weight: 500;
         }
+
         .btn-icon:hover {
             background: #f0f4fa;
             border-color: #b0c4d8;
         }
-        .btn-icon.active {
+
+        .btn-icon .badge {
             background: #0a2e5c;
             color: #fff;
-            border-color: #0a2e5c;
-        }
-        .btn-icon.active:hover {
-            background: #123f72;
-        }
-        .btn-primary {
-            background: #0a2e5c;
-            color: #fff;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 10px;
+            font-size: 10px;
+            border-radius: 50%;
+            padding: 0 6px;
+            min-width: 18px;
+            text-align: center;
+            line-height: 18px;
             font-weight: 600;
-            font-size: 13px;
-            font-family: inherit;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-        .btn-primary:hover {
-            background: #123f72;
         }
 
-        .tabs {
-            display: flex;
-            gap: 4px;
-            background: #ffffff;
-            border-radius: 14px;
-            padding: 6px 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 20, 40, 0.06);
-            flex-wrap: wrap;
+        /* ── Dropdown Menu ── */
+        .menu-wrapper {
+            position: relative;
+            display: inline-block;
         }
-        .tab-btn {
-            padding: 8px 18px;
-            border: none;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 500;
-            font-family: inherit;
-            cursor: pointer;
+
+        .menu-dropdown {
+            position: absolute;
+            top: 110%;
+            right: 0;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0, 20, 40, 0.15);
+            min-width: 180px;
+            padding: 6px 0;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-6px);
             transition: all 0.2s ease;
+            border: 1px solid #eef4f9;
+        }
+
+        .menu-wrapper.active .menu-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .menu-dropdown a {
+            display: block;
+            padding: 8px 18px;
+            font-size: 13px;
+            color: #1f3a5f;
+            text-decoration: none;
+            transition: background 0.15s ease;
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
             background: transparent;
-            color: #5a7a9a;
+            width: 100%;
+            text-align: left;
         }
-        .tab-btn:hover {
+
+        .menu-dropdown a:hover {
             background: #f2f7fc;
-            color: #0a2e5c;
         }
-        .tab-btn.active {
-            background: #0a2e5c;
-            color: #fff;
+
+        .menu-dropdown .divider {
+            height: 1px;
+            background: #eef4f9;
+            margin: 4px 12px;
         }
-        .tab-content {
-            display: none;
+
+        /* ── Dropdown Kolom ── */
+        .col-menu-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .col-menu-dropdown {
+            position: absolute;
+            top: 110%;
+            right: 0;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0, 20, 40, 0.15);
+            min-width: 200px;
+            padding: 10px 14px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-6px);
+            transition: all 0.2s ease;
+            border: 1px solid #eef4f9;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .col-menu-wrapper.active .col-menu-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .col-menu-dropdown .col-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .col-menu-dropdown .col-item:hover {
+            background: #f2f7fc;
+        }
+
+        .col-menu-dropdown .col-item input[type="checkbox"] {
+            cursor: pointer;
+            width: 14px;
+            height: 14px;
+        }
+
+        .col-menu-dropdown .col-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* ── Table Card ── */
+        .table-card {
             background: #ffffff;
             border-radius: 16px;
-            padding: 24px 28px;
             box-shadow: 0 2px 12px rgba(0, 20, 40, 0.06);
-        }
-        .tab-content.active {
-            display: block;
-        }
-
-        .filter-row {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
+            overflow: hidden;
+            padding: 0 0 4px 0;
             margin-bottom: 20px;
-        }
-        .filter-row label {
-            font-size: 13px;
-            font-weight: 500;
-            color: #1f3a5f;
-        }
-        .filter-row select {
-            padding: 6px 12px;
-            font-size: 13px;
-            border: 1.5px solid #dce6ef;
-            border-radius: 8px;
-            outline: none;
-            font-family: inherit;
-            background: #fafcfe;
-        }
-        .filter-row select:focus {
-            border-color: #0a2e5c;
-        }
-
-        .book-header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        .book-header h2 {
-            font-size: 20px;
-            font-weight: 700;
-            color: #0a2e5c;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-        .book-header .sub-info {
-            font-size: 13px;
-            color: #5a7a9a;
-        }
-        .book-header .sub-info span {
-            margin: 0 8px;
-        }
-
-        .book-meta {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 4px 16px;
-            background: #f8fafc;
-            padding: 12px 18px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #eef4f9;
-            align-items: center;
-        }
-        .book-meta .meta-row {
-            display: contents;
-        }
-        .book-meta .meta-label {
-            text-align: left;
-            font-weight: 600;
-            color: #1f3a5f;
-            white-space: nowrap;
-            padding-right: 8px;
-        }
-        .book-meta .meta-value {
-            text-align: left;
-            color: #0a1e33;
         }
 
         .table-wrapper {
             overflow-x: auto;
-            margin-bottom: 20px;
+            padding: 0 2px 2px 2px;
+            position: relative;
         }
-        table.book-table {
+
+        table {
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
+            table-layout: auto;
+            min-width: 700px;
+        }
+
+        /* ── Borders ── */
+        table,
+        th,
+        td {
             border: 1px solid #dce6ef;
         }
-        table.book-table thead {
+
+        thead {
             background: #f2f7fc;
         }
-        table.book-table th {
+
+        thead th {
             padding: 8px 8px;
-            text-align: center;
+            text-align: left;
             font-weight: 600;
             color: #1f3a5f;
             font-size: 11px;
+            letter-spacing: 0.2px;
             text-transform: uppercase;
-            border: 1px solid #dce6ef;
-            white-space: normal;
-            word-break: break-word;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: #f2f7fc;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
             position: relative;
-        }
-        table.book-table td {
-            padding: 6px 8px;
-            text-align: center;
-            border: 1px solid #dce6ef;
-            vertical-align: middle;
-            font-size: 12px;
-        }
-        table.book-table td.left {
-            text-align: left;
-        }
-        table.book-table td.right {
-            text-align: right;
-        }
-        table.book-table .total-row {
-            background: #f8fafc;
-            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 60px;
+            transition: background 0.15s ease;
         }
 
+        thead th:hover {
+            background: #e8eff6;
+        }
+
+        thead th .sort-icon {
+            display: inline-block;
+            margin-left: 4px;
+            font-size: 10px;
+            opacity: 0.5;
+            transition: opacity 0.2s ease;
+        }
+
+        thead th.sorted .sort-icon {
+            opacity: 1;
+        }
+
+        thead th .sort-hint {
+            font-size: 9px;
+            opacity: 0.4;
+            margin-left: 4px;
+            font-weight: 400;
+            text-transform: none;
+        }
+
+        thead th.hidden-col {
+            display: none;
+        }
+
+        tbody td.hidden-col {
+            display: none;
+        }
+
+        /* ── Column Resizer ── */
         .col-resizer {
             position: absolute;
             top: 0;
@@ -355,117 +468,160 @@
             background: transparent;
             transition: background 0.15s ease;
         }
+
         .col-resizer:hover,
         .col-resizer.active {
             background: #0a2e5c;
-            opacity: 0.25;
+            opacity: 0.3;
         }
+
         .col-resizer.active {
-            opacity: 0.5;
+            opacity: 0.6;
         }
 
-        .closing-statement {
-            margin-top: 20px;
-            padding: 16px 20px;
-            background: #f8fafc;
-            border-radius: 10px;
-            border: 1px solid #eef4f9;
-            font-size: 13px;
-            line-height: 1.8;
-        }
-        .closing-statement .closing-grid {
-            display: grid;
-            grid-template-columns: auto auto;
-            gap: 4px 12px;
-            width: fit-content;
-            max-width: 100%;
-        }
-        .closing-statement .closing-grid .item {
-            display: contents;
-        }
-        .closing-statement .closing-grid .item span:first-child {
-            text-align: left;
-            font-weight: 400;
-        }
-        .closing-statement .closing-grid .item span:last-child {
-            text-align: left;
-            font-weight: 400;
-        }
-        .closing-statement .closing-grid .item.total {
-            font-weight: 600;
-            border-top: 1px solid #dce6ef;
-            padding-top: 4px;
-            margin-top: 4px;
-        }
-        .closing-statement .closing-grid .item.total span:first-child {
-            font-weight: 600;
-        }
-        .closing-statement .closing-grid .item.total span:last-child {
-            font-weight: 600;
+        /* ── Body cells ── */
+        tbody tr {
+            transition: background 0.1s ease;
         }
 
-        .signature {
-            margin-top: 32px;
-            padding-top: 20px;
-            border-top: 1px solid #eef4f9;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
+        tbody tr:hover {
+            background: #f8fafd;
         }
-        .signature .sign-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto auto auto;
-            gap: 0 40px;
+
+        tbody td {
+            padding: 4px 6px;
+            vertical-align: middle;
+            color: #1a3048;
+            word-break: break-word;
+            line-height: 1.4;
+            max-height: 2.8em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ── Inline editing ── */
+        .editable-cell {
+            cursor: text;
+            min-height: 28px;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: background 0.15s ease;
+        }
+
+        .editable-cell:hover {
+            background: #f0f6fe;
+        }
+
+        .editable-cell.editing {
+            background: #fff;
+            padding: 0;
+        }
+
+        .editable-cell.editing input,
+        .editable-cell.editing select {
             width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-        }
-        .signature .sign-grid .sign-place-date {
+            border: 2px solid #0a2e5c;
+            border-radius: 4px;
+            padding: 2px 4px;
             font-size: 12px;
-            color: #5a7a9a;
-            text-align: center;
-            margin-bottom: 0;
-            grid-column: 2;
-            grid-row: 1;
-            justify-self: center;
-        }
-        .signature .sign-grid .sign-label {
-            font-size: 12px;
-            color: #5a7a9a;
-            text-align: center;
-            margin-bottom: 4px;
-            font-weight: 400;
-            align-self: end;
-        }
-        .signature .sign-grid .sign-label-kepsek {
-            grid-column: 1;
-            grid-row: 2;
-        }
-        .signature .sign-grid .sign-label-bendahara {
-            grid-column: 2;
-            grid-row: 2;
-        }
-        .signature .sign-grid .sign-name {
-            font-weight: 600;
-            font-size: 14px;
-            text-align: center;
-            padding-top: 4px;
-            border-top: 1px solid #0a2e5c;
-            display: inline-block;
-            min-width: 160px;
-            margin-top: 56px;
-            align-self: start;
-        }
-        .signature .sign-grid .sign-name-kepsek {
-            grid-column: 1;
-            grid-row: 3;
-        }
-        .signature .sign-grid .sign-name-bendahara {
-            grid-column: 2;
-            grid-row: 3;
+            font-family: inherit;
+            background: #fff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(10, 46, 92, 0.1);
         }
 
+        .editable-cell.editing select {
+            padding: 2px 2px;
+        }
+
+        .editable-cell .cell-value {
+            display: block;
+            padding: 2px 2px;
+        }
+
+        .editable-cell .cell-value.empty {
+            color: #b0c4d8;
+            font-style: italic;
+        }
+
+        .editable-cell.readonly {
+            cursor: default;
+            background: #f8fafc;
+            color: #4a6a8a;
+        }
+
+        .editable-cell.readonly:hover {
+            background: #f8fafc;
+        }
+
+        /* ── Row number ── */
+        .row-num {
+            text-align: center;
+            font-weight: 500;
+            color: #5a7a9a;
+            font-size: 11px;
+            width: 32px;
+            min-width: 32px;
+        }
+
+        /* ── Add row ── */
+        .add-row-cell {
+            text-align: center;
+            padding: 2px 4px !important;
+        }
+
+        .btn-add-row {
+            background: transparent;
+            border: 1.5px dashed #b0c4d8;
+            border-radius: 4px;
+            padding: 2px 10px;
+            font-size: 13px;
+            cursor: pointer;
+            color: #5a7a9a;
+            transition: all 0.2s ease;
+            width: 100%;
+            font-family: inherit;
+            display: inline-block;
+        }
+
+        .btn-add-row:hover {
+            border-color: #0a2e5c;
+            color: #0a2e5c;
+            background: #f2f7fc;
+        }
+
+        /* ── Actions column ── */
+        .actions-cell {
+            text-align: center;
+            white-space: nowrap;
+            min-width: 60px;
+        }
+
+        .btn-delete-row {
+            background: transparent;
+            border: none;
+            color: #b00020;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: background 0.15s ease;
+            font-family: inherit;
+        }
+
+        .btn-delete-row:hover {
+            background: #fee8e8;
+        }
+
+        /* ── Empty row ── */
+        .empty-row td {
+            padding: 40px 8px;
+            text-align: center;
+            color: #8aa0b8;
+            font-size: 14px;
+        }
+
+        /* ── Toast ── */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -483,11 +639,13 @@
             transition: opacity 0.3s ease, transform 0.3s ease;
             pointer-events: none;
         }
+
         .toast.show {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
         }
+
         .toast.success {
             background: #1a7a3a;
         }
@@ -495,659 +653,261 @@
             background: #b00020;
         }
 
-        @media (max-width: 768px) {
-            body {
-                padding: 12px;
-            }
-            .tab-content {
-                padding: 16px;
-            }
-            .signature .sign-grid {
-                gap: 0 20px;
-                max-width: 100%;
-            }
-            .closing-statement .closing-grid {
-                max-width: 100%;
-            }
-            .book-meta {
-                grid-template-columns: auto 1fr;
-                gap: 4px 12px;
-            }
-            .filter-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-
-        @media print {
-            .app-header,
-            .toolbar,
-            .tabs,
-            .filter-row,
-            .tab-content:not(.active),
-            .print-preview-toolbar,
-            .toast,
-            #backBtn,
-            .btn-primary,
-            .btn-icon,
-            .btn-logout,
-            .header-actions .user-badge {
-                display: none !important;
-            }
-            html,
-            body {
-                margin: 0 !important;
-                padding: 0 !important;
-                background: #fff !important;
-                height: auto !important;
-                overflow: visible !important;
-                width: 100% !important;
-            }
-            .print-preview-overlay {
-                display: flex !important;
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-                background: #fff !important;
-                backdrop-filter: none !important;
-                padding: 0 !important;
-                z-index: 9999 !important;
-                align-items: center !important;
-                justify-content: center !important;
-                visibility: visible !important;
-            }
-            .print-preview-modal {
-                display: flex !important;
-                flex-direction: column !important;
-                max-width: 100% !important;
-                max-height: 100% !important;
-                border-radius: 0 !important;
-                box-shadow: none !important;
-                background: #fff !important;
-                overflow: visible !important;
-                width: 100% !important;
-                height: 100% !important;
-                visibility: visible !important;
-            }
-            .print-preview-body {
-                display: flex !important;
-                justify-content: center !important;
-                align-items: flex-start !important;
-                padding: 0 !important;
-                background: #fff !important;
-                overflow: visible !important;
-                flex: 1 !important;
-                width: 100% !important;
-                visibility: visible !important;
-            }
-            #a4PreviewContent {
-                width: 210mm !important;
-                min-height: 297mm !important;
-                margin: 0 auto !important;
-                padding: 10mm !important;
-                box-sizing: border-box !important;
-                background: #fff !important;
-                font-size: 11pt !important;
-                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
-                line-height: 1.4 !important;
-                color: #000 !important;
-                overflow: visible !important;
-                box-shadow: none !important;
-                border-radius: 0 !important;
-                page-break-after: avoid !important;
-                page-break-inside: avoid !important;
-                flex-shrink: 0 !important;
-                visibility: visible !important;
-            }
-            #a4PreviewContent * {
-                box-sizing: border-box !important;
-                visibility: visible !important;
-            }
-            @page {
-                size: A4 portrait;
-                margin: 0 !important;
-            }
-            #a4PreviewContent .book-header h2 {
-                font-size: 14pt !important;
-                font-weight: 700 !important;
-                color: #000 !important;
-                letter-spacing: 0.5px !important;
-                margin: 0 0 2pt 0 !important;
-                text-align: center !important;
-            }
-            #a4PreviewContent .book-header .sub-info {
-                font-size: 10pt !important;
-                color: #333 !important;
-                text-align: center !important;
-                margin: 0 0 6pt 0 !important;
-            }
-            #a4PreviewContent .book-meta {
-                display: grid !important;
-                grid-template-columns: auto 1fr !important;
-                gap: 2pt 12pt !important;
-                background: #f9f9f9 !important;
-                padding: 6pt 10pt !important;
-                border: 1px solid #ccc !important;
-                border-radius: 0 !important;
-                margin: 0 0 10pt 0 !important;
-                font-size: 9pt !important;
-                align-items: center !important;
-            }
-            #a4PreviewContent .book-meta .meta-row {
-                display: contents !important;
-            }
-            #a4PreviewContent .book-meta .meta-label {
-                text-align: left !important;
-                font-weight: 600 !important;
-                color: #000 !important;
-                white-space: nowrap !important;
-                padding-right: 6pt !important;
-            }
-            #a4PreviewContent .book-meta .meta-value {
-                text-align: left !important;
-                color: #000 !important;
-            }
-            #a4PreviewContent .table-wrapper {
-                overflow: visible !important;
-                margin: 0 0 8pt 0 !important;
-            }
-            #a4PreviewContent table.book-table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-                border: 1px solid #000 !important;
-                font-size: 9pt !important;
-                table-layout: fixed !important;
-                page-break-inside: auto !important;
-                line-height: 1.2 !important;
-                margin: 0 !important;
-            }
-            #a4PreviewContent table.book-table thead {
-                background: #f0f0f0 !important;
-                display: table-header-group !important;
-            }
-            #a4PreviewContent table.book-table th {
-                font-size: 8pt !important;
-                padding: 3pt 4pt !important;
-                border: 1px solid #000 !important;
-                text-align: center !important;
-                font-weight: 700 !important;
-                color: #000 !important;
-                text-transform: uppercase !important;
-                background: #f0f0f0 !important;
-                white-space: normal !important;
-                word-break: break-word !important;
-                line-height: 1.2 !important;
-                position: relative !important;
-            }
-            #a4PreviewContent table.book-table td {
-                font-size: 8.5pt !important;
-                padding: 3pt 4pt !important;
-                border: 1px solid #000 !important;
-                vertical-align: middle !important;
-                line-height: 1.2 !important;
-                color: #000 !important;
-            }
-            #a4PreviewContent table.book-table td.left {
-                text-align: left !important;
-            }
-            #a4PreviewContent table.book-table td.right {
-                text-align: right !important;
-            }
-            #a4PreviewContent table.book-table td.center {
-                text-align: center !important;
-            }
-            #a4PreviewContent table.book-table tr {
-                page-break-inside: avoid !important;
-            }
-            #a4PreviewContent table.book-table tr.total-row {
-                background: #f5f5f5 !important;
-                font-weight: 600 !important;
-            }
-            #a4PreviewContent table.book-table tr.saldo-awal-row {
-                font-weight: 600 !important;
-                background: #f9f9f9 !important;
-            }
-            #a4PreviewContent .closing-statement {
-                margin: 10pt 0 0 0 !important;
-                padding: 8pt 12pt !important;
-                background: #f9f9f9 !important;
-                border: 1px solid #ccc !important;
-                border-radius: 0 !important;
-                font-size: 9pt !important;
-                line-height: 1.4 !important;
-            }
-            #a4PreviewContent .closing-statement .closing-grid {
-                max-width: 100% !important;
-                grid-template-columns: auto auto !important;
-                gap: 2pt 12pt !important;
-                width: fit-content !important;
-            }
-            #a4PreviewContent .closing-statement .closing-grid .item {
-                display: contents !important;
-            }
-            #a4PreviewContent .closing-statement .closing-grid .item span:first-child {
-                text-align: left !important;
-            }
-            #a4PreviewContent .closing-statement .closing-grid .item span:last-child {
-                text-align: left !important;
-            }
-            #a4PreviewContent .closing-statement .closing-grid .item.total {
-                font-weight: 700 !important;
-                border-top: 1px solid #000 !important;
-                padding-top: 3pt !important;
-                margin-top: 3pt !important;
-            }
-            #a4PreviewContent .closing-statement .closing-grid .item.total span:first-child,
-            #a4PreviewContent .closing-statement .closing-grid .item.total span:last-child {
-                font-weight: 700 !important;
-            }
-            #a4PreviewContent .signature {
-                margin: 16pt 0 0 0 !important;
-                padding: 10pt 0 0 0 !important;
-                border-top: 1px solid #ccc !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: flex-end !important;
-            }
-            #a4PreviewContent .signature .sign-grid {
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
-                grid-template-rows: auto auto auto !important;
-                gap: 0 20pt !important;
-                width: 100% !important;
-                max-width: 100% !important;
-            }
-            #a4PreviewContent .signature .sign-grid .sign-place-date {
-                font-size: 8pt !important;
-                color: #555 !important;
-                text-align: center !important;
-                margin-bottom: 0 !important;
-                grid-column: 2 !important;
-                grid-row: 1 !important;
-                justify-self: center !important;
-            }
-            #a4PreviewContent .signature .sign-grid .sign-label {
-                font-size: 8pt !important;
-                color: #555 !important;
-                text-align: center !important;
-                margin-bottom: 2pt !important;
-                font-weight: 400 !important;
-                align-self: end !important;
-            }
-            #a4PreviewContent .signature .sign-grid .sign-label-kepsek {
-                grid-column: 1 !important;
-                grid-row: 2 !important;
-            }
-            #a4PreviewContent .signature .sign-grid .sign-label-bendahara {
-                grid-column: 2 !important;
-                grid-row: 2 !important;
-            }
-            #a4PreviewContent .signature .sign-grid .sign-name {
-                font-weight: 700 !important;
-                font-size: 10pt !important;
-                text-align: center !important;
-                padding-top: 3pt !important;
-                border-top: 1px solid #000 !important;
-                display: inline-block !important;
-                min-width: 120pt !important;
-                color: #000 !important;
-                margin-top: 32pt !important;
-                align-self: start !important;
-            }
-            #a4PreviewContent .signature .sign-grid .sign-name-kepsek {
-                grid-column: 1 !important;
-                grid-row: 3 !important;
-            }
-            #a4PreviewContent .signature .sign-grid .sign-name-bendahara {
-                grid-column: 2 !important;
-                grid-row: 3 !important;
-            }
-            #a4PreviewContent * {
-                margin-top: 0 !important;
-                margin-bottom: 0 !important;
-            }
-            #a4PreviewContent .book-header {
-                margin-bottom: 6pt !important;
-            }
-            #a4PreviewContent .book-meta {
-                margin-bottom: 6pt !important;
-            }
-            #a4PreviewContent .col-resizer {
-                display: none !important;
-            }
-            #tab-buku-kas,
-            #tab-buku-tunai,
-            #tab-buku-bank,
-            #tab-buku-pajak {
-                display: none !important;
-            }
-        }
-
-        .print-preview-overlay {
+        /* ── Modal ── */
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(4px);
-            z-index: 9999;
-            display: none;
+            background: rgba(10, 30, 51, 0.4);
+            backdrop-filter: blur(3px);
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
         }
-        .print-preview-overlay.active {
-            display: flex;
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
-        .print-preview-modal {
-            background: #fff;
-            border-radius: 16px;
-            max-width: 900px;
+
+        .modal {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 28px 32px 24px;
+            max-width: 520px;
             width: 100%;
-            max-height: 95vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
-            overflow: hidden;
+            box-shadow: 0 32px 80px rgba(0, 20, 40, 0.2);
+            transform: scale(0.95);
+            transition: transform 0.25s ease;
         }
-        .print-preview-toolbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 20px;
-            background: #f8fafc;
-            border-bottom: 1px solid #e2edf6;
-            flex-shrink: 0;
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
         }
-        .print-preview-toolbar .title {
-            font-weight: 600;
-            font-size: 14px;
+
+        .modal h2 {
+            font-size: 18px;
+            font-weight: 700;
             color: #0a2e5c;
+            margin-bottom: 4px;
         }
-        .print-preview-toolbar .actions {
+
+        .modal .sub {
+            font-size: 13px;
+            color: #7a8fa6;
+            margin-bottom: 18px;
+        }
+
+        .modal .form-group {
+            margin-bottom: 14px;
+        }
+
+        .modal .form-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #1f3a5f;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .modal .form-group input {
+            width: 100%;
+            padding: 9px 14px;
+            font-size: 14px;
+            border: 1.5px solid #dce6ef;
+            border-radius: 10px;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .modal .form-group input:focus {
+            border-color: #0a2e5c;
+        }
+
+        .modal-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
+            margin-top: 18px;
+            justify-content: flex-end;
         }
-        .print-preview-toolbar .actions button {
-            padding: 6px 16px;
+
+        .modal-actions .btn-primary {
+            padding: 9px 24px;
+        }
+        .modal-actions .btn-secondary {
+            padding: 9px 20px;
+        }
+
+        .btn-primary {
+            background: #0a2e5c;
+            color: #fff;
             border: none;
-            border-radius: 8px;
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: #123f72;
+        }
+
+        .btn-secondary {
+            background: #e9f0f7;
+            color: #1f3a5f;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 10px;
             font-weight: 500;
             font-size: 13px;
             font-family: inherit;
             cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .print-preview-toolbar .actions .btn-close-preview {
-            background: #e9f0f7;
-            color: #1f3a5f;
-        }
-        .print-preview-toolbar .actions .btn-close-preview:hover {
-            background: #dce6f0;
-        }
-        .print-preview-toolbar .actions .btn-print-pdf {
-            background: #0a2e5c;
-            color: #fff;
-        }
-        .print-preview-toolbar .actions .btn-print-pdf:hover {
-            background: #123f72;
-        }
-        .print-preview-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 24px 30px;
-            background: #e8ecf0;
-            display: flex;
-            justify-content: center;
-        }
-        .print-preview-body .a4-page {
-            background: #fff;
-            width: 210mm;
-            min-height: 297mm;
-            padding: 10mm !important;
-            box-sizing: border-box !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            border-radius: 2px;
-            flex-shrink: 0;
-            font-size: 11pt !important;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
-            line-height: 1.4 !important;
-            color: #000 !important;
-        }
-        .print-preview-body .a4-page .col-resizer {
-            position: absolute;
-            top: 0;
-            right: -4px;
-            width: 8px;
-            height: 100%;
-            cursor: col-resize;
-            z-index: 10;
-            background: transparent;
-            transition: background 0.15s ease;
-        }
-        .print-preview-body .a4-page .col-resizer:hover,
-        .print-preview-body .a4-page .col-resizer.active {
-            background: #0a2e5c;
-            opacity: 0.25;
-        }
-        .print-preview-body .a4-page .col-resizer.active {
-            opacity: 0.5;
-        }
-        .print-preview-body .a4-page .book-header h2 {
-            font-size: 14pt !important;
-            font-weight: 700 !important;
-            color: #000 !important;
-            letter-spacing: 0.5px !important;
-            margin-bottom: 2pt !important;
-            text-align: center !important;
-        }
-        .print-preview-body .a4-page .book-header .sub-info {
-            font-size: 10pt !important;
-            color: #333 !important;
-            text-align: center !important;
-        }
-        .print-preview-body .a4-page .book-meta {
-            display: grid !important;
-            grid-template-columns: auto 1fr !important;
-            gap: 2pt 12pt !important;
-            background: #f9f9f9 !important;
-            padding: 6pt 10pt !important;
-            border-radius: 0 !important;
-            border: 1px solid #ccc !important;
-            margin-bottom: 10pt !important;
-            font-size: 9pt !important;
-            align-items: center !important;
-        }
-        .print-preview-body .a4-page .book-meta .meta-row {
-            display: contents !important;
-        }
-        .print-preview-body .a4-page .book-meta .meta-label {
-            text-align: left !important;
-            font-weight: 600 !important;
-            color: #000 !important;
-            white-space: nowrap !important;
-            padding-right: 6pt !important;
-        }
-        .print-preview-body .a4-page .book-meta .meta-value {
-            text-align: left !important;
-            color: #000 !important;
-        }
-        .print-preview-body .a4-page table.book-table {
-            font-size: 9pt !important;
-            border-collapse: collapse !important;
-            border: 1px solid #000 !important;
-            width: 100% !important;
-            line-height: 1.2 !important;
-            table-layout: fixed !important;
-        }
-        .print-preview-body .a4-page table.book-table th {
-            font-size: 8pt !important;
-            padding: 3pt 4pt !important;
-            border: 1px solid #000 !important;
-            text-align: center !important;
-            font-weight: 700 !important;
-            color: #000 !important;
-            text-transform: uppercase !important;
-            background: #f0f0f0 !important;
-            position: relative;
-            white-space: normal !important;
-            word-break: break-word !important;
-        }
-        .print-preview-body .a4-page table.book-table td {
-            font-size: 8.5pt !important;
-            padding: 3pt 4pt !important;
-            border: 1px solid #000 !important;
-            vertical-align: middle !important;
-            line-height: 1.2 !important;
-            color: #000 !important;
-        }
-        .print-preview-body .a4-page table.book-table td.left {
-            text-align: left !important;
-        }
-        .print-preview-body .a4-page table.book-table td.right {
-            text-align: right !important;
-        }
-        .print-preview-body .a4-page .closing-statement {
-            margin-top: 10pt !important;
-            padding: 8pt 12pt !important;
-            background: #f9f9f9 !important;
-            border: 1px solid #ccc !important;
-            border-radius: 0 !important;
-            font-size: 9pt !important;
-            line-height: 1.4 !important;
-        }
-        .print-preview-body .a4-page .closing-statement .closing-grid {
-            max-width: 100% !important;
-            grid-template-columns: auto auto !important;
-            gap: 2pt 12pt !important;
-            width: fit-content !important;
-        }
-        .print-preview-body .a4-page .closing-statement .closing-grid .item {
-            display: contents !important;
-        }
-        .print-preview-body .a4-page .closing-statement .closing-grid .item span:first-child {
-            text-align: left !important;
-        }
-        .print-preview-body .a4-page .closing-statement .closing-grid .item span:last-child {
-            text-align: left !important;
-        }
-        .print-preview-body .a4-page .closing-statement .closing-grid .item.total {
-            font-weight: 700 !important;
-            border-top: 1px solid #000 !important;
-            padding-top: 3pt !important;
-            margin-top: 3pt !important;
-        }
-        .print-preview-body .a4-page .closing-statement .closing-grid .item.total span:first-child,
-        .print-preview-body .a4-page .closing-statement .closing-grid .item.total span:last-child {
-            font-weight: 700 !important;
-        }
-        .print-preview-body .a4-page .signature {
-            margin-top: 16pt !important;
-            padding-top: 10pt !important;
-            border-top: 1px solid #ccc !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: flex-end !important;
-        }
-        .print-preview-body .a4-page .signature .sign-grid {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            grid-template-rows: auto auto auto !important;
-            gap: 0 20pt !important;
-            width: 100% !important;
-            max-width: 100% !important;
-        }
-        .print-preview-body .a4-page .signature .sign-grid .sign-place-date {
-            font-size: 8pt !important;
-            color: #555 !important;
-            text-align: center !important;
-            margin-bottom: 0 !important;
-            grid-column: 2 !important;
-            grid-row: 1 !important;
-            justify-self: center !important;
-        }
-        .print-preview-body .a4-page .signature .sign-grid .sign-label {
-            font-size: 8pt !important;
-            color: #555 !important;
-            text-align: center !important;
-            margin-bottom: 2pt !important;
-            font-weight: 400 !important;
-            align-self: end !important;
-        }
-        .print-preview-body .a4-page .signature .sign-grid .sign-label-kepsek {
-            grid-column: 1 !important;
-            grid-row: 2 !important;
-        }
-        .print-preview-body .a4-page .signature .sign-grid .sign-label-bendahara {
-            grid-column: 2 !important;
-            grid-row: 2 !important;
-        }
-        .print-preview-body .a4-page .signature .sign-grid .sign-name {
-            font-weight: 700 !important;
-            font-size: 10pt !important;
-            text-align: center !important;
-            padding-top: 3pt !important;
-            border-top: 1px solid #000 !important;
-            display: inline-block !important;
-            min-width: 120pt !important;
-            color: #000 !important;
-            margin-top: 32pt !important;
-            align-self: start !important;
-        }
-        .print-preview-body .a4-page .signature .sign-grid .sign-name-kepsek {
-            grid-column: 1 !important;
-            grid-row: 3 !important;
-        }
-        .print-preview-body .a4-page .signature .sign-grid .sign-name-bendahara {
-            grid-column: 2 !important;
-            grid-row: 3 !important;
-        }
-        .print-preview-body .a4-page * {
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
-        }
-        .print-preview-body .a4-page .book-header {
-            margin-bottom: 6pt !important;
-        }
-        .print-preview-body .a4-page .book-meta {
-            margin-bottom: 6pt !important;
+            transition: background 0.2s ease;
         }
 
-        @media (max-width: 860px) {
-            .print-preview-body .a4-page {
-                width: 100%;
-                min-height: auto;
-                padding: 1cm !important;
+        .btn-secondary:hover {
+            background: #dce6f0;
+        }
+
+        /* ── Summary Card ── */
+        .summary-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 20, 40, 0.06);
+            padding: 18px 24px;
+            margin-bottom: 20px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .summary-item .label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #7a8fa6;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .summary-item .value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0a2e5c;
+            margin-top: 2px;
+        }
+
+        .summary-item .value.anggaran {
+            color: #1a7a3a;
+        }
+        .summary-item .value.teranggarkan {
+            color: #0a2e5c;
+        }
+        .summary-item .value.belum {
+            color: #b00020;
+        }
+        .summary-item .value.total {
+            color: #0a2e5c;
+            font-size: 20px;
+        }
+
+        .summary-item.highlight {
+            grid-column: span 2;
+            background: #f2f7fc;
+            border-radius: 8px;
+            padding: 6px 12px;
+        }
+
+        @media (max-width: 600px) {
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
             }
-            .print-preview-body .a4-page .book-meta {
-                grid-template-columns: auto 1fr !important;
+            .summary-item.highlight {
+                grid-column: span 1;
             }
         }
-        @media (max-width: 600px) {
-            .print-preview-body .a4-page .book-meta {
-                grid-template-columns: auto 1fr !important;
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px 12px 30px;
             }
-            .print-preview-body .a4-page .closing-statement .closing-grid {
-                grid-template-columns: auto auto !important;
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
             }
-            .print-preview-body .a4-page .signature {
-                align-items: center !important;
-            }
-            .print-preview-body .a4-page .signature .sign-grid {
-                grid-template-columns: 1fr 1fr !important;
-                gap: 0 10pt !important;
-            }
-            .print-preview-toolbar {
+
+            .toolbar-left,
+            .toolbar-right {
                 flex-wrap: wrap;
-                gap: 8px;
             }
-            .print-preview-toolbar .actions {
+
+            .toolbar .filter-input {
+                min-width: 120px;
+                flex: 1;
+            }
+
+            .app-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-actions {
                 width: 100%;
-                justify-content: flex-end;
+                justify-content: flex-start;
             }
+
+            .modal {
+                margin: 16px;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-header h1 {
+                font-size: 17px;
+            }
+            .toolbar .filter-input {
+                min-width: 100px;
+                font-size: 12px;
+            }
+            .btn-save {
+                font-size: 12px;
+                padding: 6px 14px;
+            }
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .col-menu-dropdown {
+                min-width: 160px;
+                right: -40px;
+            }
+        }
+
+        /* ── Drag indicator ── */
+        .dragging-active {
+            cursor: col-resize !important;
+        }
+        .dragging-active * {
+            cursor: col-resize !important;
         }
     </style>
 </head>
@@ -1156,20 +916,44 @@
     <!-- ─── Toast ─── -->
     <div class="toast" id="toast"></div>
 
-    <!-- ─── Print Preview Modal ─── -->
-    <div class="print-preview-overlay" id="printPreviewOverlay">
-        <div class="print-preview-modal">
-            <div class="print-preview-toolbar">
-                <span class="title">📄 Preview Cetak — Kertas A4</span>
-                <div class="actions">
-                    <button class="btn-close-preview" id="closePreviewBtn">Tutup</button>
-                    <button class="btn-print-pdf" id="confirmPrintBtn">🖨️ Cetak / PDF</button>
-                </div>
+    <!-- ─── Modal Pengaturan ─── -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <h2>⚙️ Pengaturan Sekolah</h2>
+            <div class="sub">Data kepala sekolah, bendahara, NPSN, anggaran, dan tanggal pemasukan per tahap untuk <span id="modalSessionLabel">SMP · 2025</span>.</div>
+
+            <div class="form-group">
+                <label for="modalNpsn">NPSN</label>
+                <input type="text" id="modalNpsn" placeholder="Nomor Pokok Sekolah Nasional" maxlength="10" />
             </div>
-            <div class="print-preview-body" id="printPreviewBody">
-                <div class="a4-page" id="a4PreviewContent">
-                    <!-- akan diisi oleh JS -->
-                </div>
+            <div class="form-group">
+                <label for="modalKepalaSekolah">Nama Kepala Sekolah</label>
+                <input type="text" id="modalKepalaSekolah" placeholder="Nama Kepala Sekolah" />
+            </div>
+            <div class="form-group">
+                <label for="modalBendahara">Nama Bendahara</label>
+                <input type="text" id="modalBendahara" placeholder="Nama Bendahara" />
+            </div>
+            <div class="form-group">
+                <label for="modalAnggaran1">Anggaran Tahap 1 (Rp)</label>
+                <input type="number" id="modalAnggaran1" placeholder="0" step="1000" />
+            </div>
+            <div class="form-group">
+                <label for="modalTanggalPemasukan1">Tanggal Pemasukan Anggaran Tahap 1</label>
+                <input type="date" id="modalTanggalPemasukan1" />
+            </div>
+            <div class="form-group">
+                <label for="modalAnggaran2">Anggaran Tahap 2 (Rp)</label>
+                <input type="number" id="modalAnggaran2" placeholder="0" step="1000" />
+            </div>
+            <div class="form-group">
+                <label for="modalTanggalPemasukan2">Tanggal Pemasukan Anggaran Tahap 2</label>
+                <input type="date" id="modalTanggalPemasukan2" />
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" id="modalCancelBtn">Batal</button>
+                <button class="btn-primary" id="modalSaveBtn">Simpan</button>
             </div>
         </div>
     </div>
@@ -1181,7 +965,7 @@
             <span class="fallback-icon" style="display:none;">B</span>
             <div>
                 <h1>BOS-NBS</h1>
-                <span class="sub">Buku Pelaporan</span>
+                <span class="sub">Database Pelaporan</span>
             </div>
         </div>
         <div class="header-actions">
@@ -1193,370 +977,117 @@
     <!-- ─── Toolbar ─── -->
     <div class="toolbar">
         <div class="toolbar-left">
-            <span style="font-size:13px;font-weight:500;color:#1f3a5f;">📋 Buku</span>
+            <input type="text" class="filter-input" id="filterInput" placeholder="🔍 Filter data..." />
+            <span style="font-size:12px;color:#7a8fa6;" id="recordCount">0 data</span>
         </div>
         <div class="toolbar-right">
-            <button class="btn-icon" id="backBtn">← Kembali</button>
-        </div>
-    </div>
+            <button class="btn-save saved" id="saveBtn" disabled>✓ Tersimpan</button>
+            <button class="btn-icon" id="addRowBtn" title="Tambah baris">➕</button>
+            <button class="btn-icon" id="settingsBtn" title="Pengaturan">⚙️</button>
 
-    <!-- ─── Tabs ─── -->
-    <div class="tabs" id="tabContainer">
-        <button class="tab-btn active" data-tab="buku-kas">📒 Buku Kas</button>
-        <button class="tab-btn" data-tab="buku-tunai">💰 Buku Tunai</button>
-        <button class="tab-btn" data-tab="buku-bank">🏦 Buku Bank</button>
-        <button class="tab-btn" data-tab="buku-pajak">📊 Buku Pajak</button>
-        <button class="tab-btn" data-tab="buku-utang">📝 Buku Utang</button>
-        <button class="tab-btn" data-tab="rob">📄 ROB</button>
-    </div>
-
-    <!-- ─── Tab Content: Buku Kas ─── -->
-    <div class="tab-content active" id="tab-buku-kas">
-        <div class="filter-row">
-            <label>Bulan:</label>
-            <select id="bulanSelect">
-                <option value="01">Januari</option>
-                <option value="02">Februari</option>
-                <option value="03">Maret</option>
-                <option value="04">April</option>
-                <option value="05">Mei</option>
-                <option value="06">Juni</option>
-                <option value="07">Juli</option>
-                <option value="08">Agustus</option>
-                <option value="09">September</option>
-                <option value="10">Oktober</option>
-                <option value="11">November</option>
-                <option value="12">Desember</option>
-            </select>
-            <label>Tahun:</label>
-            <select id="tahunSelect"></select>
-            <button class="btn-primary" id="loadDataBtn" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
-            <button class="btn-primary" id="printBtnKas" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
-        </div>
-
-        <div id="bukuKasContent">
-            <div class="book-header">
-                <h2>BUKU KAS UMUM</h2>
-                <div class="sub-info">
-                    Bulan: <span id="displayBulan">Januari</span>
-                    <span>|</span> Tahun: <span id="displayTahun">2025</span>
+            <!-- Tombol Hide/Unhide Kolom -->
+            <div class="col-menu-wrapper" id="colMenuWrapper">
+                <button class="btn-icon" id="colMenuBtn">👁️ Kolom</button>
+                <div class="col-menu-dropdown" id="colMenuDropdown">
+                    <!-- akan diisi oleh JS -->
                 </div>
             </div>
 
-            <div class="book-meta" id="bookMeta">
-                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsn">-</span></div>
-                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolah">-</span></div>
-                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
-            </div>
-
-            <div class="table-wrapper">
-                <table class="book-table" id="kasTable">
-                    <thead>
-                        <tr>
-                            <th style="width:80px;">TANGGAL</th>
-                            <th style="width:100px;">KODE KEGIATAN</th>
-                            <th style="width:100px;">KODE REKENING</th>
-                            <th style="width:100px;">NO. BUKTI</th>
-                            <th style="width:200px;">URAIAN</th>
-                            <th style="width:120px;">PENERIMAAN</th>
-                            <th style="width:120px;">PENGELUARAN</th>
-                            <th style="width:120px;">SALDO</th>
-                        </tr>
-                    </thead>
-                    <tbody id="kasTableBody">
-                        <tr>
-                            <td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="closing-statement" id="closingStatement">
-                <div style="font-size:13px;margin-bottom:8px;">
-                    Pada hari ini <span id="closingHari">-</span>, tanggal <span id="closingTanggal">-</span> bulan <span id="closingBulan">-</span> Tahun <span id="closingTahun">-</span>, Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut:
-                </div>
-                <div class="closing-grid">
-                    <div class="item"><span>Saldo Bank</span> <span id="saldoBank">Rp 0</span></div>
-                    <div class="item"><span>Saldo Tunai</span> <span id="saldoTunai">Rp 0</span></div>
-                    <div class="item total"><span>Jumlah</span> <span id="saldoTotal">Rp 0</span></div>
-                </div>
-
-                <div class="signature">
-                    <div class="sign-grid">
-                        <div class="sign-place-date">Kec. Bola, <span id="signTanggal">-</span></div>
-                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                        <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                        <div class="sign-name sign-name-kepsek" id="signKepsek">-</div>
-                        <div class="sign-name sign-name-bendahara" id="signBendahara">-</div>
-                    </div>
+            <!-- Menu sederhana: Buku & Kwitansi -->
+            <div class="menu-wrapper" id="menuWrapper">
+                <button class="btn-icon" id="menuBtn">📋 Menu</button>
+                <div class="menu-dropdown" id="menuDropdown">
+                    <a data-menu="buku">📖 Buku</a>
+                    <div class="divider"></div>
+                    <a data-menu="kwitansi">🧾 Kwitansi</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ─── Tab Content: Buku Tunai ─── -->
-    <div class="tab-content" id="tab-buku-tunai">
-        <div class="filter-row">
-            <label>Bulan:</label>
-            <select id="bulanSelectTunai">
-                <option value="01">Januari</option>
-                <option value="02">Februari</option>
-                <option value="03">Maret</option>
-                <option value="04">April</option>
-                <option value="05">Mei</option>
-                <option value="06">Juni</option>
-                <option value="07">Juli</option>
-                <option value="08">Agustus</option>
-                <option value="09">September</option>
-                <option value="10">Oktober</option>
-                <option value="11">November</option>
-                <option value="12">Desember</option>
-            </select>
-            <label>Tahun:</label>
-            <select id="tahunSelectTunai"></select>
-            <button class="btn-primary" id="loadDataBtnTunai" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
-            <button class="btn-primary" id="printBtnTunai" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
-        </div>
-
-        <div id="bukuTunaiContent">
-            <div class="book-header">
-                <h2>BUKU KAS PEMBANTU TUNAI</h2>
-                <div class="sub-info">
-                    Bulan: <span id="displayBulanTunai">Januari</span>
-                    <span>|</span> Tahun: <span id="displayTahunTunai">2025</span>
-                </div>
-            </div>
-
-            <div class="book-meta" id="bookMetaTunai">
-                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnTunai">-</span></div>
-                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahTunai">-</span></div>
-                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
-            </div>
-
-            <div class="table-wrapper">
-                <table class="book-table" id="tunaiTable">
-                    <thead>
-                        <tr>
-                            <th style="width:80px;">TANGGAL</th>
-                            <th style="width:100px;">KODE KEGIATAN</th>
-                            <th style="width:100px;">KODE REKENING</th>
-                            <th style="width:100px;">NO. BUKTI</th>
-                            <th style="width:200px;">URAIAN</th>
-                            <th style="width:120px;">PENERIMAAN</th>
-                            <th style="width:120px;">PENGELUARAN</th>
-                            <th style="width:120px;">SALDO</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tunaiTableBody">
-                        <tr>
-                            <td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="closing-statement" id="closingStatementTunai">
-                <div style="font-size:13px;margin-bottom:8px;">
-                    Pada hari ini <span id="closingHariTunai">-</span>, tanggal <span id="closingTanggalTunai">-</span> bulan <span id="closingBulanTunai">-</span> Tahun <span id="closingTahunTunai">-</span> Buku Kas Tunai ditutup dengan keadaan/posisi buku sebagai berikut :
-                </div>
-                <div class="closing-grid">
-                    <div class="item"><span>Saldo Buku Kas Tunai</span> <span id="saldoTunaiFinal">Rp 0</span></div>
-                </div>
-
-                <div class="signature">
-                    <div class="sign-grid">
-                        <div class="sign-place-date">Kec. Bola, <span id="signTanggalTunai">-</span></div>
-                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                        <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                        <div class="sign-name sign-name-kepsek" id="signKepsekTunai">-</div>
-                        <div class="sign-name sign-name-bendahara" id="signBendaharaTunai">-</div>
-                    </div>
-                </div>
-            </div>
+    <!-- ─── Table ─── -->
+    <div class="table-card">
+        <div class="table-wrapper">
+            <table id="mainTable">
+                <thead>
+                    <tr id="headerRow">
+                        <th style="width:32px;min-width:32px;text-align:center;" data-col="no" data-sort="no" data-required="true">No</th>
+                        <!-- KOLOM BARU: Debet/Kredit -->
+                        <th data-col="debetKredit" data-sort="debetKredit" style="min-width:90px;">Debet/Kredit <span class="sort-hint">↕</span></th>
+                        <!-- KOLOM BARU: Jenis Berisi -->
+                        <th data-col="jenisBerisi" data-sort="jenisBerisi" style="min-width:90px;">Jenis Berisi <span class="sort-hint">↕</span></th>
+                        <th data-col="noBukti" data-sort="noBukti">No. Bukti <span class="sort-hint">↕</span></th>
+                        <th data-col="kodeKegiatan" data-sort="kodeKegiatan" data-required="true">Kode Kegiatan <span class="sort-hint">↕</span></th>
+                        <th data-col="noRek" data-sort="noRek">No. Rek <span class="sort-hint">↕</span></th>
+                        <th data-col="siplah" data-sort="siplah">Siplah <span class="sort-hint">↕</span></th>
+                        <th data-col="jenisKegiatan" data-sort="jenisKegiatan">Jenis Keg. <span class="sort-hint">↕</span></th>
+                        <th data-col="uraian" data-sort="uraian">Uraian <span class="sort-hint">↕</span></th>
+                        <th data-col="komponen" data-sort="komponen" data-readonly="true">Komponen <span class="sort-hint">↕</span></th>
+                        <th data-col="standar" data-sort="standar" data-readonly="true">Standar <span class="sort-hint">↕</span></th>
+                        <th data-col="jenisBelanja" data-sort="jenisBelanja">Jenis Belanja <span class="sort-hint">↕</span></th>
+                        <th data-col="tahap" data-sort="tahap">Tahap <span class="sort-hint">↕</span></th>
+                        <th data-col="vol" data-sort="vol">Vol <span class="sort-hint">↕</span></th>
+                        <th data-col="satuan" data-sort="satuan">Satuan <span class="sort-hint">↕</span></th>
+                        <th data-col="harga" data-sort="harga">Harga <span class="sort-hint">↕</span></th>
+                        <th data-col="jumlahHarga" data-sort="jumlahHarga">Jml Harga <span class="sort-hint">↕</span></th>
+                        <th data-col="tglPelaksanaan" data-sort="tglPelaksanaan">Tgl Pelaks. <span class="sort-hint">↕</span></th>
+                        <th data-col="tglPembayaran" data-sort="tglPembayaran">Tgl Bayar <span class="sort-hint">↕</span></th>
+                        <!-- KOLOM DIUBAH: Jenis Pajak menjadi dropdown -->
+                        <th data-col="jenisPajak" data-sort="jenisPajak" style="min-width:100px;">Jenis Pajak <span class="sort-hint">↕</span></th>
+                        <th data-col="persenPajak" data-sort="persenPajak">% Pajak <span class="sort-hint">↕</span></th>
+                        <th data-col="jmlPajak" data-sort="jmlPajak">Jml Pajak <span class="sort-hint">↕</span></th>
+                        <th data-col="toko" data-sort="toko">Toko/Personal <span class="sort-hint">↕</span></th>
+                        <th data-col="alamatToko" data-sort="alamatToko">Alamat <span class="sort-hint">↕</span></th>
+                        <th data-col="telp" data-sort="telp">Telp. <span class="sort-hint">↕</span></th>
+                        <th style="width:50px;min-width:50px;" data-col="actions" data-required="true">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr class="empty-row">
+                        <td colspan="27">Belum ada data. Klik ➕ untuk menambah baris.</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- ─── Tab Content: Buku Bank ─── -->
-    <div class="tab-content" id="tab-buku-bank">
-        <div class="filter-row">
-            <label>Bulan:</label>
-            <select id="bulanSelectBank">
-                <option value="01">Januari</option>
-                <option value="02">Februari</option>
-                <option value="03">Maret</option>
-                <option value="04">April</option>
-                <option value="05">Mei</option>
-                <option value="06">Juni</option>
-                <option value="07">Juli</option>
-                <option value="08">Agustus</option>
-                <option value="09">September</option>
-                <option value="10">Oktober</option>
-                <option value="11">November</option>
-                <option value="12">Desember</option>
-            </select>
-            <label>Tahun:</label>
-            <select id="tahunSelectBank"></select>
-            <button class="btn-primary" id="loadDataBtnBank" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
-            <button class="btn-primary" id="printBtnBank" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
-        </div>
-
-        <div id="bukuBankContent">
-            <div class="book-header">
-                <h2>BUKU BANK</h2>
-                <div class="sub-info">
-                    Bulan: <span id="displayBulanBank">Januari</span>
-                    <span>|</span> Tahun: <span id="displayTahunBank">2025</span>
-                </div>
+    <!-- ─── Summary Anggaran ─── -->
+    <div class="summary-card">
+        <div class="summary-grid">
+            <div class="summary-item">
+                <span class="label">Anggaran Tahap 1</span>
+                <span class="value anggaran" id="sumAnggaran1">Rp 0</span>
             </div>
-
-            <div class="book-meta" id="bookMetaBank">
-                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnBank">-</span></div>
-                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahBank">-</span></div>
-                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            <div class="summary-item">
+                <span class="label">Teranggarkan Tahap 1</span>
+                <span class="value teranggarkan" id="sumTeranggarkan1">Rp 0</span>
             </div>
-
-            <div class="table-wrapper">
-                <table class="book-table" id="bankTable">
-                    <thead>
-                        <tr>
-                            <th style="width:80px;">TANGGAL</th>
-                            <th style="width:100px;">KODE KEGIATAN</th>
-                            <th style="width:100px;">KODE REKENING</th>
-                            <th style="width:100px;">NO. BUKTI</th>
-                            <th style="width:200px;">URAIAN</th>
-                            <th style="width:120px;">PENERIMAAN</th>
-                            <th style="width:120px;">PENGELUARAN</th>
-                            <th style="width:120px;">SALDO</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bankTableBody">
-                        <tr>
-                            <td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="summary-item">
+                <span class="label">Belum Teranggarkan Tahap 1</span>
+                <span class="value belum" id="sumBelum1">Rp 0</span>
             </div>
-
-            <div class="closing-statement" id="closingStatementBank">
-                <div style="font-size:13px;margin-bottom:8px;">
-                    Pada hari ini <span id="closingHariBank">-</span>, tanggal <span id="closingTanggalBank">-</span> bulan <span id="closingBulanBank">-</span> Tahun <span id="closingTahunBank">-</span>, Buku Bank ditutup dengan keadaan/posisi buku sebagai berikut:
-                </div>
-                <div class="closing-grid">
-                    <div class="item"><span>Saldo Bank</span> <span id="saldoBankFinal">Rp 0</span></div>
-                </div>
-
-                <div class="signature">
-                    <div class="sign-grid">
-                        <div class="sign-place-date">Kec. Bola, <span id="signTanggalBank">-</span></div>
-                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                        <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                        <div class="sign-name sign-name-kepsek" id="signKepsekBank">-</div>
-                        <div class="sign-name sign-name-bendahara" id="signBendaharaBank">-</div>
-                    </div>
-                </div>
+            <div class="summary-item">
+                <span class="label">Anggaran Tahap 2</span>
+                <span class="value anggaran" id="sumAnggaran2">Rp 0</span>
+            </div>
+            <div class="summary-item">
+                <span class="label">Teranggarkan Tahap 2</span>
+                <span class="value teranggarkan" id="sumTeranggarkan2">Rp 0</span>
+            </div>
+            <div class="summary-item">
+                <span class="label">Belum Teranggarkan Tahap 2</span>
+                <span class="value belum" id="sumBelum2">Rp 0</span>
+            </div>
+            <div class="summary-item highlight">
+                <span class="label">Total Anggaran</span>
+                <span class="value total" id="sumTotal">Rp 0</span>
             </div>
         </div>
-    </div>
-
-    <!-- ─── Tab Content: Buku Pajak ─── -->
-    <div class="tab-content" id="tab-buku-pajak">
-        <div class="filter-row">
-            <label>Bulan:</label>
-            <select id="bulanSelectPajak">
-                <option value="01">Januari</option>
-                <option value="02">Februari</option>
-                <option value="03">Maret</option>
-                <option value="04">April</option>
-                <option value="05">Mei</option>
-                <option value="06">Juni</option>
-                <option value="07">Juli</option>
-                <option value="08">Agustus</option>
-                <option value="09">September</option>
-                <option value="10">Oktober</option>
-                <option value="11">November</option>
-                <option value="12">Desember</option>
-            </select>
-            <label>Tahun:</label>
-            <select id="tahunSelectPajak"></select>
-            <button class="btn-primary" id="loadDataBtnPajak" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
-            <button class="btn-primary" id="printBtnPajak" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
-        </div>
-
-        <div id="bukuPajakContent">
-            <div class="book-header">
-                <h2>BUKU PEMBANTU PAJAK</h2>
-                <div class="sub-info">
-                    Bulan: <span id="displayBulanPajak">Januari</span>
-                    <span>|</span> Tahun: <span id="displayTahunPajak">2025</span>
-                </div>
-            </div>
-
-            <div class="book-meta" id="bookMetaPajak">
-                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnPajak">-</span></div>
-                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahPajak">-</span></div>
-                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
-            </div>
-
-            <div class="table-wrapper">
-                <table class="book-table" id="pajakTable">
-                    <thead>
-                        <tr>
-                            <th style="width:80px;">TANGGAL</th>
-                            <th style="width:100px;">NO.KODE</th>
-                            <th style="width:200px;">URAIAN</th>
-                            <th style="width:100px;">PPN</th>
-                            <th style="width:100px;">PPh 21</th>
-                            <th style="width:100px;">PPh 23</th>
-                            <th style="width:100px;">PPh 4</th>
-                            <th style="width:100px;">SSPD</th>
-                            <th style="width:150px;">PENGELUARAN / KREDIT</th>
-                            <th style="width:150px;">SALDO</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pajakTableBody">
-                        <tr>
-                            <td colspan="10" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Tanda tangan (tanpa closing statement) -->
-            <div class="signature">
-                <div class="sign-grid">
-                    <div class="sign-place-date">Kec. Bola, <span id="signTanggalPajak">-</span></div>
-                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                    <div class="sign-name sign-name-kepsek" id="signKepsekPajak">-</div>
-                    <div class="sign-name sign-name-bendahara" id="signBendaharaPajak">-</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ─── Tab Lainnya (Placeholder) ─── -->
-    <div class="tab-content" id="tab-buku-utang">
-        <div style="text-align:center;padding:60px 0;color:#8aa0b8;font-size:16px;">📝 Buku Utang (Coming Soon)</div>
-    </div>
-    <div class="tab-content" id="tab-rob">
-        <div style="text-align:center;padding:60px 0;color:#8aa0b8;font-size:16px;">📄 ROB (Coming Soon)</div>
     </div>
 
     <script>
         // ─────────────────────────────────────────────
-        // 1. Firebase init
+        // 1.  Firebase init
         // ─────────────────────────────────────────────
         const firebaseConfig = {
             apiKey: "AIzaSyD61HLphga_Egy_VTGeqx5D8_XmqgWzMsE",
@@ -1566,116 +1097,330 @@
             messagingSenderId: "691310998051",
             appId: "1:691310998051:web:fe576f0c14f37f84c6f796"
         };
+
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
         // ─────────────────────────────────────────────
-        // 2. Session check
+        // 2.  Session check & constants
         // ─────────────────────────────────────────────
         const sessionJenjang = localStorage.getItem('bosnbs_jenjang');
         const sessionTahun = localStorage.getItem('bosnbs_tahun');
+
         if (!sessionJenjang || !sessionTahun) {
             window.location.href = 'index.html';
         }
         document.getElementById('userBadge').textContent = `${sessionJenjang} · ${sessionTahun}`;
+        document.getElementById('modalSessionLabel').textContent = `${sessionJenjang} · ${sessionTahun}`;
 
         // ─────────────────────────────────────────────
-        // 3. State
+        // 3.  Mapping STANDAR & KOMPONEN
         // ─────────────────────────────────────────────
+        const STANDAR_MAP = {
+            '01': 'Pengembangan Kompetensi Lulusan',
+            '02': 'Pengembangan standar isi',
+            '03': 'Pengembangan standar proses',
+            '04': 'Pengembangan pendidik dan tenaga kependidikan',
+            '05': 'Pengembangan sarana dan prasarana sekolah',
+            '06': 'Pengembangan standar pengelolaan',
+            '07': 'Pengembangan standar pembiayaan',
+            '08': 'Pengembangan dan implementasi sistem penilaian'
+        };
+
+        const KOMPONEN_MAP = {
+            '01': 'penerimaan Peserta Didik baru',
+            '02': 'pengembangan perpustakaan',
+            '03': 'pelaksanaan kegiatan pembelajaran dan ekstrakurikuler',
+            '04': 'pelaksanaan kegiatan asesmen dan evaluasi pembelajaran',
+            '05': 'pelaksanaan administrasi kegiatan sekolah',
+            '06': 'pengembangan profesi guru dan tenaga kependidikan',
+            '07': 'pembiayaan langganan daya dan jasa',
+            '08': 'pemeliharaan sarana dan prasarana sekolah',
+            '09': 'penyediaan alat multimedia pembelajaran',
+            '10': 'penyelenggaraan kegiatan peningkatan kompetensi keahlian',
+            '11': 'penyelenggaraan kegiatan dalam mendukung keterserapan lulusan',
+            '12': 'pembayaran honor'
+        };
+
+        function parseKodeKegiatan(kode) {
+            if (!kode || typeof kode !== 'string') return { standar: '', komponen: '' };
+            const clean = kode.trim();
+            const parts = clean.split('.');
+            if (parts.length < 2) return { standar: '', komponen: '' };
+            const standarCode = parts[0].padStart(2, '0');
+            const komponenCode = parts[1].padStart(2, '0');
+            const standar = STANDAR_MAP[standarCode] || '';
+            const komponen = KOMPONEN_MAP[komponenCode] || '';
+            return { standar, komponen };
+        }
+
+        // ─────────────────────────────────────────────
+        // 4.  State
+        // ─────────────────────────────────────────────
+        let allData = [];
         let settingsData = {};
-        let allKasData = [];
-        let allTunaiData = [];
-        let allBankData = [];
-        let allPajakData = [];
+        let hasUnsavedChanges = false;
+        let sortKey = null;
+        let sortAsc = true;
+        let filterText = '';
+
+        let hiddenColumns = new Set();
+
         const COLLECTION = 'data_bos';
         const SETTINGS_COLLECTION = 'settings_bos';
+        const COL_WIDTHS_KEY = 'bosnbs_col_widths';
+        const HIDDEN_COLS_KEY = 'bosnbs_hidden_cols';
 
         // ─────────────────────────────────────────────
-        // 4. DOM refs
+        // 5.  DOM refs
         // ─────────────────────────────────────────────
-        // Buku Kas
-        const bulanSelect = document.getElementById('bulanSelect');
-        const tahunSelect = document.getElementById('tahunSelect');
-        const loadDataBtn = document.getElementById('loadDataBtn');
-        const kasTableBody = document.getElementById('kasTableBody');
-        const displayBulan = document.getElementById('displayBulan');
-        const displayTahun = document.getElementById('displayTahun');
-        const metaNpsn = document.getElementById('metaNpsn');
-        const metaSekolah = document.getElementById('metaSekolah');
-        const closingHari = document.getElementById('closingHari');
-        const closingTanggal = document.getElementById('closingTanggal');
-        const closingBulan = document.getElementById('closingBulan');
-        const closingTahun = document.getElementById('closingTahun');
-        const saldoBank = document.getElementById('saldoBank');
-        const saldoTunai = document.getElementById('saldoTunai');
-        const saldoTotal = document.getElementById('saldoTotal');
-        const signTanggal = document.getElementById('signTanggal');
-        const signKepsek = document.getElementById('signKepsek');
-        const signBendahara = document.getElementById('signBendahara');
+        const tableBody = document.getElementById('tableBody');
+        const headerRow = document.getElementById('headerRow');
+        const recordCount = document.getElementById('recordCount');
         const toast = document.getElementById('toast');
+        const filterInput = document.getElementById('filterInput');
+        const saveBtn = document.getElementById('saveBtn');
+        const addRowBtn = document.getElementById('addRowBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const menuBtn = document.getElementById('menuBtn');
+        const menuWrapper = document.getElementById('menuWrapper');
+        const menuDropdown = document.getElementById('menuDropdown');
+        const colMenuBtn = document.getElementById('colMenuBtn');
+        const colMenuWrapper = document.getElementById('colMenuWrapper');
+        const colMenuDropdown = document.getElementById('colMenuDropdown');
 
-        // Buku Tunai
-        const bulanSelectTunai = document.getElementById('bulanSelectTunai');
-        const tahunSelectTunai = document.getElementById('tahunSelectTunai');
-        const loadDataBtnTunai = document.getElementById('loadDataBtnTunai');
-        const tunaiTableBody = document.getElementById('tunaiTableBody');
-        const displayBulanTunai = document.getElementById('displayBulanTunai');
-        const displayTahunTunai = document.getElementById('displayTahunTunai');
-        const metaNpsnTunai = document.getElementById('metaNpsnTunai');
-        const metaSekolahTunai = document.getElementById('metaSekolahTunai');
-        const closingHariTunai = document.getElementById('closingHariTunai');
-        const closingTanggalTunai = document.getElementById('closingTanggalTunai');
-        const closingBulanTunai = document.getElementById('closingBulanTunai');
-        const closingTahunTunai = document.getElementById('closingTahunTunai');
-        const saldoTunaiFinal = document.getElementById('saldoTunaiFinal');
-        const signTanggalTunai = document.getElementById('signTanggalTunai');
-        const signKepsekTunai = document.getElementById('signKepsekTunai');
-        const signBendaharaTunai = document.getElementById('signBendaharaTunai');
+        const settingsModal = document.getElementById('settingsModal');
+        const modalCancelBtn = document.getElementById('modalCancelBtn');
+        const modalSaveBtn = document.getElementById('modalSaveBtn');
+        const modalNpsn = document.getElementById('modalNpsn');
+        const modalKepalaSekolah = document.getElementById('modalKepalaSekolah');
+        const modalBendahara = document.getElementById('modalBendahara');
+        const modalAnggaran1 = document.getElementById('modalAnggaran1');
+        const modalAnggaran2 = document.getElementById('modalAnggaran2');
+        const modalTanggalPemasukan1 = document.getElementById('modalTanggalPemasukan1');
+        const modalTanggalPemasukan2 = document.getElementById('modalTanggalPemasukan2');
 
-        // Buku Bank
-        const bulanSelectBank = document.getElementById('bulanSelectBank');
-        const tahunSelectBank = document.getElementById('tahunSelectBank');
-        const loadDataBtnBank = document.getElementById('loadDataBtnBank');
-        const bankTableBody = document.getElementById('bankTableBody');
-        const displayBulanBank = document.getElementById('displayBulanBank');
-        const displayTahunBank = document.getElementById('displayTahunBank');
-        const metaNpsnBank = document.getElementById('metaNpsnBank');
-        const metaSekolahBank = document.getElementById('metaSekolahBank');
-        const closingHariBank = document.getElementById('closingHariBank');
-        const closingTanggalBank = document.getElementById('closingTanggalBank');
-        const closingBulanBank = document.getElementById('closingBulanBank');
-        const closingTahunBank = document.getElementById('closingTahunBank');
-        const saldoBankFinal = document.getElementById('saldoBankFinal');
-        const signTanggalBank = document.getElementById('signTanggalBank');
-        const signKepsekBank = document.getElementById('signKepsekBank');
-        const signBendaharaBank = document.getElementById('signBendaharaBank');
-
-        // Buku Pajak
-        const bulanSelectPajak = document.getElementById('bulanSelectPajak');
-        const tahunSelectPajak = document.getElementById('tahunSelectPajak');
-        const loadDataBtnPajak = document.getElementById('loadDataBtnPajak');
-        const pajakTableBody = document.getElementById('pajakTableBody');
-        const displayBulanPajak = document.getElementById('displayBulanPajak');
-        const displayTahunPajak = document.getElementById('displayTahunPajak');
-        const metaNpsnPajak = document.getElementById('metaNpsnPajak');
-        const metaSekolahPajak = document.getElementById('metaSekolahPajak');
-        const signTanggalPajak = document.getElementById('signTanggalPajak');
-        const signKepsekPajak = document.getElementById('signKepsekPajak');
-        const signBendaharaPajak = document.getElementById('signBendaharaPajak');
-
-        // Print preview
-        const printPreviewOverlay = document.getElementById('printPreviewOverlay');
-        const a4PreviewContent = document.getElementById('a4PreviewContent');
-        const closePreviewBtn = document.getElementById('closePreviewBtn');
-        const confirmPrintBtn = document.getElementById('confirmPrintBtn');
-
-        const printBtnKas = document.getElementById('printBtnKas');
-        const printBtnTunai = document.getElementById('printBtnTunai');
-        const printBtnBank = document.getElementById('printBtnBank');
-        const printBtnPajak = document.getElementById('printBtnPajak');
+        const sumAnggaran1 = document.getElementById('sumAnggaran1');
+        const sumAnggaran2 = document.getElementById('sumAnggaran2');
+        const sumTeranggarkan1 = document.getElementById('sumTeranggarkan1');
+        const sumTeranggarkan2 = document.getElementById('sumTeranggarkan2');
+        const sumBelum1 = document.getElementById('sumBelum1');
+        const sumBelum2 = document.getElementById('sumBelum2');
+        const sumTotal = document.getElementById('sumTotal');
 
         // ─────────────────────────────────────────────
-        // 5. Toast
+        // 6.  Column definitions (untuk hide/unhide)
+        // ─────────────────────────────────────────────
+        const COLUMN_DEFS = [
+            { key: 'no', label: 'No', required: true },
+            { key: 'debetKredit', label: 'Debet/Kredit' },
+            { key: 'jenisBerisi', label: 'Jenis Berisi' },
+            { key: 'noBukti', label: 'No. Bukti' },
+            { key: 'kodeKegiatan', label: 'Kode Kegiatan', required: true },
+            { key: 'noRek', label: 'No. Rek' },
+            { key: 'siplah', label: 'Siplah' },
+            { key: 'jenisKegiatan', label: 'Jenis Keg.' },
+            { key: 'uraian', label: 'Uraian' },
+            { key: 'komponen', label: 'Komponen' },
+            { key: 'standar', label: 'Standar' },
+            { key: 'jenisBelanja', label: 'Jenis Belanja' },
+            { key: 'tahap', label: 'Tahap' },
+            { key: 'vol', label: 'Vol' },
+            { key: 'satuan', label: 'Satuan' },
+            { key: 'harga', label: 'Harga' },
+            { key: 'jumlahHarga', label: 'Jml Harga' },
+            { key: 'tglPelaksanaan', label: 'Tgl Pelaks.' },
+            { key: 'tglPembayaran', label: 'Tgl Bayar' },
+            { key: 'jenisPajak', label: 'Jenis Pajak' },
+            { key: 'persenPajak', label: '% Pajak' },
+            { key: 'jmlPajak', label: 'Jml Pajak' },
+            { key: 'toko', label: 'Toko/Personal' },
+            { key: 'alamatToko', label: 'Alamat' },
+            { key: 'telp', label: 'Telp.' },
+            { key: 'actions', label: 'Aksi', required: true }
+        ];
+
+        // ─────────────────────────────────────────────
+        // 7.  Load/Save hidden columns
+        // ─────────────────────────────────────────────
+        function loadHiddenColumns() {
+            try {
+                const saved = localStorage.getItem(HIDDEN_COLS_KEY);
+                if (saved) {
+                    const arr = JSON.parse(saved);
+                    hiddenColumns = new Set(arr);
+                } else {
+                    hiddenColumns = new Set();
+                }
+            } catch (e) {
+                hiddenColumns = new Set();
+            }
+            COLUMN_DEFS.forEach(col => {
+                if (col.required && hiddenColumns.has(col.key)) {
+                    hiddenColumns.delete(col.key);
+                }
+            });
+        }
+
+        function saveHiddenColumns() {
+            try {
+                localStorage.setItem(HIDDEN_COLS_KEY, JSON.stringify([...hiddenColumns]));
+            } catch (e) { /* ignore */ }
+        }
+
+        function applyHiddenColumns() {
+            const headers = headerRow.querySelectorAll('th');
+            headers.forEach(th => {
+                const col = th.dataset.col;
+                if (col && hiddenColumns.has(col)) {
+                    th.classList.add('hidden-col');
+                } else {
+                    th.classList.remove('hidden-col');
+                }
+            });
+
+            const rows = tableBody.querySelectorAll('tr');
+            rows.forEach(row => {
+                const tdList = row.querySelectorAll('td[data-field]');
+                tdList.forEach(td => {
+                    const field = td.dataset.field;
+                    if (field && hiddenColumns.has(field)) {
+                        td.classList.add('hidden-col');
+                    } else {
+                        td.classList.remove('hidden-col');
+                    }
+                });
+                const actionsTd = row.querySelector('td.actions-cell');
+                if (actionsTd && hiddenColumns.has('actions')) {
+                    actionsTd.classList.add('hidden-col');
+                } else if (actionsTd) {
+                    actionsTd.classList.remove('hidden-col');
+                }
+                const rowNumTd = row.querySelector('td.row-num');
+                if (rowNumTd && hiddenColumns.has('no')) {
+                    rowNumTd.classList.add('hidden-col');
+                } else if (rowNumTd) {
+                    rowNumTd.classList.remove('hidden-col');
+                }
+            });
+            updateColMenu();
+        }
+
+        function updateColMenu() {
+            let html = '';
+            COLUMN_DEFS.forEach(col => {
+                const checked = !hiddenColumns.has(col.key) ? 'checked' : '';
+                const disabled = col.required ? 'disabled' : '';
+                html += `
+                            <div class="col-item">
+                                <input type="checkbox" id="col_${col.key}" ${checked} ${disabled} data-col="${col.key}" />
+                                <label for="col_${col.key}">${col.label} ${col.required ? '(wajib)' : ''}</label>
+                            </div>
+                        `;
+            });
+            colMenuDropdown.innerHTML = html;
+
+            colMenuDropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const col = e.target.dataset.col;
+                    if (e.target.checked) {
+                        hiddenColumns.delete(col);
+                    } else {
+                        const def = COLUMN_DEFS.find(c => c.key === col);
+                        if (def && def.required) {
+                            e.target.checked = true;
+                            return;
+                        }
+                        hiddenColumns.add(col);
+                    }
+                    saveHiddenColumns();
+                    applyHiddenColumns();
+                    renderTable();
+                });
+            });
+        }
+
+        // ─────────────────────────────────────────────
+        // 8.  Column Resizer
+        // ─────────────────────────────────────────────
+        let columnWidths = {};
+
+        function loadColumnWidths() {
+            try {
+                const saved = localStorage.getItem(COL_WIDTHS_KEY);
+                if (saved) {
+                    columnWidths = JSON.parse(saved);
+                } else {
+                    columnWidths = {};
+                }
+            } catch (e) {
+                columnWidths = {};
+            }
+        }
+
+        function saveColumnWidths() {
+            try {
+                localStorage.setItem(COL_WIDTHS_KEY, JSON.stringify(columnWidths));
+            } catch (e) { /* ignore */ }
+        }
+
+        function applyColumnWidths() {
+            const headers = headerRow.querySelectorAll('th');
+            headers.forEach(th => {
+                const col = th.dataset.col;
+                if (col && columnWidths[col]) {
+                    th.style.width = columnWidths[col] + 'px';
+                    th.style.minWidth = columnWidths[col] + 'px';
+                }
+            });
+        }
+
+        function initResizers() {
+            const headers = headerRow.querySelectorAll('th');
+            headers.forEach(th => {
+                const oldResizer = th.querySelector('.col-resizer');
+                if (oldResizer) oldResizer.remove();
+
+                const resizer = document.createElement('span');
+                resizer.className = 'col-resizer';
+                resizer.dataset.col = th.dataset.col;
+                th.appendChild(resizer);
+
+                resizer.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const col = th.dataset.col;
+                    if (!col) return;
+
+                    const startX = e.clientX;
+                    const startWidth = th.offsetWidth;
+
+                    document.body.classList.add('dragging-active');
+
+                    const onMouseMove = (ev) => {
+                        const diff = ev.clientX - startX;
+                        const newWidth = Math.max(40, startWidth + diff);
+                        th.style.width = newWidth + 'px';
+                        th.style.minWidth = newWidth + 'px';
+                        columnWidths[col] = newWidth;
+                        saveColumnWidths();
+                    };
+
+                    const onMouseUp = () => {
+                        document.body.classList.remove('dragging-active');
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+                    };
+
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                });
+            });
+        }
+
+        // ─────────────────────────────────────────────
+        // 9.  Toast
         // ─────────────────────────────────────────────
         let toastTimer = null;
 
@@ -1689,32 +1434,15 @@
         }
 
         // ─────────────────────────────────────────────
-        // 6. Populate tahun
+        // 10. Format number with dots
         // ─────────────────────────────────────────────
-        function populateTahun(selectElement) {
-            const currentYear = new Date().getFullYear();
-            const start = 2024;
-            const end = 2034;
-            selectElement.innerHTML = '';
-            for (let y = start; y <= end; y++) {
-                const opt = document.createElement('option');
-                opt.value = y;
-                opt.textContent = y;
-                if (y === currentYear) opt.selected = true;
-                selectElement.appendChild(opt);
-            }
-            if (currentYear < start || currentYear > end) {
-                selectElement.value = start;
-            }
+        function formatNumber(val) {
+            if (val === undefined || val === null || val === '') return '';
+            const num = parseFloat(val);
+            if (isNaN(num)) return '';
+            return num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
-        populateTahun(tahunSelect);
-        populateTahun(tahunSelectTunai);
-        populateTahun(tahunSelectBank);
-        populateTahun(tahunSelectPajak);
 
-        // ─────────────────────────────────────────────
-        // 7. Format number & date
-        // ─────────────────────────────────────────────
         function formatRupiah(val) {
             if (val === undefined || val === null || val === '') return 'Rp 0';
             const num = parseFloat(val);
@@ -1722,55 +1450,522 @@
             return 'Rp ' + num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 
-        function getMonthName(month) {
-            const names = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-            ];
-            return names[parseInt(month) - 1] || month;
+        function parseNumber(str) {
+            if (!str) return 0;
+            const cleaned = str.replace(/\./g, '').replace(/,/g, '');
+            return parseFloat(cleaned) || 0;
         }
 
-        function getDayName(date) {
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            return days[date.getDay()];
-        }
-
-        function getPreviousMonth(month, year) {
-            let m = parseInt(month) - 1;
-            let y = parseInt(year);
-            if (m === 0) {
-                m = 12;
-                y = y - 1;
-            }
-            return { month: String(m).padStart(2, '0'), year: String(y) };
-        }
-
-        function formatDateToDDMMYY(dateStr) {
-            if (!dateStr) return '';
-            let parts = null;
-            if (dateStr.includes('-')) {
-                parts = dateStr.split('-');
-            } else if (dateStr.includes('/')) {
-                parts = dateStr.split('/');
-            } else {
-                return dateStr;
-            }
-            if (parts.length !== 3) return dateStr;
-            let day, month, year;
-            if (parts[0].length === 4) {
-                year = parts[0];
-                month = parts[1];
-                day = parts[2];
-            } else {
-                day = parts[0];
-                month = parts[1];
-                year = parts[2];
-            }
-            const shortYear = year.slice(-2);
-            return `${day.padStart(2,'0')}/${month.padStart(2,'0')}/${shortYear}`;
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
         }
 
         // ─────────────────────────────────────────────
-        // 8. Load settings (update semua meta)
+        // 11. Column definitions untuk data entry
+        // ─────────────────────────────────────────────
+        const COLUMNS = [
+            { key: 'debetKredit', type: 'select', options: ['Debet', 'Kredit'] },
+            { key: 'jenisBerisi', type: 'select', options: ['Tunai', 'Bank', 'Pajak'] },
+            { key: 'noBukti', type: 'text', label: 'No. Bukti' },
+            { key: 'kodeKegiatan', type: 'text', label: 'Kode Kegiatan' },
+            { key: 'noRek', type: 'text', label: 'No. Rek' },
+            { key: 'siplah', type: 'select', options: ['Siplah', 'Non Siplah'] },
+            { key: 'jenisKegiatan', type: 'text', label: 'Jenis Kegiatan' },
+            { key: 'uraian', type: 'text', label: 'Uraian' },
+            { key: 'komponen', type: 'text', label: 'Komponen', readonly: true },
+            { key: 'standar', type: 'text', label: 'Standar', readonly: true },
+            { key: 'jenisBelanja', type: 'select', options: ['Pegawai', 'Barang dan Jasa', 'Peralatan dan Mesin',
+                    'Aset tetap lainnya'
+                ] },
+            { key: 'tahap', type: 'select', options: ['Tahap 1', 'Tahap 2'] },
+            { key: 'vol', type: 'number', label: 'Vol' },
+            { key: 'satuan', type: 'text', label: 'Satuan' },
+            { key: 'harga', type: 'number', label: 'Harga' },
+            { key: 'jumlahHarga', type: 'number', label: 'Jml Harga', readonly: true },
+            { key: 'tglPelaksanaan', type: 'date', label: 'Tgl Pelaksanaan' },
+            { key: 'tglPembayaran', type: 'date', label: 'Tgl Bayar' },
+            // Jenis Pajak sekarang dropdown
+            { key: 'jenisPajak', type: 'select', options: ['PPN', 'PPh 21', 'PPh 23', 'PPh 4', 'SSPD'] },
+            { key: 'persenPajak', type: 'number', label: '% Pajak' },
+            { key: 'jmlPajak', type: 'number', label: 'Jml Pajak', readonly: true },
+            { key: 'toko', type: 'text', label: 'Toko/Personal' },
+            { key: 'alamatToko', type: 'text', label: 'Alamat' },
+            { key: 'telp', type: 'text', label: 'Telp.' }
+        ];
+
+        const COLUMN_KEYS = COLUMNS.map(c => c.key);
+
+        // ─────────────────────────────────────────────
+        // 12. Generate empty row data
+        // ─────────────────────────────────────────────
+        function createEmptyRow() {
+            const row = {};
+            COLUMN_KEYS.forEach(key => {
+                if (key === 'debetKredit') row[key] = 'Kredit';
+                else if (key === 'jenisBerisi') row[key] = 'Tunai';
+                else if (key === 'siplah') row[key] = 'Siplah';
+                else if (key === 'jenisBelanja') row[key] = 'Pegawai';
+                else if (key === 'tahap') row[key] = 'Tahap 1';
+                else if (key === 'jenisPajak') row[key] = 'PPN';
+                else if (key === 'komponen' || key === 'standar') row[key] = '';
+                else row[key] = '';
+            });
+            row.jenjang = sessionJenjang;
+            row.tahun = sessionTahun;
+            return row;
+        }
+
+        // ─────────────────────────────────────────────
+        // 13. Auto-calc
+        // ─────────────────────────────────────────────
+        function autoCalcRow(row) {
+            const vol = parseFloat(row.vol) || 0;
+            const harga = parseFloat(row.harga) || 0;
+            const persenPajak = parseFloat(row.persenPajak) || 0;
+            const jml = vol * harga;
+            row.jumlahHarga = jml;
+            row.jmlPajak = jml * (persenPajak / 100);
+            return row;
+        }
+
+        // ─────────────────────────────────────────────
+        // 14. Get display data
+        // ─────────────────────────────────────────────
+        function getDisplayData() {
+            let data = allData.filter(item =>
+                item.jenjang === sessionJenjang && item.tahun === sessionTahun
+            );
+
+            if (filterText.trim()) {
+                const search = filterText.trim().toLowerCase();
+                data = data.filter(item => {
+                    return COLUMN_KEYS.some(key => {
+                        const val = item[key] !== undefined ? String(item[key]) : '';
+                        return val.toLowerCase().includes(search);
+                    });
+                });
+            }
+
+            if (sortKey) {
+                data.sort((a, b) => {
+                    let va = a[sortKey] !== undefined ? a[sortKey] : '';
+                    let vb = b[sortKey] !== undefined ? b[sortKey] : '';
+                    if (typeof va === 'string') va = va.toLowerCase();
+                    if (typeof vb === 'string') vb = vb.toLowerCase();
+                    if (va < vb) return sortAsc ? -1 : 1;
+                    if (va > vb) return sortAsc ? 1 : -1;
+                    return 0;
+                });
+            }
+
+            return data;
+        }
+
+        // ─────────────────────────────────────────────
+        // 15. Render table
+        // ─────────────────────────────────────────────
+        function renderTable() {
+            const data = getDisplayData();
+
+            if (data.length === 0) {
+                tableBody.innerHTML =
+                    `<tr class="empty-row"><td colspan="27">Tidak ada data untuk ${sessionJenjang} · ${sessionTahun}. Klik ➕ untuk menambah.</td></tr>`;
+                updateCount();
+                updateSummary();
+                applyHiddenColumns();
+                return;
+            }
+
+            let html = '';
+            data.forEach((item, idx) => {
+                const rowNum = idx + 1;
+                html += `<tr data-id="${item._id || ''}" data-rowidx="${idx}">`;
+                html += `<td class="row-num">${rowNum}</td>`;
+
+                // Debet/Kredit
+                const debetVal = item.debetKredit !== undefined ? item.debetKredit : 'Kredit';
+                html += `<td data-field="debetKredit" data-rowidx="${idx}" class="editable-cell">`;
+                html += `<span class="cell-value${!debetVal ? ' empty' : ''}">${escapeHtml(String(debetVal)) || '—'}</span>`;
+                html += `</td>`;
+
+                // Jenis Berisi
+                const jenisVal = item.jenisBerisi !== undefined ? item.jenisBerisi : 'Tunai';
+                html += `<td data-field="jenisBerisi" data-rowidx="${idx}" class="editable-cell">`;
+                html += `<span class="cell-value${!jenisVal ? ' empty' : ''}">${escapeHtml(String(jenisVal)) || '—'}</span>`;
+                html += `</td>`;
+
+                // Kolom data lainnya
+                COLUMN_KEYS.forEach(key => {
+                    if (key === 'debetKredit' || key === 'jenisBerisi') return;
+                    const col = COLUMNS.find(c => c.key === key);
+                    const val = item[key] !== undefined ? item[key] : '';
+                    let displayVal = val;
+                    const isReadonly = col && col.readonly;
+
+                    if (col && (col.type === 'number' || key === 'harga' || key === 'jumlahHarga' || key ===
+                            'jmlPajak' || key === 'vol' || key === 'persenPajak')) {
+                        if (val !== '' && val !== null && val !== undefined) {
+                            displayVal = formatNumber(val);
+                        } else {
+                            displayVal = '';
+                        }
+                    }
+
+                    if (key === 'tglPelaksanaan' || key === 'tglPembayaran') {
+                        displayVal = val || '';
+                    }
+
+                    const isEmpty = displayVal === '' || displayVal === null || displayVal === undefined;
+                    const displayText = isEmpty ? '' : escapeHtml(String(displayVal));
+
+                    let cellContent = '';
+                    if (col && col.type === 'select' && !isReadonly) {
+                        cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
+                    } else if (isReadonly) {
+                        cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
+                    } else {
+                        cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
+                    }
+
+                    const readonlyClass = isReadonly ? 'readonly' : '';
+                    html += `<td data-field="${key}" data-rowidx="${idx}" class="editable-cell ${readonlyClass}">${cellContent}</td>`;
+                });
+
+                html += `<td class="actions-cell">
+                            <button class="btn-delete-row" data-id="${item._id || ''}" data-rowidx="${idx}" title="Hapus baris">✕</button>
+                        </td>`;
+                html += `</tr>`;
+            });
+
+            html += `<tr class="add-row-row">
+                        <td colspan="27" class="add-row-cell">
+                            <button class="btn-add-row" id="addRowBottomBtn">➕ Tambah Baris</button>
+                        </td>
+                    </tr>`;
+
+            tableBody.innerHTML = html;
+
+            applyColumnWidths();
+            applyHiddenColumns();
+
+            document.querySelectorAll('.editable-cell:not(.readonly)').forEach(cell => {
+                cell.addEventListener('dblclick', () => startEdit(cell));
+            });
+
+            document.querySelectorAll('.btn-delete-row').forEach(btn => {
+                btn.addEventListener('click', () => deleteRow(btn.dataset.id, parseInt(btn.dataset.rowidx)));
+            });
+
+            const addBottom = document.getElementById('addRowBottomBtn');
+            if (addBottom) {
+                addBottom.addEventListener('click', () => addRow());
+            }
+
+            updateCount();
+            updateSaveButton();
+            updateSummary();
+            updateSortIndicators();
+        }
+
+        // ─────────────────────────────────────────────
+        // 16. Update sort indicators
+        // ─────────────────────────────────────────────
+        function updateSortIndicators() {
+            const headers = headerRow.querySelectorAll('th[data-sort]');
+            headers.forEach(th => {
+                const key = th.dataset.sort;
+                const icon = th.querySelector('.sort-icon');
+                if (key === sortKey) {
+                    th.classList.add('sorted');
+                    if (icon) {
+                        icon.textContent = sortAsc ? '▲' : '▼';
+                    }
+                } else {
+                    th.classList.remove('sorted');
+                    if (icon) {
+                        icon.textContent = '↕';
+                    }
+                }
+            });
+        }
+
+        // ─────────────────────────────────────────────
+        // 17. Start inline edit
+        // ─────────────────────────────────────────────
+        function startEdit(cell) {
+            const field = cell.dataset.field;
+            const rowIdx = parseInt(cell.dataset.rowidx);
+            const data = getDisplayData();
+            if (rowIdx >= data.length) return;
+
+            const item = data[rowIdx];
+            const col = COLUMNS.find(c => c.key === field);
+            if (!col || col.readonly) return;
+
+            const currentVal = item[field] !== undefined ? item[field] : '';
+
+            if (cell.classList.contains('editing')) return;
+            cell.classList.add('editing');
+
+            let input;
+            if (col.type === 'select') {
+                input = document.createElement('select');
+                col.options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt;
+                    if (opt === currentVal) option.selected = true;
+                    input.appendChild(option);
+                });
+            } else if (col.type === 'date') {
+                input = document.createElement('input');
+                input.type = 'date';
+                input.value = currentVal || '';
+            } else {
+                input = document.createElement('input');
+                input.type = 'text';
+                if (col.type === 'number') {
+                    input.type = 'text';
+                    input.value = currentVal !== '' && currentVal !== null ? formatNumber(currentVal) : '';
+                } else {
+                    input.value = currentVal || '';
+                }
+            }
+
+            input.className = 'inline-edit-input';
+            input.style.width = '100%';
+            input.style.border = '2px solid #0a2e5c';
+            input.style.borderRadius = '4px';
+            input.style.padding = '2px 4px';
+            input.style.fontSize = '12px';
+            input.style.fontFamily = 'inherit';
+            input.style.background = '#fff';
+            input.style.outline = 'none';
+
+            cell.innerHTML = '';
+            cell.appendChild(input);
+            input.focus();
+            if (input.select) input.select();
+
+            const saveEdit = () => {
+                let newVal = input.value.trim();
+                if (col.type === 'number') {
+                    newVal = parseNumber(newVal);
+                } else if (col.type === 'date') {
+                    newVal = newVal || '';
+                }
+
+                const displayData = getDisplayData();
+                if (rowIdx < displayData.length) {
+                    const target = displayData[rowIdx];
+                    const realIdx = allData.findIndex(d => d._id === target._id);
+                    if (realIdx !== -1) {
+                        allData[realIdx][field] = newVal;
+
+                        if (field === 'kodeKegiatan') {
+                            const parsed = parseKodeKegiatan(newVal);
+                            allData[realIdx]['standar'] = parsed.standar;
+                            allData[realIdx]['komponen'] = parsed.komponen;
+                        }
+
+                        allData[realIdx] = autoCalcRow(allData[realIdx]);
+                        markUnsaved();
+                        renderTable();
+                    } else {
+                        renderTable();
+                    }
+                } else {
+                    renderTable();
+                }
+            };
+
+            input.addEventListener('blur', saveEdit);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') { e.preventDefault();
+                    input.blur(); }
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    const displayData = getDisplayData();
+                    if (rowIdx < displayData.length) {
+                        const target = displayData[rowIdx];
+                        const realIdx = allData.findIndex(d => d._id === target._id);
+                        if (realIdx !== -1) {
+                            allData[realIdx][field] = currentVal;
+                        }
+                    }
+                    renderTable();
+                }
+            });
+
+            if (col.type === 'select') {
+                input.addEventListener('change', () => setTimeout(() => input.blur(), 50));
+            }
+
+            cell.dataset.prevValue = currentVal;
+        }
+
+        // ─────────────────────────────────────────────
+        // 18. Add row
+        // ─────────────────────────────────────────────
+        function addRow() {
+            const newRow = createEmptyRow();
+            newRow._id = '_temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            allData.push(newRow);
+            markUnsaved();
+            renderTable();
+            setTimeout(() => {
+                const lastRow = tableBody.querySelector('tr:last-child');
+                if (lastRow) lastRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        // ─────────────────────────────────────────────
+        // 19. Delete row
+        // ─────────────────────────────────────────────
+        function deleteRow(id, rowIdx) {
+            const displayData = getDisplayData();
+            if (rowIdx >= displayData.length) return;
+            const item = displayData[rowIdx];
+            if (!item) return;
+
+            if (!confirm(`Hapus baris No. ${rowIdx + 1}?`)) return;
+
+            const realIdx = allData.findIndex(d => d._id === item._id);
+            if (realIdx !== -1) {
+                if (item._id && !item._id.startsWith('_temp_')) {
+                    db.collection(COLLECTION).doc(item._id).delete()
+                        .then(() => showToast('Data berhasil dihapus.', 'success'))
+                        .catch(err => showToast('Gagal hapus: ' + err.message, 'error'));
+                }
+                allData.splice(realIdx, 1);
+                markUnsaved();
+                renderTable();
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // 20. Save / unsaved state
+        // ─────────────────────────────────────────────
+        function markUnsaved() {
+            hasUnsavedChanges = true;
+            updateSaveButton();
+        }
+
+        function markSaved() {
+            hasUnsavedChanges = false;
+            updateSaveButton();
+        }
+
+        function updateSaveButton() {
+            if (hasUnsavedChanges) {
+                saveBtn.className = 'btn-save unsaved';
+                saveBtn.textContent = '⚠️ Simpan';
+                saveBtn.disabled = false;
+            } else {
+                saveBtn.className = 'btn-save saved';
+                saveBtn.textContent = '✓ Tersimpan';
+                saveBtn.disabled = true;
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // 21. Save all to Firestore
+        // ─────────────────────────────────────────────
+        async function saveAll() {
+            if (!hasUnsavedChanges) return;
+
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Menyimpan...';
+
+            try {
+                const promises = [];
+                let savedCount = 0;
+
+                for (const item of allData) {
+                    if (item.jenjang !== sessionJenjang || item.tahun !== sessionTahun) continue;
+
+                    const hasData = COLUMN_KEYS.some(key => {
+                        const val = item[key];
+                        return val !== '' && val !== null && val !== undefined;
+                    });
+                    if (!hasData && !item._id) continue;
+
+                    const dataToSave = {};
+                    COLUMN_KEYS.forEach(key => {
+                        dataToSave[key] = item[key] !== undefined ? item[key] : '';
+                    });
+                    // Simpan juga debetKredit dan jenisBerisi
+                    dataToSave.debetKredit = item.debetKredit || 'Kredit';
+                    dataToSave.jenisBerisi = item.jenisBerisi || 'Tunai';
+                    dataToSave.jenjang = sessionJenjang;
+                    dataToSave.tahun = sessionTahun;
+                    dataToSave.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+
+                    if (item._id && !item._id.startsWith('_temp_')) {
+                        promises.push(db.collection(COLLECTION).doc(item._id).update(dataToSave));
+                        savedCount++;
+                    } else {
+                        dataToSave.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        const docRef = db.collection(COLLECTION).doc();
+                        dataToSave._id = docRef.id;
+                        promises.push(docRef.set(dataToSave));
+                        item._id = docRef.id;
+                        savedCount++;
+                    }
+                }
+
+                await Promise.all(promises);
+                showToast(`✅ ${savedCount} data berhasil disimpan!`, 'success');
+                markSaved();
+                loadData();
+            } catch (error) {
+                console.error('Save error:', error);
+                showToast('❌ Gagal menyimpan: ' + error.message, 'error');
+                saveBtn.disabled = false;
+                updateSaveButton();
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // 22. Load data from Firestore
+        // ─────────────────────────────────────────────
+        function loadData() {
+            db.collection(COLLECTION)
+                .orderBy('createdAt', 'desc')
+                .onSnapshot((snapshot) => {
+                    const loaded = [];
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        data._id = doc.id;
+                        // Pastikan field baru ada
+                        if (data.debetKredit === undefined) data.debetKredit = 'Kredit';
+                        if (data.jenisBerisi === undefined) data.jenisBerisi = 'Tunai';
+                        if (data.jenisPajak === undefined) data.jenisPajak = 'PPN';
+                        COLUMN_KEYS.forEach(key => {
+                            if (data[key] === undefined) data[key] = '';
+                        });
+                        if (!data.jenjang) data.jenjang = '';
+                        if (!data.tahun) data.tahun = '';
+                        loaded.push(data);
+                    });
+
+                    const tempRows = allData.filter(d => d._id && d._id.startsWith('_temp_') &&
+                        d.jenjang === sessionJenjang && d.tahun === sessionTahun);
+                    allData = [...loaded, ...tempRows];
+                    markSaved();
+                    renderTable();
+                    loadSettings();
+                }, (error) => {
+                    console.error('Firestore read error:', error);
+                    showToast('Gagal memuat data: ' + error.message, 'error');
+                });
+        }
+
+        // ─────────────────────────────────────────────
+        // 23. Load settings (per jenjang & tahun) + NPSN + tanggal pemasukan
         // ─────────────────────────────────────────────
         function loadSettings() {
             const docId = `${sessionJenjang}_${sessionTahun}`;
@@ -1780,1106 +1975,170 @@
                         settingsData = doc.data();
                     } else {
                         settingsData = {
+                            npsn: '',
                             kepalaSekolah: '',
                             bendahara: '',
                             anggaran1: 0,
                             anggaran2: 0,
-                            npsn: '',
-                            namaSekolah: '',
                             tanggalPemasukan1: '',
                             tanggalPemasukan2: ''
                         };
                     }
-                    const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
-                    const npsn = settingsData.npsn || '-';
-                    const kepala = settingsData.kepalaSekolah || '-';
-                    const bendahara = settingsData.bendahara || '-';
-
-                    // Kas
-                    metaNpsn.textContent = npsn;
-                    metaSekolah.textContent = namaSekolah;
-                    signKepsek.textContent = kepala;
-                    signBendahara.textContent = bendahara;
-
-                    // Tunai
-                    metaNpsnTunai.textContent = npsn;
-                    metaSekolahTunai.textContent = namaSekolah;
-                    signKepsekTunai.textContent = kepala;
-                    signBendaharaTunai.textContent = bendahara;
-
-                    // Bank
-                    metaNpsnBank.textContent = npsn;
-                    metaSekolahBank.textContent = namaSekolah;
-                    signKepsekBank.textContent = kepala;
-                    signBendaharaBank.textContent = bendahara;
-
-                    // Pajak
-                    metaNpsnPajak.textContent = npsn;
-                    metaSekolahPajak.textContent = namaSekolah;
-                    signKepsekPajak.textContent = kepala;
-                    signBendaharaPajak.textContent = bendahara;
+                    modalNpsn.value = settingsData.npsn || '';
+                    modalKepalaSekolah.value = settingsData.kepalaSekolah || '';
+                    modalBendahara.value = settingsData.bendahara || '';
+                    modalAnggaran1.value = settingsData.anggaran1 || 0;
+                    modalAnggaran2.value = settingsData.anggaran2 || 0;
+                    modalTanggalPemasukan1.value = settingsData.tanggalPemasukan1 || '';
+                    modalTanggalPemasukan2.value = settingsData.tanggalPemasukan2 || '';
+                    updateSummary();
                 }, (error) => {
                     console.error('Settings read error:', error);
                 });
         }
 
         // ─────────────────────────────────────────────
-        // 9. Fungsi bantu untuk ambil transaksi dari Firestore
+        // 24. Update count
         // ─────────────────────────────────────────────
-        async function fetchTransaksi() {
-            const snapshot = await db.collection(COLLECTION)
-                .where('jenjang', '==', sessionJenjang)
-                .where('tahun', '==', sessionTahun)
-                .get();
-            const transaksi = [];
-            snapshot.forEach(doc => {
-                const d = doc.data();
-                d._id = doc.id;
-                // Pastikan field baru ada
-                if (d.debetKredit === undefined) d.debetKredit = 'Kredit';
-                if (d.jenisBerisi === undefined) d.jenisBerisi = 'Tunai';
-                if (d.jenisPajak === undefined) d.jenisPajak = 'PPN';
-                transaksi.push(d);
-            });
-            return transaksi;
+        function updateCount() {
+            const data = getDisplayData();
+            recordCount.textContent = data.length + ' data';
         }
 
         // ─────────────────────────────────────────────
-        // 10. Hitung saldo kumulatif untuk Buku Kas (semua) & Bank/Tunai (dengan filter)
+        // 25. Update Summary
         // ─────────────────────────────────────────────
-        function buildSaldoTransaksi(transaksiRaw, bulan, tahun, jenisFilter = null) {
-            const prev = getPreviousMonth(bulan, tahun);
-            const bulanLaluNama = getMonthName(prev.month);
+        function updateSummary() {
+            const data = getDisplayData();
 
-            // Filter transaksi berdasarkan jenis (jika ada)
-            let filtered = transaksiRaw;
-            if (jenisFilter) {
-                filtered = transaksiRaw.filter(item => item.jenisBerisi === jenisFilter);
-            }
-
-            // Hitung saldo awal bulan lalu untuk jenis yang difilter
-            let saldoAkhirBulanLalu = 0;
-            filtered.forEach(item => {
-                const tgl = item.tglPembayaran;
-                if (tgl) {
-                    let dateParts = null;
-                    if (tgl.includes('-')) dateParts = tgl.split('-');
-                    else if (tgl.includes('/')) dateParts = tgl.split('/');
-                    if (dateParts && dateParts.length === 3) {
-                        let year, month;
-                        if (dateParts[0].length === 4) { year = dateParts[0];
-                            month = dateParts[1]; } else { year = dateParts[2];
-                            month = dateParts[1]; }
-                        month = month.padStart(2, '0');
-                        if ((parseInt(month) < parseInt(prev.month) && parseInt(year) <= parseInt(prev.year)) ||
-                            (parseInt(month) === parseInt(prev.month) && parseInt(year) === parseInt(prev.year))) {
-                            // Kurangi saldo jika Kredit, tambah jika Debet
-                            const jumlah = parseFloat(item.jumlahHarga) || 0;
-                            if (item.debetKredit === 'Debet') {
-                                saldoAkhirBulanLalu += jumlah;
-                            } else {
-                                saldoAkhirBulanLalu -= jumlah;
-                            }
-                        }
-                    }
-                }
+            let total1 = 0,
+                total2 = 0;
+            data.forEach(item => {
+                const jml = parseFloat(item.jumlahHarga) || 0;
+                if (item.tahap === 'Tahap 1') total1 += jml;
+                else if (item.tahap === 'Tahap 2') total2 += jml;
             });
 
-            // Tambahkan pemasukan anggaran hanya untuk Buku Kas (tanpa filter) atau jika jenisFilter null
-            const tgl1 = settingsData.tanggalPemasukan1 || '';
-            const tgl2 = settingsData.tanggalPemasukan2 || '';
             const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
             const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
 
-            function addAnggaran(tgl, jumlah) {
-                if (!tgl || jumlah <= 0) return;
-                let dateParts = null;
-                if (tgl.includes('-')) dateParts = tgl.split('-');
-                else if (tgl.includes('/')) dateParts = tgl.split('/');
-                if (dateParts && dateParts.length === 3) {
-                    let year, month;
-                    if (dateParts[0].length === 4) { year = dateParts[0];
-                        month = dateParts[1]; } else { year = dateParts[2];
-                        month = dateParts[1]; }
-                    month = month.padStart(2, '0');
-                    if (parseInt(month) <= parseInt(prev.month) && parseInt(year) <= parseInt(prev.year)) {
-                        saldoAkhirBulanLalu += jumlah;
-                    }
-                }
-            }
-            // Hanya tambahkan anggaran jika tidak ada filter jenis (Buku Kas)
-            if (!jenisFilter) {
-                addAnggaran(tgl1, anggaran1);
-                addAnggaran(tgl2, anggaran2);
-            }
+            const belum1 = Math.max(0, anggaran1 - total1);
+            const belum2 = Math.max(0, anggaran2 - total2);
+            const totalAnggaran = anggaran1 + anggaran2;
 
-            const result = [];
-            // Baris saldo awal
-            result.push({
-                tanggal: '',
-                kodeKegiatan: '',
-                kodeRekening: '',
-                noBukti: '',
-                uraian: `Saldo Awal (${bulanLaluNama})`,
-                penerimaan: 0,
-                pengeluaran: 0,
-                saldo: saldoAkhirBulanLalu,
-                isSaldoAwal: true,
-                jenis: 'saldo_awal'
-            });
-
-            // Transaksi bulan ini
-            filtered.forEach(item => {
-                const tgl = item.tglPembayaran;
-                if (tgl) {
-                    let dateParts = null;
-                    if (tgl.includes('-')) dateParts = tgl.split('-');
-                    else if (tgl.includes('/')) dateParts = tgl.split('/');
-                    if (dateParts && dateParts.length === 3) {
-                        let year, month;
-                        if (dateParts[0].length === 4) { year = dateParts[0];
-                            month = dateParts[1]; } else { year = dateParts[2];
-                            month = dateParts[1]; }
-                        month = month.padStart(2, '0');
-                        if (month === bulan && year === tahun) {
-                            const jumlah = parseFloat(item.jumlahHarga) || 0;
-                            let penerimaan = 0,
-                                pengeluaran = 0;
-                            if (item.debetKredit === 'Debet') {
-                                penerimaan = jumlah;
-                            } else {
-                                pengeluaran = jumlah;
-                            }
-                            result.push({
-                                tanggal: tgl,
-                                kodeKegiatan: item.kodeKegiatan || '',
-                                kodeRekening: item.noRek || '',
-                                noBukti: item.noBukti || '',
-                                uraian: item.uraian || '',
-                                penerimaan: penerimaan,
-                                pengeluaran: pengeluaran,
-                                saldo: 0,
-                                isSaldoAwal: false,
-                                jenis: 'transaksi'
-                            });
-                        }
-                    }
-                }
-            });
-
-            // Tambahkan pemasukan anggaran (hanya untuk Buku Kas)
-            if (!jenisFilter) {
-                function addPemasukan(tgl, jumlah, keterangan) {
-                    if (!tgl || jumlah <= 0) return;
-                    let dateParts = null;
-                    if (tgl.includes('-')) dateParts = tgl.split('-');
-                    else if (tgl.includes('/')) dateParts = tgl.split('/');
-                    if (dateParts && dateParts.length === 3) {
-                        let year, month;
-                        if (dateParts[0].length === 4) { year = dateParts[0];
-                            month = dateParts[1]; } else { year = dateParts[2];
-                            month = dateParts[1]; }
-                        month = month.padStart(2, '0');
-                        if (month === bulan && year === tahun) {
-                            result.push({
-                                tanggal: tgl,
-                                kodeKegiatan: '',
-                                kodeRekening: '',
-                                noBukti: '',
-                                uraian: keterangan,
-                                penerimaan: jumlah,
-                                pengeluaran: 0,
-                                saldo: 0,
-                                isSaldoAwal: false,
-                                jenis: 'pemasukan'
-                            });
-                        }
-                    }
-                }
-                addPemasukan(settingsData.tanggalPemasukan1 || '', parseFloat(settingsData.anggaran1) || 0,
-                    'Penerimaan Anggaran Tahap 1');
-                addPemasukan(settingsData.tanggalPemasukan2 || '', parseFloat(settingsData.anggaran2) || 0,
-                    'Penerimaan Anggaran Tahap 2');
-            }
-
-            // Urutkan berdasarkan tanggal
-            result.sort((a, b) => {
-                if (a.isSaldoAwal && !b.isSaldoAwal) return -1;
-                if (!a.isSaldoAwal && b.isSaldoAwal) return 1;
-                return a.tanggal.localeCompare(b.tanggal);
-            });
-
-            // Hitung saldo kumulatif
-            let saldoKumulatif = saldoAkhirBulanLalu;
-            result.forEach(item => {
-                if (item.isSaldoAwal) {
-                    item.saldo = saldoKumulatif;
-                } else {
-                    saldoKumulatif += (item.penerimaan || 0) - (item.pengeluaran || 0);
-                    item.saldo = saldoKumulatif;
-                }
-            });
-
-            // Tambahkan baris penutup (opsional)
-            return result;
+            sumAnggaran1.textContent = formatRupiah(anggaran1);
+            sumAnggaran2.textContent = formatRupiah(anggaran2);
+            sumTeranggarkan1.textContent = formatRupiah(total1);
+            sumTeranggarkan2.textContent = formatRupiah(total2);
+            sumBelum1.textContent = formatRupiah(belum1);
+            sumBelum2.textContent = formatRupiah(belum2);
+            sumTotal.textContent = formatRupiah(totalAnggaran);
         }
 
         // ─────────────────────────────────────────────
-        // 11. Load Buku Kas (semua transaksi)
+        // 26. Filter
         // ─────────────────────────────────────────────
-        async function loadKasData() {
-            const bulan = bulanSelect.value;
-            const tahun = tahunSelect.value;
-            displayBulan.textContent = getMonthName(bulan);
-            displayTahun.textContent = tahun;
-
-            const raw = await fetchTransaksi();
-            const transaksi = buildSaldoTransaksi(raw, bulan, tahun, null); // tanpa filter
-            allKasData = transaksi;
-            renderKasTable(transaksi);
-            updateClosingKas(transaksi);
-        }
-
-        function renderKasTable(data) {
-            if (data.length === 0) {
-                kasTableBody.innerHTML =
-                    `<tr><td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada data untuk bulan ini.</td></tr>`;
-                return;
-            }
-            let html = '';
-            data.forEach((item) => {
-                const tgl = item.tanggal || '';
-                const kode = item.kodeKegiatan || '';
-                const rek = item.kodeRekening || '';
-                const bukti = item.noBukti || '';
-                const uraian = item.uraian || '';
-                const penerimaan = item.penerimaan || 0;
-                const pengeluaran = item.pengeluaran || 0;
-                const saldo = item.saldo || 0;
-
-                let displayKode = kode,
-                    displayRek = rek,
-                    displayBukti = bukti;
-                if (item.jenis === 'pemasukan' || item.isSaldoAwal) {
-                    displayKode = '';
-                    displayRek = '';
-                    displayBukti = '';
-                }
-                const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
-                const tanggalFormatted = formatDateToDDMMYY(tgl);
-                html += `
-                        <tr style="${isBold ? 'font-weight:600;' : ''}">
-                            <td>${tanggalFormatted}</td>
-                            <td>${displayKode}</td>
-                            <td>${displayRek}</td>
-                            <td>${displayBukti}</td>
-                            <td class="left">${uraian}</td>
-                            <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
-                            <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
-                            <td class="right">${formatRupiah(saldo)}</td>
-                        </tr>
-                    `;
-            });
-            kasTableBody.innerHTML = html;
-        }
-
-        function updateClosingKas(data) {
-            const bulan = parseInt(bulanSelect.value);
-            const tahun = parseInt(tahunSelect.value);
-            const lastDay = new Date(tahun, bulan, 0);
-            const dayName = getDayName(lastDay);
-
-            closingHari.textContent = dayName;
-            closingTanggal.textContent = lastDay.getDate();
-            closingBulan.textContent = getMonthName(String(bulan));
-            closingTahun.textContent = tahun;
-
-            let saldoAkhir = 0;
-            if (data.length > 0) saldoAkhir = data[data.length - 1].saldo || 0;
-            // Untuk sementara, saldo Bank dan Tunai tidak dipisah di sini
-            saldoBank.textContent = formatRupiah(saldoAkhir);
-            saldoTunai.textContent = formatRupiah(0);
-            saldoTotal.textContent = formatRupiah(saldoAkhir);
-
-            const signDate = new Date(tahun, bulan, 0);
-            signTanggal.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-        }
-
-        // ─────────────────────────────────────────────
-        // 12. Load Buku Tunai (filter jenisBerisi === 'Tunai')
-        // ─────────────────────────────────────────────
-        async function loadTunaiData() {
-            const bulan = bulanSelectTunai.value;
-            const tahun = tahunSelectTunai.value;
-            displayBulanTunai.textContent = getMonthName(bulan);
-            displayTahunTunai.textContent = tahun;
-
-            const raw = await fetchTransaksi();
-            const transaksi = buildSaldoTransaksi(raw, bulan, tahun, 'Tunai');
-            allTunaiData = transaksi;
-            renderTunaiTable(transaksi);
-            updateClosingTunai(transaksi);
-        }
-
-        function renderTunaiTable(data) {
-            if (data.length === 0) {
-                tunaiTableBody.innerHTML =
-                    `<tr><td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada data untuk bulan ini.</td></tr>`;
-                return;
-            }
-            let html = '';
-            data.forEach((item) => {
-                const tgl = item.tanggal || '';
-                const kode = item.kodeKegiatan || '';
-                const rek = item.kodeRekening || '';
-                const bukti = item.noBukti || '';
-                const uraian = item.uraian || '';
-                const penerimaan = item.penerimaan || 0;
-                const pengeluaran = item.pengeluaran || 0;
-                const saldo = item.saldo || 0;
-                const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
-                const tanggalFormatted = formatDateToDDMMYY(tgl);
-                html += `
-                        <tr style="${isBold ? 'font-weight:600;' : ''}">
-                            <td>${tanggalFormatted}</td>
-                            <td>${kode}</td>
-                            <td>${rek}</td>
-                            <td>${bukti}</td>
-                            <td class="left">${uraian}</td>
-                            <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
-                            <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
-                            <td class="right">${formatRupiah(saldo)}</td>
-                        </tr>
-                    `;
-            });
-            tunaiTableBody.innerHTML = html;
-        }
-
-        function updateClosingTunai(data) {
-            const bulan = parseInt(bulanSelectTunai.value);
-            const tahun = parseInt(tahunSelectTunai.value);
-            const lastDay = new Date(tahun, bulan, 0);
-            const dayName = getDayName(lastDay);
-
-            closingHariTunai.textContent = dayName;
-            closingTanggalTunai.textContent = lastDay.getDate();
-            closingBulanTunai.textContent = getMonthName(String(bulan));
-            closingTahunTunai.textContent = tahun;
-
-            let saldoAkhir = 0;
-            if (data.length > 0) saldoAkhir = data[data.length - 1].saldo || 0;
-            saldoTunaiFinal.textContent = formatRupiah(saldoAkhir);
-
-            const signDate = new Date(tahun, bulan, 0);
-            signTanggalTunai.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-        }
-
-        // ─────────────────────────────────────────────
-        // 13. Load Buku Bank (filter jenisBerisi === 'Bank')
-        // ─────────────────────────────────────────────
-        async function loadBankData() {
-            const bulan = bulanSelectBank.value;
-            const tahun = tahunSelectBank.value;
-            displayBulanBank.textContent = getMonthName(bulan);
-            displayTahunBank.textContent = tahun;
-
-            const raw = await fetchTransaksi();
-            const transaksi = buildSaldoTransaksi(raw, bulan, tahun, 'Bank');
-            allBankData = transaksi;
-            renderBankTable(transaksi);
-            updateClosingBank(transaksi);
-        }
-
-        function renderBankTable(data) {
-            if (data.length === 0) {
-                bankTableBody.innerHTML =
-                    `<tr><td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada data untuk bulan ini.</td></tr>`;
-                return;
-            }
-            let html = '';
-            data.forEach((item) => {
-                const tgl = item.tanggal || '';
-                const kode = item.kodeKegiatan || '';
-                const rek = item.kodeRekening || '';
-                const bukti = item.noBukti || '';
-                const uraian = item.uraian || '';
-                const penerimaan = item.penerimaan || 0;
-                const pengeluaran = item.pengeluaran || 0;
-                const saldo = item.saldo || 0;
-                const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
-                const tanggalFormatted = formatDateToDDMMYY(tgl);
-                html += `
-                        <tr style="${isBold ? 'font-weight:600;' : ''}">
-                            <td>${tanggalFormatted}</td>
-                            <td>${kode}</td>
-                            <td>${rek}</td>
-                            <td>${bukti}</td>
-                            <td class="left">${uraian}</td>
-                            <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
-                            <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
-                            <td class="right">${formatRupiah(saldo)}</td>
-                        </tr>
-                    `;
-            });
-            bankTableBody.innerHTML = html;
-        }
-
-        function updateClosingBank(data) {
-            const bulan = parseInt(bulanSelectBank.value);
-            const tahun = parseInt(tahunSelectBank.value);
-            const lastDay = new Date(tahun, bulan, 0);
-            const dayName = getDayName(lastDay);
-
-            closingHariBank.textContent = dayName;
-            closingTanggalBank.textContent = lastDay.getDate();
-            closingBulanBank.textContent = getMonthName(String(bulan));
-            closingTahunBank.textContent = tahun;
-
-            let saldoAkhir = 0;
-            if (data.length > 0) saldoAkhir = data[data.length - 1].saldo || 0;
-            saldoBankFinal.textContent = formatRupiah(saldoAkhir);
-
-            const signDate = new Date(tahun, bulan, 0);
-            signTanggalBank.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-        }
-
-        // ─────────────────────────────────────────────
-        // 14. Load Buku Pajak (filter jenisBerisi === 'Pajak')
-        // ─────────────────────────────────────────────
-        async function loadPajakData() {
-            const bulan = bulanSelectPajak.value;
-            const tahun = tahunSelectPajak.value;
-            displayBulanPajak.textContent = getMonthName(bulan);
-            displayTahunPajak.textContent = tahun;
-
-            const raw = await fetchTransaksi();
-            // Filter transaksi dengan jenisBerisi === 'Pajak' dan bulan/tahun sesuai
-            const pajakRows = [];
-            let saldoKumulatif = 0;
-
-            raw.forEach(item => {
-                const tgl = item.tglPembayaran;
-                if (!tgl) return;
-                let dateParts = null;
-                if (tgl.includes('-')) dateParts = tgl.split('-');
-                else if (tgl.includes('/')) dateParts = tgl.split('/');
-                if (!dateParts || dateParts.length !== 3) return;
-                let year, month;
-                if (dateParts[0].length === 4) { year = dateParts[0];
-                    month = dateParts[1]; } else { year = dateParts[2];
-                    month = dateParts[1]; }
-                month = month.padStart(2, '0');
-                if (month !== bulan || year !== tahun) return;
-                if (item.jenisBerisi !== 'Pajak') return;
-
-                const jumlah = parseFloat(item.jumlahHarga) || 0;
-                const jenisPajak = item.jenisPajak || 'PPN';
-                const persen = parseFloat(item.persenPajak) || 0;
-                const pajak = parseFloat(item.jmlPajak) || (jumlah * (persen / 100));
-
-                // Tentukan kolom mana yang diisi
-                let ppn = 0,
-                    pph21 = 0,
-                    pph23 = 0,
-                    pph4 = 0,
-                    sspd = 0;
-                if (jenisPajak === 'PPN') ppn = pajak;
-                else if (jenisPajak === 'PPh 21') pph21 = pajak;
-                else if (jenisPajak === 'PPh 23') pph23 = pajak;
-                else if (jenisPajak === 'PPh 4') pph4 = pajak;
-                else if (jenisPajak === 'SSPD') sspd = pajak;
-
-                // Pengeluaran / kredit = jumlah (karena ini adalah pengeluaran)
-                const pengeluaran = jumlah;
-                saldoKumulatif += pengeluaran;
-
-                pajakRows.push({
-                    tanggal: tgl,
-                    kode: item.kodeKegiatan || '',
-                    uraian: item.uraian || '',
-                    ppn,
-                    pph21,
-                    pph23,
-                    pph4,
-                    sspd,
-                    pengeluaran,
-                    saldo: saldoKumulatif
-                });
-            });
-
-            allPajakData = pajakRows;
-            renderPajakTable(pajakRows);
-            updateClosingPajak(pajakRows);
-        }
-
-        function renderPajakTable(data) {
-            if (data.length === 0) {
-                pajakTableBody.innerHTML =
-                    `<tr><td colspan="10" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada transaksi pajak untuk bulan ini.</td></tr>`;
-                return;
-            }
-            let html = '';
-            data.forEach((item) => {
-                const tanggalFormatted = formatDateToDDMMYY(item.tanggal);
-                html += `
-                        <tr>
-                            <td>${tanggalFormatted}</td>
-                            <td>${item.kode}</td>
-                            <td class="left">${item.uraian}</td>
-                            <td class="right">${formatRupiah(item.ppn)}</td>
-                            <td class="right">${formatRupiah(item.pph21)}</td>
-                            <td class="right">${formatRupiah(item.pph23)}</td>
-                            <td class="right">${formatRupiah(item.pph4)}</td>
-                            <td class="right">${formatRupiah(item.sspd)}</td>
-                            <td class="right">${formatRupiah(item.pengeluaran)}</td>
-                            <td class="right">${formatRupiah(item.saldo)}</td>
-                        </tr>
-                    `;
-            });
-            pajakTableBody.innerHTML = html;
-        }
-
-        function updateClosingPajak(data) {
-            const bulan = parseInt(bulanSelectPajak.value);
-            const tahun = parseInt(tahunSelectPajak.value);
-            const signDate = new Date(tahun, bulan, 0);
-            signTanggalPajak.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-        }
-
-        // ─────────────────────────────────────────────
-        // 15. Tabs
-        // ─────────────────────────────────────────────
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-                const target = document.getElementById('tab-' + this.dataset.tab);
-                if (target) target.classList.add('active');
-
-                if (this.dataset.tab === 'buku-tunai') loadTunaiData();
-                if (this.dataset.tab === 'buku-bank') loadBankData();
-                if (this.dataset.tab === 'buku-pajak') loadPajakData();
-            });
+        filterInput.addEventListener('input', () => {
+            filterText = filterInput.value;
+            renderTable();
         });
 
         // ─────────────────────────────────────────────
-        // 16. Build A4 preview untuk masing-masing tab
+        // 27. Sort handlers
         // ─────────────────────────────────────────────
-        function buildA4PreviewKas() {
-            const bulan = bulanSelect.value;
-            const tahun = tahunSelect.value;
-            const bulanNama = getMonthName(bulan);
-            let tableRows = '';
-            if (allKasData.length === 0) {
-                tableRows =
-                    `<tr><td colspan="8" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada data.</td></tr>`;
-            } else {
-                allKasData.forEach(item => {
-                    const tgl = formatDateToDDMMYY(item.tanggal);
-                    const penerimaan = item.penerimaan || 0;
-                    const pengeluaran = item.pengeluaran || 0;
-                    const saldo = item.saldo || 0;
-                    const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
-                    const kode = (item.jenis === 'pemasukan' || item.isSaldoAwal) ? '' : item.kodeKegiatan || '';
-                    const rek = (item.jenis === 'pemasukan' || item.isSaldoAwal) ? '' : item.kodeRekening || '';
-                    const bukti = (item.jenis === 'pemasukan' || item.isSaldoAwal) ? '' : item.noBukti || '';
-                    tableRows += `
-                            <tr style="${isBold ? 'font-weight:600;' : ''}">
-                                <td>${tgl}</td>
-                                <td>${kode}</td>
-                                <td>${rek}</td>
-                                <td>${bukti}</td>
-                                <td class="left">${item.uraian || ''}</td>
-                                <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
-                                <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
-                                <td class="right">${formatRupiah(saldo)}</td>
-                            </tr>
-                        `;
-                });
-            }
-
-            const npsn = settingsData.npsn || '-';
-            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
-            const kepalaSekolah = settingsData.kepalaSekolah || '-';
-            const bendahara = settingsData.bendahara || '-';
-            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
-            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-
-            let saldoAkhir = 0;
-            if (allKasData.length > 0) saldoAkhir = allKasData[allKasData.length - 1].saldo || 0;
-
-            return `
-                    <div class="book-header">
-                        <h2>BUKU KAS UMUM</h2>
-                        <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
-                    </div>
-                    <div class="book-meta">
-                        <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
-                        <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
-                        <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                        <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                        <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                        <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="book-table">
-                            <thead>
-                                <tr>
-                                    <th style="width:80px;">TANGGAL</th>
-                                    <th style="width:100px;">KODE KEGIATAN</th>
-                                    <th style="width:100px;">KODE REKENING</th>
-                                    <th style="width:100px;">NO. BUKTI</th>
-                                    <th style="width:200px;">URAIAN</th>
-                                    <th style="width:120px;">PENERIMAAN</th>
-                                    <th style="width:120px;">PENGELUARAN</th>
-                                    <th style="width:120px;">SALDO</th>
-                                </tr>
-                            </thead>
-                            <tbody>${tableRows}</tbody>
-                        </table>
-                    </div>
-                    <div class="closing-statement">
-                        <div style="font-size:13px;margin-bottom:8px;">
-                            Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut:
-                        </div>
-                        <div class="closing-grid">
-                            <div class="item"><span>Saldo Bank</span> <span>${formatRupiah(saldoAkhir)}</span></div>
-                            <div class="item"><span>Saldo Tunai</span> <span>Rp 0</span></div>
-                            <div class="item total"><span>Jumlah</span> <span>${formatRupiah(saldoAkhir)}</span></div>
-                        </div>
-                        <div class="signature">
-                            <div class="sign-grid">
-                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
-                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
-                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-        }
-
-        function buildA4PreviewTunai() {
-            const bulan = bulanSelectTunai.value;
-            const tahun = tahunSelectTunai.value;
-            const bulanNama = getMonthName(bulan);
-            let tableRows = '';
-            if (allTunaiData.length === 0) {
-                tableRows =
-                    `<tr><td colspan="8" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada data.</td></tr>`;
-            } else {
-                allTunaiData.forEach(item => {
-                    const tgl = formatDateToDDMMYY(item.tanggal);
-                    const penerimaan = item.penerimaan || 0;
-                    const pengeluaran = item.pengeluaran || 0;
-                    const saldo = item.saldo || 0;
-                    const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
-                    tableRows += `
-                            <tr style="${isBold ? 'font-weight:600;' : ''}">
-                                <td>${tgl}</td>
-                                <td>${item.kodeKegiatan || ''}</td>
-                                <td>${item.kodeRekening || ''}</td>
-                                <td>${item.noBukti || ''}</td>
-                                <td class="left">${item.uraian || ''}</td>
-                                <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
-                                <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
-                                <td class="right">${formatRupiah(saldo)}</td>
-                            </tr>
-                        `;
-                });
-            }
-
-            const npsn = settingsData.npsn || '-';
-            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
-            const kepalaSekolah = settingsData.kepalaSekolah || '-';
-            const bendahara = settingsData.bendahara || '-';
-            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
-            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-
-            let saldoAkhir = 0;
-            if (allTunaiData.length > 0) saldoAkhir = allTunaiData[allTunaiData.length - 1].saldo || 0;
-
-            return `
-                    <div class="book-header">
-                        <h2>BUKU KAS PEMBANTU TUNAI</h2>
-                        <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
-                    </div>
-                    <div class="book-meta">
-                        <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
-                        <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
-                        <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                        <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                        <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                        <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="book-table">
-                            <thead>
-                                <tr>
-                                    <th style="width:80px;">TANGGAL</th>
-                                    <th style="width:100px;">KODE KEGIATAN</th>
-                                    <th style="width:100px;">KODE REKENING</th>
-                                    <th style="width:100px;">NO. BUKTI</th>
-                                    <th style="width:200px;">URAIAN</th>
-                                    <th style="width:120px;">PENERIMAAN</th>
-                                    <th style="width:120px;">PENGELUARAN</th>
-                                    <th style="width:120px;">SALDO</th>
-                                </tr>
-                            </thead>
-                            <tbody>${tableRows}</tbody>
-                        </table>
-                    </div>
-                    <div class="closing-statement">
-                        <div style="font-size:13px;margin-bottom:8px;">
-                            Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Kas Tunai ditutup dengan keadaan/posisi buku sebagai berikut:
-                        </div>
-                        <div class="closing-grid">
-                            <div class="item"><span>Saldo Buku Kas Tunai</span> <span>${formatRupiah(saldoAkhir)}</span></div>
-                        </div>
-                        <div class="signature">
-                            <div class="sign-grid">
-                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
-                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
-                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-        }
-
-        function buildA4PreviewBank() {
-            const bulan = bulanSelectBank.value;
-            const tahun = tahunSelectBank.value;
-            const bulanNama = getMonthName(bulan);
-            let tableRows = '';
-            if (allBankData.length === 0) {
-                tableRows =
-                    `<tr><td colspan="8" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada data.</td></tr>`;
-            } else {
-                allBankData.forEach(item => {
-                    const tgl = formatDateToDDMMYY(item.tanggal);
-                    const penerimaan = item.penerimaan || 0;
-                    const pengeluaran = item.pengeluaran || 0;
-                    const saldo = item.saldo || 0;
-                    const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
-                    tableRows += `
-                            <tr style="${isBold ? 'font-weight:600;' : ''}">
-                                <td>${tgl}</td>
-                                <td>${item.kodeKegiatan || ''}</td>
-                                <td>${item.kodeRekening || ''}</td>
-                                <td>${item.noBukti || ''}</td>
-                                <td class="left">${item.uraian || ''}</td>
-                                <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
-                                <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
-                                <td class="right">${formatRupiah(saldo)}</td>
-                            </tr>
-                        `;
-                });
-            }
-
-            const npsn = settingsData.npsn || '-';
-            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
-            const kepalaSekolah = settingsData.kepalaSekolah || '-';
-            const bendahara = settingsData.bendahara || '-';
-            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
-            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-
-            let saldoAkhir = 0;
-            if (allBankData.length > 0) saldoAkhir = allBankData[allBankData.length - 1].saldo || 0;
-
-            return `
-                    <div class="book-header">
-                        <h2>BUKU BANK</h2>
-                        <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
-                    </div>
-                    <div class="book-meta">
-                        <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
-                        <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
-                        <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                        <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                        <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                        <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="book-table">
-                            <thead>
-                                <tr>
-                                    <th style="width:80px;">TANGGAL</th>
-                                    <th style="width:100px;">KODE KEGIATAN</th>
-                                    <th style="width:100px;">KODE REKENING</th>
-                                    <th style="width:100px;">NO. BUKTI</th>
-                                    <th style="width:200px;">URAIAN</th>
-                                    <th style="width:120px;">PENERIMAAN</th>
-                                    <th style="width:120px;">PENGELUARAN</th>
-                                    <th style="width:120px;">SALDO</th>
-                                </tr>
-                            </thead>
-                            <tbody>${tableRows}</tbody>
-                        </table>
-                    </div>
-                    <div class="closing-statement">
-                        <div style="font-size:13px;margin-bottom:8px;">
-                            Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Bank ditutup dengan keadaan/posisi buku sebagai berikut:
-                        </div>
-                        <div class="closing-grid">
-                            <div class="item"><span>Saldo Bank</span> <span>${formatRupiah(saldoAkhir)}</span></div>
-                        </div>
-                        <div class="signature">
-                            <div class="sign-grid">
-                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
-                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
-                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-        }
-
-        function buildA4PreviewPajak() {
-            const bulan = bulanSelectPajak.value;
-            const tahun = tahunSelectPajak.value;
-            const bulanNama = getMonthName(bulan);
-
-            let tableRows = '';
-            if (allPajakData.length === 0) {
-                tableRows =
-                    `<tr><td colspan="10" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada transaksi pajak.</td></tr>`;
-            } else {
-                allPajakData.forEach(item => {
-                    const tgl = formatDateToDDMMYY(item.tanggal);
-                    tableRows += `
-                            <tr>
-                                <td>${tgl}</td>
-                                <td>${item.kode}</td>
-                                <td class="left">${item.uraian}</td>
-                                <td class="right">${formatRupiah(item.ppn)}</td>
-                                <td class="right">${formatRupiah(item.pph21)}</td>
-                                <td class="right">${formatRupiah(item.pph23)}</td>
-                                <td class="right">${formatRupiah(item.pph4)}</td>
-                                <td class="right">${formatRupiah(item.sspd)}</td>
-                                <td class="right">${formatRupiah(item.pengeluaran)}</td>
-                                <td class="right">${formatRupiah(item.saldo)}</td>
-                            </tr>
-                        `;
-                });
-            }
-
-            const npsn = settingsData.npsn || '-';
-            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
-            const kepalaSekolah = settingsData.kepalaSekolah || '-';
-            const bendahara = settingsData.bendahara || '-';
-            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
-            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-
-            return `
-                    <div class="book-header">
-                        <h2>BUKU PEMBANTU PAJAK</h2>
-                        <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
-                    </div>
-                    <div class="book-meta">
-                        <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
-                        <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
-                        <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                        <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                        <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                        <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="book-table">
-                            <thead>
-                                <tr>
-                                    <th style="width:80px;">TANGGAL</th>
-                                    <th style="width:100px;">NO.KODE</th>
-                                    <th style="width:200px;">URAIAN</th>
-                                    <th style="width:100px;">PPN</th>
-                                    <th style="width:100px;">PPh 21</th>
-                                    <th style="width:100px;">PPh 23</th>
-                                    <th style="width:100px;">PPh 4</th>
-                                    <th style="width:100px;">SSPD</th>
-                                    <th style="width:150px;">PENGELUARAN / KREDIT</th>
-                                    <th style="width:150px;">SALDO</th>
-                                </tr>
-                            </thead>
-                            <tbody>${tableRows}</tbody>
-                        </table>
-                    </div>
-                    <div class="signature">
-                        <div class="sign-grid">
-                            <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
-                            <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                            <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                            <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
-                            <div class="sign-name sign-name-bendahara">${bendahara}</div>
-                        </div>
-                    </div>
-                `;
-        }
-
-        // ─────────────────────────────────────────────
-        // 17. Show print preview
-        // ─────────────────────────────────────────────
-        function showPrintPreview(type) {
-            a4PreviewContent.innerHTML = '';
-            let content = '';
-            if (type === 'kas') content = buildA4PreviewKas();
-            else if (type === 'tunai') content = buildA4PreviewTunai();
-            else if (type === 'bank') content = buildA4PreviewBank();
-            else if (type === 'pajak') content = buildA4PreviewPajak();
-            else return;
-            a4PreviewContent.innerHTML = content;
-            printPreviewOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            setTimeout(() => initPreviewResizers(), 100);
-        }
-
-        function closePrintPreview() {
-            printPreviewOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        // ─────────────────────────────────────────────
-        // 18. Resize kolom preview
-        // ─────────────────────────────────────────────
-        let previewColumnWidths = {};
-
-        function loadPreviewColumnWidths() {
-            try {
-                const saved = localStorage.getItem('bosnbs_preview_col_widths');
-                if (saved) previewColumnWidths = JSON.parse(saved);
-                else previewColumnWidths = {};
-            } catch (e) { previewColumnWidths = {}; }
-        }
-
-        function savePreviewColumnWidths() {
-            try {
-                localStorage.setItem('bosnbs_preview_col_widths', JSON.stringify(previewColumnWidths));
-            } catch (e) { /* ignore */ }
-        }
-
-        function initPreviewResizers() {
-            const table = document.querySelector('#a4PreviewContent table.book-table');
-            if (!table) return;
-            const headers = table.querySelectorAll('thead th');
+        function setupSortHandlers() {
+            const headers = headerRow.querySelectorAll('th[data-sort]');
             headers.forEach(th => {
-                const colKey = th.textContent.trim();
-                const oldResizer = th.querySelector('.col-resizer');
-                if (oldResizer) oldResizer.remove();
-                const resizer = document.createElement('span');
-                resizer.className = 'col-resizer';
-                resizer.dataset.col = colKey;
-                th.style.position = 'relative';
-                th.appendChild(resizer);
-                if (previewColumnWidths[colKey]) {
-                    th.style.width = previewColumnWidths[colKey] + 'px';
-                    th.style.minWidth = previewColumnWidths[colKey] + 'px';
-                }
-                resizer.addEventListener('mousedown', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const startX = e.clientX;
-                    const startWidth = th.offsetWidth;
-                    document.body.classList.add('dragging-active');
-                    const onMouseMove = (ev) => {
-                        const diff = ev.clientX - startX;
-                        const newWidth = Math.max(40, startWidth + diff);
-                        th.style.width = newWidth + 'px';
-                        th.style.minWidth = newWidth + 'px';
-                        previewColumnWidths[colKey] = newWidth;
-                        savePreviewColumnWidths();
-                    };
-                    const onMouseUp = () => {
-                        document.body.classList.remove('dragging-active');
-                        document.removeEventListener('mousemove', onMouseMove);
-                        document.removeEventListener('mouseup', onMouseUp);
-                    };
-                    document.addEventListener('mousemove', onMouseMove);
-                    document.addEventListener('mouseup', onMouseUp);
-                });
+                th.removeEventListener('click', handleSortClick);
+                th.addEventListener('click', handleSortClick);
             });
         }
 
-        // ─────────────────────────────────────────────
-        // 19. Print / PDF
-        // ─────────────────────────────────────────────
-        function doPrint() {
-            const toolbar = document.querySelector('.print-preview-toolbar');
-            if (toolbar) toolbar.style.display = 'none';
-            const overlay = printPreviewOverlay;
-            overlay.style.background = '#fff';
-            overlay.style.backdropFilter = 'none';
-            window.print();
-            setTimeout(() => {
-                if (toolbar) toolbar.style.display = 'flex';
-                overlay.style.background = '';
-                overlay.style.backdropFilter = '';
-            }, 500);
+        function handleSortClick(e) {
+            const th = e.currentTarget;
+            const key = th.dataset.sort;
+            if (!key) return;
+
+            if (sortKey === key) {
+                sortAsc = !sortAsc;
+            } else {
+                sortKey = key;
+                sortAsc = true;
+            }
+
+            renderTable();
         }
 
         // ─────────────────────────────────────────────
-        // 20. Event listeners
+        // 28. Event listeners
         // ─────────────────────────────────────────────
-        loadDataBtn.addEventListener('click', loadKasData);
-        loadDataBtnTunai.addEventListener('click', loadTunaiData);
-        loadDataBtnBank.addEventListener('click', loadBankData);
-        loadDataBtnPajak.addEventListener('click', loadPajakData);
+        addRowBtn.addEventListener('click', addRow);
+        saveBtn.addEventListener('click', saveAll);
 
-        printBtnKas.addEventListener('click', () => {
-            if (allKasData.length === 0) {
-                showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
-                return;
-            }
-            loadPreviewColumnWidths();
-            showPrintPreview('kas');
+        settingsBtn.addEventListener('click', () => settingsModal.classList.add('active'));
+        modalCancelBtn.addEventListener('click', () => settingsModal.classList.remove('active'));
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) settingsModal.classList.remove('active');
         });
 
-        printBtnTunai.addEventListener('click', () => {
-            if (allTunaiData.length === 0) {
-                showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
-                return;
-            }
-            loadPreviewColumnWidths();
-            showPrintPreview('tunai');
-        });
+        modalSaveBtn.addEventListener('click', async () => {
+            const npsn = modalNpsn.value.trim();
+            const kepalaSekolah = modalKepalaSekolah.value.trim();
+            const bendahara = modalBendahara.value.trim();
+            const anggaran1 = parseFloat(modalAnggaran1.value) || 0;
+            const anggaran2 = parseFloat(modalAnggaran2.value) || 0;
+            const tanggalPemasukan1 = modalTanggalPemasukan1.value || '';
+            const tanggalPemasukan2 = modalTanggalPemasukan2.value || '';
 
-        printBtnBank.addEventListener('click', () => {
-            if (allBankData.length === 0) {
-                showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
-                return;
-            }
-            loadPreviewColumnWidths();
-            showPrintPreview('bank');
-        });
-
-        printBtnPajak.addEventListener('click', () => {
-            if (allPajakData.length === 0) {
-                showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
-                return;
-            }
-            loadPreviewColumnWidths();
-            showPrintPreview('pajak');
-        });
-
-        closePreviewBtn.addEventListener('click', closePrintPreview);
-        printPreviewOverlay.addEventListener('click', (e) => {
-            if (e.target === printPreviewOverlay) closePrintPreview();
-        });
-        confirmPrintBtn.addEventListener('click', doPrint);
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && printPreviewOverlay.classList.contains('active')) {
-                closePrintPreview();
+            const docId = `${sessionJenjang}_${sessionTahun}`;
+            try {
+                await db.collection(SETTINGS_COLLECTION).doc(docId).set({
+                    npsn,
+                    kepalaSekolah,
+                    bendahara,
+                    anggaran1,
+                    anggaran2,
+                    tanggalPemasukan1,
+                    tanggalPemasukan2,
+                    jenjang: sessionJenjang,
+                    tahun: sessionTahun,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+                showToast('Pengaturan berhasil disimpan!', 'success');
+                settingsModal.classList.remove('active');
+                loadSettings();
+            } catch (error) {
+                showToast('Gagal menyimpan: ' + error.message, 'error');
             }
         });
 
-        document.getElementById('backBtn').addEventListener('click', () => {
-            window.location.href = 'database.html';
+        // Menu dropdown sederhana
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuWrapper.classList.toggle('active');
         });
+        document.addEventListener('click', () => menuWrapper.classList.remove('active'));
+        menuDropdown.querySelectorAll('a').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const menu = item.dataset.menu;
+                if (menu === 'buku') {
+                    window.location.href = 'buku.html';
+                } else if (menu === 'kwitansi') {
+                    showToast('🧾 Halaman Kwitansi (coming soon)', 'info');
+                }
+                menuWrapper.classList.remove('active');
+            });
+        });
+
+        // Dropdown kolom
+        colMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            colMenuWrapper.classList.toggle('active');
+        });
+        document.addEventListener('click', () => colMenuWrapper.classList.remove('active'));
+
+        // Logout
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('bosnbs_jenjang');
             localStorage.removeItem('bosnbs_tahun');
@@ -2887,25 +2146,31 @@
         });
 
         // ─────────────────────────────────────────────
-        // 21. Init
+        // 29. Init
         // ─────────────────────────────────────────────
-        loadSettings();
-        const now = new Date();
-        const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
-        bulanSelect.value = currentMonth;
-        bulanSelectTunai.value = currentMonth;
-        bulanSelectBank.value = currentMonth;
-        bulanSelectPajak.value = currentMonth;
+        document.querySelectorAll('thead th[data-sort]').forEach(th => {
+            const icon = document.createElement('span');
+            icon.className = 'sort-icon';
+            icon.textContent = '↕';
+            th.appendChild(icon);
+        });
+
+        loadColumnWidths();
+        loadHiddenColumns();
 
         setTimeout(() => {
-            loadKasData();
-            loadTunaiData();
-            loadBankData();
-            loadPajakData();
-        }, 500);
+            initResizers();
+            applyColumnWidths();
+            setupSortHandlers();
+            updateColMenu();
+            applyHiddenColumns();
+        }, 50);
 
-        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank, Pajak) siap dengan filter jenis');
+        loadData();
+
+        console.log('📋 BOS-NBS · Database siap (dengan Debet/Kredit, Jenis Berisi, Jenis Pajak dropdown)');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
+        console.log('ℹ️  Klik "Buku" untuk menuju halaman buku.');
     </script>
 
 </body>
