@@ -1845,9 +1845,9 @@
         }
 
         // ─────────────────────────────────────────────
-        // 10. Hitung saldo kumulatif untuk Buku Kas (semua) & Bank/Tunai (dengan filter)
+        // 10. Hitung saldo kumulatif untuk Buku Kas & Bank (dengan anggaran)
         // ─────────────────────────────────────────────
-        function buildSaldoTransaksi(transaksiRaw, bulan, tahun, jenisFilter = null) {
+        function buildSaldoTransaksi(transaksiRaw, bulan, tahun, jenisFilter = null, includeAnggaran = false) {
             const prev = getPreviousMonth(bulan, tahun);
             const bulanLaluNama = getMonthName(prev.month);
 
@@ -1873,7 +1873,6 @@
                         month = month.padStart(2, '0');
                         if ((parseInt(month) < parseInt(prev.month) && parseInt(year) <= parseInt(prev.year)) ||
                             (parseInt(month) === parseInt(prev.month) && parseInt(year) === parseInt(prev.year))) {
-                            // Kurangi saldo jika Kredit, tambah jika Debet
                             const jumlah = parseFloat(item.jumlahHarga) || 0;
                             if (item.debetKredit === 'Debet') {
                                 saldoAkhirBulanLalu += jumlah;
@@ -1885,32 +1884,32 @@
                 }
             });
 
-            // Tambahkan pemasukan anggaran hanya untuk Buku Kas (tanpa filter) atau jika jenisFilter null
-            const tgl1 = settingsData.tanggalPemasukan1 || '';
-            const tgl2 = settingsData.tanggalPemasukan2 || '';
-            const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
-            const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
+            // Tambahkan pemasukan anggaran jika diizinkan dan (Kas atau Bank)
+            if (includeAnggaran && (jenisFilter === null || jenisFilter === 'Bank')) {
+                const tgl1 = settingsData.tanggalPemasukan1 || '';
+                const tgl2 = settingsData.tanggalPemasukan2 || '';
+                const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
+                const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
 
-            function addAnggaran(tgl, jumlah) {
-                if (!tgl || jumlah <= 0) return;
-                let dateParts = null;
-                if (tgl.includes('-')) dateParts = tgl.split('-');
-                else if (tgl.includes('/')) dateParts = tgl.split('/');
-                if (dateParts && dateParts.length === 3) {
-                    let year, month;
-                    if (dateParts[0].length === 4) { year = dateParts[0];
-                        month = dateParts[1]; } else { year = dateParts[2];
-                        month = dateParts[1]; }
-                    month = month.padStart(2, '0');
-                    if (parseInt(month) <= parseInt(prev.month) && parseInt(year) <= parseInt(prev.year)) {
-                        saldoAkhirBulanLalu += jumlah;
+                const addAnggaran = (tgl, jumlah, keterangan) => {
+                    if (!tgl || jumlah <= 0) return;
+                    let dateParts = null;
+                    if (tgl.includes('-')) dateParts = tgl.split('-');
+                    else if (tgl.includes('/')) dateParts = tgl.split('/');
+                    if (dateParts && dateParts.length === 3) {
+                        let year, month;
+                        if (dateParts[0].length === 4) { year = dateParts[0];
+                            month = dateParts[1]; } else { year = dateParts[2];
+                            month = dateParts[1]; }
+                        month = month.padStart(2, '0');
+                        // Tambahkan saldo awal jika tanggal anggaran <= bulan lalu
+                        if (parseInt(month) <= parseInt(prev.month) && parseInt(year) <= parseInt(prev.year)) {
+                            saldoAkhirBulanLalu += jumlah;
+                        }
                     }
-                }
-            }
-            // Hanya tambahkan anggaran jika tidak ada filter jenis (Buku Kas)
-            if (!jenisFilter) {
-                addAnggaran(tgl1, anggaran1);
-                addAnggaran(tgl2, anggaran2);
+                };
+                addAnggaran(tgl1, anggaran1, 'Anggaran Tahap 1');
+                addAnggaran(tgl2, anggaran2, 'Anggaran Tahap 2');
             }
 
             const result = [];
@@ -1967,9 +1966,9 @@
                 }
             });
 
-            // Tambahkan pemasukan anggaran (hanya untuk Buku Kas)
-            if (!jenisFilter) {
-                function addPemasukan(tgl, jumlah, keterangan) {
+            // Tambahkan pemasukan anggaran (hanya untuk Kas / Bank)
+            if (includeAnggaran && (jenisFilter === null || jenisFilter === 'Bank')) {
+                const addPemasukanAnggaran = (tgl, jumlah, keterangan) => {
                     if (!tgl || jumlah <= 0) return;
                     let dateParts = null;
                     if (tgl.includes('-')) dateParts = tgl.split('-');
@@ -1995,10 +1994,10 @@
                             });
                         }
                     }
-                }
-                addPemasukan(settingsData.tanggalPemasukan1 || '', parseFloat(settingsData.anggaran1) || 0,
+                };
+                addPemasukanAnggaran(settingsData.tanggalPemasukan1 || '', parseFloat(settingsData.anggaran1) || 0,
                     'Penerimaan Anggaran Tahap 1');
-                addPemasukan(settingsData.tanggalPemasukan2 || '', parseFloat(settingsData.anggaran2) || 0,
+                addPemasukanAnggaran(settingsData.tanggalPemasukan2 || '', parseFloat(settingsData.anggaran2) || 0,
                     'Penerimaan Anggaran Tahap 2');
             }
 
@@ -2020,12 +2019,11 @@
                 }
             });
 
-            // Tambahkan baris penutup (opsional)
             return result;
         }
 
         // ─────────────────────────────────────────────
-        // 11. Load Buku Kas (semua transaksi)
+        // 11. Load Buku Kas (semua transaksi + anggaran)
         // ─────────────────────────────────────────────
         async function loadKasData() {
             const bulan = bulanSelect.value;
@@ -2034,7 +2032,7 @@
             displayTahun.textContent = tahun;
 
             const raw = await fetchTransaksi();
-            const transaksi = buildSaldoTransaksi(raw, bulan, tahun, null); // tanpa filter
+            const transaksi = buildSaldoTransaksi(raw, bulan, tahun, null, true); // include anggaran
             allKasData = transaksi;
             renderKasTable(transaksi);
             updateClosingKas(transaksi);
@@ -2096,7 +2094,6 @@
 
             let saldoAkhir = 0;
             if (data.length > 0) saldoAkhir = data[data.length - 1].saldo || 0;
-            // Untuk sementara, saldo Bank dan Tunai tidak dipisah di sini
             saldoBank.textContent = formatRupiah(saldoAkhir);
             saldoTunai.textContent = formatRupiah(0);
             saldoTotal.textContent = formatRupiah(saldoAkhir);
@@ -2106,7 +2103,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 12. Load Buku Tunai (filter jenisBerisi === 'Tunai')
+        // 12. Load Buku Tunai (filter jenisBerisi === 'Tunai', tanpa anggaran)
         // ─────────────────────────────────────────────
         async function loadTunaiData() {
             const bulan = bulanSelectTunai.value;
@@ -2115,7 +2112,7 @@
             displayTahunTunai.textContent = tahun;
 
             const raw = await fetchTransaksi();
-            const transaksi = buildSaldoTransaksi(raw, bulan, tahun, 'Tunai');
+            const transaksi = buildSaldoTransaksi(raw, bulan, tahun, 'Tunai', false);
             allTunaiData = transaksi;
             renderTunaiTable(transaksi);
             updateClosingTunai(transaksi);
@@ -2175,7 +2172,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 13. Load Buku Bank (filter jenisBerisi === 'Bank')
+        // 13. Load Buku Bank (filter jenisBerisi === 'Bank' + anggaran)
         // ─────────────────────────────────────────────
         async function loadBankData() {
             const bulan = bulanSelectBank.value;
@@ -2184,7 +2181,7 @@
             displayTahunBank.textContent = tahun;
 
             const raw = await fetchTransaksi();
-            const transaksi = buildSaldoTransaksi(raw, bulan, tahun, 'Bank');
+            const transaksi = buildSaldoTransaksi(raw, bulan, tahun, 'Bank', true);
             allBankData = transaksi;
             renderBankTable(transaksi);
             updateClosingBank(transaksi);
@@ -2253,7 +2250,6 @@
             displayTahunPajak.textContent = tahun;
 
             const raw = await fetchTransaksi();
-            // Filter transaksi dengan jenisBerisi === 'Pajak' dan bulan/tahun sesuai
             const pajakRows = [];
             let saldoKumulatif = 0;
 
@@ -2277,7 +2273,6 @@
                 const persen = parseFloat(item.persenPajak) || 0;
                 const pajak = parseFloat(item.jmlPajak) || (jumlah * (persen / 100));
 
-                // Tentukan kolom mana yang diisi
                 let ppn = 0,
                     pph21 = 0,
                     pph23 = 0,
@@ -2289,7 +2284,6 @@
                 else if (jenisPajak === 'PPh 4') pph4 = pajak;
                 else if (jenisPajak === 'SSPD') sspd = pajak;
 
-                // Pengeluaran / kredit = jumlah (karena ini adalah pengeluaran)
                 const pengeluaran = jumlah;
                 saldoKumulatif += pengeluaran;
 
@@ -2904,9 +2898,9 @@
             loadPajakData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank, Pajak) siap dengan filter jenis');
+        console.log('📋 BOS-NBS · Buku Kas & Bank sekarang menyertakan pemasukan anggaran dari pengaturan.');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
 </body>
-</html>
+</html>                                                                                                                                                                    
