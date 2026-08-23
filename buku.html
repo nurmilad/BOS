@@ -2241,7 +2241,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 14. Load Buku Pajak (filter jenisBerisi === 'Pajak')
+        // 14. Load Buku Pajak (filter jenisBerisi === 'Pajak') - DIPERBAIKI
         // ─────────────────────────────────────────────
         async function loadPajakData() {
             const bulan = bulanSelectPajak.value;
@@ -2253,6 +2253,7 @@
             const pajakRows = [];
             let saldoKumulatif = 0;
 
+            // Filter transaksi dengan jenisBerisi === 'Pajak' dan bulan/tahun sesuai
             raw.forEach(item => {
                 const tgl = item.tglPembayaran;
                 if (!tgl) return;
@@ -2270,22 +2271,42 @@
 
                 const jumlah = parseFloat(item.jumlahHarga) || 0;
                 const jenisPajak = item.jenisPajak || 'PPN';
-                const persen = parseFloat(item.persenPajak) || 0;
-                const pajak = parseFloat(item.jmlPajak) || (jumlah * (persen / 100));
+                const debetKredit = item.debetKredit || 'Kredit';
 
+                // Inisialisasi kolom
                 let ppn = 0,
                     pph21 = 0,
                     pph23 = 0,
                     pph4 = 0,
                     sspd = 0;
-                if (jenisPajak === 'PPN') ppn = pajak;
-                else if (jenisPajak === 'PPh 21') pph21 = pajak;
-                else if (jenisPajak === 'PPh 23') pph23 = pajak;
-                else if (jenisPajak === 'PPh 4') pph4 = pajak;
-                else if (jenisPajak === 'SSPD') sspd = pajak;
+                let pengeluaranKredit = 0;
 
-                const pengeluaran = jumlah;
-                saldoKumulatif += pengeluaran;
+                if (debetKredit === 'Debet') {
+                    // Pemasukan pajak → masukkan ke kolom jenis pajak yang sesuai
+                    const pajakMap = {
+                        'PPN': 'ppn',
+                        'PPh 21': 'pph21',
+                        'PPh 23': 'pph23',
+                        'PPh 4': 'pph4',
+                        'SSPD': 'sspd'
+                    };
+                    const field = pajakMap[jenisPajak];
+                    if (field) {
+                        if (field === 'ppn') ppn = jumlah;
+                        else if (field === 'pph21') pph21 = jumlah;
+                        else if (field === 'pph23') pph23 = jumlah;
+                        else if (field === 'pph4') pph4 = jumlah;
+                        else if (field === 'sspd') sspd = jumlah;
+                    }
+                    // pengeluaranKredit tetap 0
+                } else {
+                    // Pengeluaran pajak (Kredit) → masukkan ke kolom Pengeluaran/Kredit
+                    pengeluaranKredit = jumlah;
+                    // kolom pajak spesifik tetap 0
+                }
+
+                // Saldo diakumulasi dari pengeluaran (kredit)
+                saldoKumulatif += pengeluaranKredit;
 
                 pajakRows.push({
                     tanggal: tgl,
@@ -2296,7 +2317,7 @@
                     pph23,
                     pph4,
                     sspd,
-                    pengeluaran,
+                    pengeluaran: pengeluaranKredit,
                     saldo: saldoKumulatif
                 });
             });
@@ -2898,9 +2919,9 @@
             loadPajakData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Buku Kas & Bank sekarang menyertakan pemasukan anggaran dari pengaturan.');
+        console.log('📋 BOS-NBS · Buku Pajak diperbaiki: pemasukan (Debet) masuk ke kolom jenis pajak, pengeluaran (Kredit) masuk ke Pengeluaran/Kredit.');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
 </body>
-</html>                                                                                                                                                                    
+</html>
