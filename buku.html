@@ -405,7 +405,7 @@
             font-weight: 600;
         }
 
-        /* ── Signature baru ── */
+        /* ── Signature ── dengan jarak 4x enter antara label dan nama ── */
         .signature {
             display: flex;
             justify-content: space-between;
@@ -426,7 +426,7 @@
         .signature .sign-block .name {
             font-weight: 600;
             font-size: 14px;
-            margin-top: 8px;
+            margin-top: 56px; /* 4x enter (sekitar 4 baris) */
             padding-top: 4px;
             border-top: 1px solid #0a2e5c;
             display: inline-block;
@@ -715,7 +715,7 @@
             #a4PreviewContent .closing-statement .closing-grid .item.total span:last-child {
                 font-weight: 700 !important;
             }
-            /* Signature print */
+            /* Signature print - jarak 4x enter (≈32pt) */
             #a4PreviewContent .signature {
                 margin: 16pt 0 0 0 !important;
                 padding: 10pt 0 0 0 !important;
@@ -740,7 +740,7 @@
             #a4PreviewContent .signature .sign-block .name {
                 font-weight: 700 !important;
                 font-size: 10pt !important;
-                margin: 6pt 0 0 0 !important;
+                margin: 32pt 0 0 0 !important; /* 4x enter */
                 padding: 3pt 0 0 0 !important;
                 border-top: 1px solid #000 !important;
                 display: inline-block !important;
@@ -1007,7 +1007,7 @@
         .print-preview-body .a4-page .signature .sign-block .name {
             font-weight: 700 !important;
             font-size: 10pt !important;
-            margin-top: 6pt !important;
+            margin-top: 32pt !important; /* 4x enter */
             padding-top: 3pt !important;
             border-top: 1px solid #000 !important;
             display: inline-block !important;
@@ -1191,7 +1191,7 @@
                     <div class="item total"><span>Jumlah</span> <span id="saldoTotal">Rp 0</span></div>
                 </div>
 
-                <!-- ── Tanda tangan baru ── -->
+                <!-- ── Tanda tangan dengan jarak 4x enter ── -->
                 <div class="signature">
                     <div class="sign-block">
                         <div class="label">Kepala Sekolah</div>
@@ -2597,7 +2597,7 @@
             loadBankData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank) siap dengan layout baru');
+        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank) siap dengan jarak 4x enter pada tanda tangan');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
