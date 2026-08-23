@@ -2013,7 +2013,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 25. Update Summary
+        // 25. Update Summary - Pajak tidak dihitung dalam Teranggarkan
         // ─────────────────────────────────────────────
         function updateSummary() {
             const data = getDisplayData();
@@ -2021,6 +2021,8 @@
             let total1 = 0,
                 total2 = 0;
             data.forEach(item => {
+                // Abaikan transaksi dengan jenisBuku === 'Pajak'
+                if (item.jenisBerisi === 'Pajak') return;
                 const jml = parseFloat(item.jumlahHarga) || 0;
                 if (item.tahap === 'Tahap 1') total1 += jml;
                 else if (item.tahap === 'Tahap 2') total2 += jml;
@@ -2176,6 +2178,7 @@
         loadData();
 
         console.log('📋 BOS-NBS · Database siap (kolom % Pajak & Jml Pajak disembunyikan, Jenis Pajak terkunci sesuai Jenis Buku)');
+        console.log('ℹ️  Pajak tidak dihitung dalam Teranggarkan Tahap 1/2');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
         console.log('ℹ️  Klik "Buku" untuk menuju halaman buku.');
     </script>
