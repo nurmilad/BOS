@@ -275,6 +275,7 @@
             margin: 0 8px;
         }
 
+        /* ── Book Meta ── rata kiri */
         .book-meta {
             display: grid;
             grid-template-columns: auto 1fr;
@@ -290,10 +291,11 @@
             display: contents;
         }
         .book-meta .meta-label {
-            text-align: right;
+            text-align: left;
             font-weight: 600;
             color: #1f3a5f;
             white-space: nowrap;
+            padding-right: 8px;
         }
         .book-meta .meta-value {
             text-align: left;
@@ -403,6 +405,7 @@
             font-weight: 600;
         }
 
+        /* ── Signature baru ── */
         .signature {
             display: flex;
             justify-content: space-between;
@@ -418,20 +421,20 @@
             font-size: 12px;
             color: #5a7a9a;
             margin-bottom: 4px;
+            display: block;
         }
         .signature .sign-block .name {
             font-weight: 600;
             font-size: 14px;
-            margin-top: 48px;
+            margin-top: 8px;
             padding-top: 4px;
             border-top: 1px solid #0a2e5c;
             display: inline-block;
             min-width: 160px;
         }
-        .signature .sign-block .title {
-            font-size: 12px;
-            color: #5a7a9a;
-            margin-top: 2px;
+        /* Untuk bendahara, label kedua (Bendahara BOS) diletakkan di bawah tempat/tanggal */
+        .signature .sign-block .label + .label {
+            margin-top: 0;
         }
 
         .toast {
@@ -608,10 +611,11 @@
                 display: contents !important;
             }
             #a4PreviewContent .book-meta .meta-label {
-                text-align: right !important;
+                text-align: left !important;
                 font-weight: 600 !important;
                 color: #000 !important;
                 white-space: nowrap !important;
+                padding-right: 6pt !important;
             }
             #a4PreviewContent .book-meta .meta-value {
                 text-align: left !important;
@@ -711,6 +715,7 @@
             #a4PreviewContent .closing-statement .closing-grid .item.total span:last-child {
                 font-weight: 700 !important;
             }
+            /* Signature print */
             #a4PreviewContent .signature {
                 margin: 16pt 0 0 0 !important;
                 padding: 10pt 0 0 0 !important;
@@ -730,21 +735,17 @@
                 font-size: 8pt !important;
                 color: #555 !important;
                 margin: 0 0 2pt 0 !important;
+                display: block !important;
             }
             #a4PreviewContent .signature .sign-block .name {
                 font-weight: 700 !important;
                 font-size: 10pt !important;
-                margin: 28pt 0 0 0 !important;
+                margin: 6pt 0 0 0 !important;
                 padding: 3pt 0 0 0 !important;
                 border-top: 1px solid #000 !important;
                 display: inline-block !important;
                 min-width: 120pt !important;
                 color: #000 !important;
-            }
-            #a4PreviewContent .signature .sign-block .title {
-                font-size: 8pt !important;
-                color: #555 !important;
-                margin: 1pt 0 0 0 !important;
             }
             #a4PreviewContent * {
                 margin-top: 0 !important;
@@ -759,12 +760,8 @@
             #a4PreviewContent .col-resizer {
                 display: none !important;
             }
-            #tab-buku-kas {
-                display: none !important;
-            }
-            #tab-buku-tunai {
-                display: none !important;
-            }
+            #tab-buku-kas,
+            #tab-buku-tunai,
             #tab-buku-bank {
                 display: none !important;
             }
@@ -910,10 +907,11 @@
             display: contents !important;
         }
         .print-preview-body .a4-page .book-meta .meta-label {
-            text-align: right !important;
+            text-align: left !important;
             font-weight: 600 !important;
             color: #000 !important;
             white-space: nowrap !important;
+            padding-right: 6pt !important;
         }
         .print-preview-body .a4-page .book-meta .meta-value {
             text-align: left !important;
@@ -1004,21 +1002,17 @@
             font-size: 8pt !important;
             color: #555 !important;
             margin-bottom: 2pt !important;
+            display: block !important;
         }
         .print-preview-body .a4-page .signature .sign-block .name {
             font-weight: 700 !important;
             font-size: 10pt !important;
-            margin-top: 28pt !important;
+            margin-top: 6pt !important;
             padding-top: 3pt !important;
             border-top: 1px solid #000 !important;
             display: inline-block !important;
             min-width: 120pt !important;
             color: #000 !important;
-        }
-        .print-preview-body .a4-page .signature .sign-block .title {
-            font-size: 8pt !important;
-            color: #555 !important;
-            margin-top: 1pt !important;
         }
         .print-preview-body .a4-page * {
             margin-top: 0 !important;
@@ -1197,18 +1191,16 @@
                     <div class="item total"><span>Jumlah</span> <span id="saldoTotal">Rp 0</span></div>
                 </div>
 
+                <!-- ── Tanda tangan baru ── -->
                 <div class="signature">
                     <div class="sign-block">
-                        <div class="label">Menyetujui,</div>
-                        <div class="label" style="margin-top:4px;">Kec. Bola, <span id="signTanggal">-</span></div>
+                        <div class="label">Kepala Sekolah</div>
                         <div class="name" id="signKepsek">-</div>
-                        <div class="title">Kepala Sekolah</div>
                     </div>
                     <div class="sign-block">
-                        <div class="label">&nbsp;</div>
-                        <div class="label" style="margin-top:4px;">&nbsp;</div>
+                        <div class="label">Kec. Bola, <span id="signTanggal">-</span></div>
+                        <div class="label">Bendahara BOS</div>
                         <div class="name" id="signBendahara">-</div>
-                        <div class="title">Bendahara BOS</div>
                     </div>
                 </div>
             </div>
@@ -1289,16 +1281,13 @@
 
                 <div class="signature">
                     <div class="sign-block">
-                        <div class="label">Menyetujui,</div>
-                        <div class="label" style="margin-top:4px;">Kec. Bola, <span id="signTanggalTunai">-</span></div>
+                        <div class="label">Kepala Sekolah</div>
                         <div class="name" id="signKepsekTunai">-</div>
-                        <div class="title">Kepala Sekolah</div>
                     </div>
                     <div class="sign-block">
-                        <div class="label">&nbsp;</div>
-                        <div class="label" style="margin-top:4px;">&nbsp;</div>
+                        <div class="label">Kec. Bola, <span id="signTanggalTunai">-</span></div>
+                        <div class="label">Bendahara BOS</div>
                         <div class="name" id="signBendaharaTunai">-</div>
-                        <div class="title">Bendahara BOS</div>
                     </div>
                 </div>
             </div>
@@ -1379,16 +1368,13 @@
 
                 <div class="signature">
                     <div class="sign-block">
-                        <div class="label">Menyetujui,</div>
-                        <div class="label" style="margin-top:4px;">Kec. Bola, <span id="signTanggalBank">-</span></div>
+                        <div class="label">Kepala Sekolah</div>
                         <div class="name" id="signKepsekBank">-</div>
-                        <div class="title">Kepala Sekolah</div>
                     </div>
                     <div class="sign-block">
-                        <div class="label">&nbsp;</div>
-                        <div class="label" style="margin-top:4px;">&nbsp;</div>
+                        <div class="label">Kec. Bola, <span id="signTanggalBank">-</span></div>
+                        <div class="label">Bendahara BOS</div>
                         <div class="name" id="signBendaharaBank">-</div>
-                        <div class="title">Bendahara BOS</div>
                     </div>
                 </div>
             </div>
@@ -1525,7 +1511,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 6.  Populate tahun (untuk semua filter)
+        // 6.  Populate tahun
         // ─────────────────────────────────────────────
         function populateTahun(selectElement) {
             const currentYear = new Date().getFullYear();
@@ -1605,7 +1591,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 8.  Load settings (update semua meta)
+        // 8.  Load settings
         // ─────────────────────────────────────────────
         function loadSettings() {
             const docId = `${sessionJenjang}_${sessionTahun}`;
@@ -1676,7 +1662,6 @@
             const prev = getPreviousMonth(bulan, tahun);
             const bulanLaluNama = getMonthName(prev.month);
 
-            // Ambil saldo akhir bulan lalu (dari semua transaksi)
             let saldoAkhirBulanLalu = 0;
             transaksiRaw.forEach(item => {
                 const tgl = item.tglPembayaran;
@@ -1697,7 +1682,6 @@
                     }
                 }
             });
-            // Tambahkan pemasukan anggaran jika tanggal <= bulan lalu
             const tgl1 = settingsData.tanggalPemasukan1 || '';
             const tgl2 = settingsData.tanggalPemasukan2 || '';
             const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
@@ -1722,9 +1706,7 @@
             addAnggaran(tgl1, anggaran1);
             addAnggaran(tgl2, anggaran2);
 
-            // Bangun array transaksi untuk bulan yang dipilih
             const result = [];
-            // Saldo awal
             result.push({
                 tanggal: '',
                 kodeKegiatan: '',
@@ -1750,7 +1732,6 @@
                 jenis: 'saldo_awal'
             });
 
-            // Transaksi pengeluaran di bulan ini
             transaksiRaw.forEach(item => {
                 const tgl = item.tglPembayaran;
                 if (tgl) {
@@ -1781,7 +1762,6 @@
                 }
             });
 
-            // Pemasukan anggaran di bulan ini
             function addPemasukan(tgl, jumlah, keterangan) {
                 if (!tgl || jumlah <= 0) return;
                 let dateParts = null;
@@ -1812,14 +1792,12 @@
             addPemasukan(settingsData.tanggalPemasukan1 || '', parseFloat(settingsData.anggaran1) || 0, 'Penerimaan Anggaran Tahap 1');
             addPemasukan(settingsData.tanggalPemasukan2 || '', parseFloat(settingsData.anggaran2) || 0, 'Penerimaan Anggaran Tahap 2');
 
-            // Urutkan
             result.sort((a, b) => {
                 if (a.isSaldoAwal && !b.isSaldoAwal) return -1;
                 if (!a.isSaldoAwal && b.isSaldoAwal) return 1;
                 return a.tanggal.localeCompare(b.tanggal);
             });
 
-            // Hitung saldo kumulatif
             let saldoKumulatif = saldoAkhirBulanLalu;
             result.forEach(item => {
                 if (item.isSaldoAwal) {
@@ -1830,7 +1808,6 @@
                 }
             });
 
-            // Tambahkan Bunga & Pajak Bunga (hanya untuk bank)
             result.push({
                 tanggal: '',
                 kodeKegiatan: '',
@@ -2113,7 +2090,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 15. Build A4 preview untuk masing-masing tab
+        // 15. Build A4 preview untuk masing-masing tab (dengan signature baru)
         // ─────────────────────────────────────────────
         function buildA4PreviewKas() {
             const bulan = bulanSelect.value;
@@ -2219,16 +2196,13 @@
                     </div>
                     <div class="signature">
                         <div class="sign-block">
-                            <div class="label">Menyetujui,</div>
-                            <div class="label" style="margin-top:2pt;">Kec. Bola, ${signDateStr}</div>
+                            <div class="label">Kepala Sekolah</div>
                             <div class="name">${kepalaSekolah}</div>
-                            <div class="title">Kepala Sekolah</div>
                         </div>
                         <div class="sign-block">
-                            <div class="label">&nbsp;</div>
-                            <div class="label" style="margin-top:2pt;">&nbsp;</div>
+                            <div class="label">Kec. Bola, ${signDateStr}</div>
+                            <div class="label">Bendahara BOS</div>
                             <div class="name">${bendahara}</div>
-                            <div class="title">Bendahara BOS</div>
                         </div>
                     </div>
                 </div>
@@ -2328,16 +2302,13 @@
                     </div>
                     <div class="signature">
                         <div class="sign-block">
-                            <div class="label">Menyetujui,</div>
-                            <div class="label" style="margin-top:2pt;">Kec. Bola, ${signDateStr}</div>
+                            <div class="label">Kepala Sekolah</div>
                             <div class="name">${kepalaSekolah}</div>
-                            <div class="title">Kepala Sekolah</div>
                         </div>
                         <div class="sign-block">
-                            <div class="label">&nbsp;</div>
-                            <div class="label" style="margin-top:2pt;">&nbsp;</div>
+                            <div class="label">Kec. Bola, ${signDateStr}</div>
+                            <div class="label">Bendahara BOS</div>
                             <div class="name">${bendahara}</div>
-                            <div class="title">Bendahara BOS</div>
                         </div>
                     </div>
                 </div>
@@ -2446,16 +2417,13 @@
                     </div>
                     <div class="signature">
                         <div class="sign-block">
-                            <div class="label">Menyetujui,</div>
-                            <div class="label" style="margin-top:2pt;">Kec. Bola, ${signDateStr}</div>
+                            <div class="label">Kepala Sekolah</div>
                             <div class="name">${kepalaSekolah}</div>
-                            <div class="title">Kepala Sekolah</div>
                         </div>
                         <div class="sign-block">
-                            <div class="label">&nbsp;</div>
-                            <div class="label" style="margin-top:2pt;">&nbsp;</div>
+                            <div class="label">Kec. Bola, ${signDateStr}</div>
+                            <div class="label">Bendahara BOS</div>
                             <div class="name">${bendahara}</div>
-                            <div class="title">Bendahara BOS</div>
                         </div>
                     </div>
                 </div>
@@ -2629,7 +2597,7 @@
             loadBankData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank) siap');
+        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank) siap dengan layout baru');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
