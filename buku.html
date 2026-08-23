@@ -765,6 +765,9 @@
             #tab-buku-tunai {
                 display: none !important;
             }
+            #tab-buku-bank {
+                display: none !important;
+            }
         }
 
         .print-preview-overlay {
@@ -1107,7 +1110,6 @@
         </div>
         <div class="toolbar-right">
             <button class="btn-icon" id="backBtn">← Kembali</button>
-            <!-- Tombol cetak global dihapus -->
         </div>
     </div>
 
@@ -1303,10 +1305,97 @@
         </div>
     </div>
 
-    <!-- ─── Tab Lainnya (Placeholder) ─── -->
+    <!-- ─── Tab Content: Buku Bank ─── -->
     <div class="tab-content" id="tab-buku-bank">
-        <div style="text-align:center;padding:60px 0;color:#8aa0b8;font-size:16px;">🏦 Buku Bank (Coming Soon)</div>
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelectBank">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelectBank"></select>
+            <button class="btn-primary" id="loadDataBtnBank" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
+            <button class="btn-primary" id="printBtnBank" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
+        </div>
+
+        <div id="bukuBankContent">
+            <div class="book-header">
+                <h2>BUKU BANK</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulanBank">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahunBank">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMetaBank">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnBank">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahBank">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="bankTable">
+                    <thead>
+                        <tr>
+                            <th style="width:80px;">TANGGAL</th>
+                            <th style="width:100px;">KODE KEGIATAN</th>
+                            <th style="width:100px;">KODE REKENING</th>
+                            <th style="width:100px;">NO. BUKTI</th>
+                            <th style="width:200px;">URAIAN</th>
+                            <th style="width:120px;">PENERIMAAN</th>
+                            <th style="width:120px;">PENGELUARAN</th>
+                            <th style="width:120px;">SALDO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bankTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="closing-statement" id="closingStatementBank">
+                <div style="font-size:13px;margin-bottom:8px;">
+                    Pada hari ini <span id="closingHariBank">-</span>, tanggal <span id="closingTanggalBank">-</span> bulan <span id="closingBulanBank">-</span> Tahun <span id="closingTahunBank">-</span>, Buku Bank ditutup dengan keadaan/posisi buku sebagai berikut:
+                </div>
+                <div class="closing-grid">
+                    <div class="item"><span>Saldo Bank</span> <span id="saldoBankFinal">Rp 0</span></div>
+                </div>
+
+                <div class="signature">
+                    <div class="sign-block">
+                        <div class="label">Menyetujui,</div>
+                        <div class="label" style="margin-top:4px;">Kec. Bola, <span id="signTanggalBank">-</span></div>
+                        <div class="name" id="signKepsekBank">-</div>
+                        <div class="title">Kepala Sekolah</div>
+                    </div>
+                    <div class="sign-block">
+                        <div class="label">&nbsp;</div>
+                        <div class="label" style="margin-top:4px;">&nbsp;</div>
+                        <div class="name" id="signBendaharaBank">-</div>
+                        <div class="title">Bendahara BOS</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- ─── Tab Lainnya (Placeholder) ─── -->
     <div class="tab-content" id="tab-buku-pajak">
         <div style="text-align:center;padding:60px 0;color:#8aa0b8;font-size:16px;">📊 Buku Pajak (Coming Soon)</div>
     </div>
@@ -1347,13 +1436,15 @@
         // ─────────────────────────────────────────────
         let settingsData = {};
         let allKasData = [];
-        let allTunaiData = []; // tambahan untuk data tunai
+        let allTunaiData = [];
+        let allBankData = [];
         const COLLECTION = 'data_bos';
         const SETTINGS_COLLECTION = 'settings_bos';
 
         // ─────────────────────────────────────────────
         // 4.  DOM refs
         // ─────────────────────────────────────────────
+        // Buku Kas
         const bulanSelect = document.getElementById('bulanSelect');
         const tahunSelect = document.getElementById('tahunSelect');
         const loadDataBtn = document.getElementById('loadDataBtn');
@@ -1374,6 +1465,7 @@
         const signBendahara = document.getElementById('signBendahara');
         const toast = document.getElementById('toast');
 
+        // Buku Tunai
         const bulanSelectTunai = document.getElementById('bulanSelectTunai');
         const tahunSelectTunai = document.getElementById('tahunSelectTunai');
         const loadDataBtnTunai = document.getElementById('loadDataBtnTunai');
@@ -1391,14 +1483,33 @@
         const signKepsekTunai = document.getElementById('signKepsekTunai');
         const signBendaharaTunai = document.getElementById('signBendaharaTunai');
 
+        // Buku Bank
+        const bulanSelectBank = document.getElementById('bulanSelectBank');
+        const tahunSelectBank = document.getElementById('tahunSelectBank');
+        const loadDataBtnBank = document.getElementById('loadDataBtnBank');
+        const bankTableBody = document.getElementById('bankTableBody');
+        const displayBulanBank = document.getElementById('displayBulanBank');
+        const displayTahunBank = document.getElementById('displayTahunBank');
+        const metaNpsnBank = document.getElementById('metaNpsnBank');
+        const metaSekolahBank = document.getElementById('metaSekolahBank');
+        const closingHariBank = document.getElementById('closingHariBank');
+        const closingTanggalBank = document.getElementById('closingTanggalBank');
+        const closingBulanBank = document.getElementById('closingBulanBank');
+        const closingTahunBank = document.getElementById('closingTahunBank');
+        const saldoBankFinal = document.getElementById('saldoBankFinal');
+        const signTanggalBank = document.getElementById('signTanggalBank');
+        const signKepsekBank = document.getElementById('signKepsekBank');
+        const signBendaharaBank = document.getElementById('signBendaharaBank');
+
+        // Print preview
         const printPreviewOverlay = document.getElementById('printPreviewOverlay');
         const a4PreviewContent = document.getElementById('a4PreviewContent');
         const closePreviewBtn = document.getElementById('closePreviewBtn');
         const confirmPrintBtn = document.getElementById('confirmPrintBtn');
 
-        // Tombol cetak per tab
         const printBtnKas = document.getElementById('printBtnKas');
         const printBtnTunai = document.getElementById('printBtnTunai');
+        const printBtnBank = document.getElementById('printBtnBank');
 
         // ─────────────────────────────────────────────
         // 5.  Toast
@@ -1414,7 +1525,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 6.  Populate tahun
+        // 6.  Populate tahun (untuk semua filter)
         // ─────────────────────────────────────────────
         function populateTahun(selectElement) {
             const currentYear = new Date().getFullYear();
@@ -1434,6 +1545,7 @@
         }
         populateTahun(tahunSelect);
         populateTahun(tahunSelectTunai);
+        populateTahun(tahunSelectBank);
 
         // ─────────────────────────────────────────────
         // 7.  Format number & date
@@ -1493,7 +1605,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 8.  Load settings
+        // 8.  Load settings (update semua meta)
         // ─────────────────────────────────────────────
         function loadSettings() {
             const docId = `${sessionJenjang}_${sessionTahun}`;
@@ -1518,116 +1630,102 @@
                     const kepala = settingsData.kepalaSekolah || '-';
                     const bendahara = settingsData.bendahara || '-';
 
+                    // Kas
                     metaNpsn.textContent = npsn;
                     metaSekolah.textContent = namaSekolah;
                     signKepsek.textContent = kepala;
                     signBendahara.textContent = bendahara;
 
+                    // Tunai
                     metaNpsnTunai.textContent = npsn;
                     metaSekolahTunai.textContent = namaSekolah;
                     signKepsekTunai.textContent = kepala;
                     signBendaharaTunai.textContent = bendahara;
+
+                    // Bank
+                    metaNpsnBank.textContent = npsn;
+                    metaSekolahBank.textContent = namaSekolah;
+                    signKepsekBank.textContent = kepala;
+                    signBendaharaBank.textContent = bendahara;
                 }, (error) => {
                     console.error('Settings read error:', error);
                 });
         }
 
         // ─────────────────────────────────────────────
-        // 9.  Hitung saldo akhir bulan tertentu (untuk kas)
+        // 9.  Fungsi bantu untuk ambil transaksi dari Firestore
         // ─────────────────────────────────────────────
-        async function getSaldoAkhirBulan(bulan, tahun) {
-            try {
-                const snapshot = await db.collection(COLLECTION)
-                    .where('jenjang', '==', sessionJenjang)
-                    .where('tahun', '==', sessionTahun)
-                    .get();
-                let totalSaldo = 0;
-                snapshot.forEach(doc => {
-                    const d = doc.data();
-                    const tgl = d.tglPembayaran;
-                    if (tgl) {
-                        let dateParts = null;
-                        if (tgl.includes('-')) {
-                            dateParts = tgl.split('-');
-                        } else if (tgl.includes('/')) {
-                            dateParts = tgl.split('/');
-                        }
-                        if (dateParts && dateParts.length === 3) {
-                            let year, month;
-                            if (dateParts[0].length === 4) {
-                                year = dateParts[0];
-                                month = dateParts[1];
-                            } else {
-                                year = dateParts[2];
-                                month = dateParts[1];
-                            }
-                            month = month.padStart(2, '0');
-                            if ((parseInt(month) < parseInt(bulan) && parseInt(year) <= parseInt(tahun)) ||
-                                (parseInt(month) === parseInt(bulan) && parseInt(year) === parseInt(tahun))) {
-                                totalSaldo -= parseFloat(d.jumlahHarga) || 0;
-                            }
-                        }
-                    }
-                });
-
-                const tgl1 = settingsData.tanggalPemasukan1 || '';
-                const tgl2 = settingsData.tanggalPemasukan2 || '';
-                const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
-                const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
-
-                function addAnggaran(tgl, jumlah) {
-                    if (!tgl || jumlah <= 0) return;
-                    let dateParts = null;
-                    if (tgl.includes('-')) {
-                        dateParts = tgl.split('-');
-                    } else if (tgl.includes('/')) {
-                        dateParts = tgl.split('/');
-                    }
-                    if (dateParts && dateParts.length === 3) {
-                        let year, month;
-                        if (dateParts[0].length === 4) {
-                            year = dateParts[0];
-                            month = dateParts[1];
-                        } else {
-                            year = dateParts[2];
-                            month = dateParts[1];
-                        }
-                        month = month.padStart(2, '0');
-                        if (parseInt(month) <= parseInt(bulan) && parseInt(year) <= parseInt(tahun)) {
-                            totalSaldo += jumlah;
-                        }
-                    }
-                }
-                addAnggaran(tgl1, anggaran1);
-                addAnggaran(tgl2, anggaran2);
-                return totalSaldo;
-            } catch (error) {
-                console.error('Error getting saldo:', error);
-                return 0;
-            }
-        }
-
-        // ─────────────────────────────────────────────
-        // 10. Load data for Buku Kas
-        // ─────────────────────────────────────────────
-        async function loadKasData() {
-            const bulan = bulanSelect.value;
-            const tahun = tahunSelect.value;
-            displayBulan.textContent = getMonthName(bulan);
-            displayTahun.textContent = tahun;
-
-            const prev = getPreviousMonth(bulan, tahun);
-            const saldoAkhirBulanLalu = await getSaldoAkhirBulan(prev.month, prev.year);
-
+        async function fetchTransaksi() {
             const snapshot = await db.collection(COLLECTION)
                 .where('jenjang', '==', sessionJenjang)
                 .where('tahun', '==', sessionTahun)
                 .get();
-
             const transaksi = [];
+            snapshot.forEach(doc => {
+                const d = doc.data();
+                d._id = doc.id;
+                transaksi.push(d);
+            });
+            return transaksi;
+        }
+
+        // ─────────────────────────────────────────────
+        // 10. Hitung saldo kumulatif untuk Buku Kas & Bank
+        // ─────────────────────────────────────────────
+        function buildSaldoTransaksi(transaksiRaw, bulan, tahun) {
+            const prev = getPreviousMonth(bulan, tahun);
             const bulanLaluNama = getMonthName(prev.month);
 
-            transaksi.push({
+            // Ambil saldo akhir bulan lalu (dari semua transaksi)
+            let saldoAkhirBulanLalu = 0;
+            transaksiRaw.forEach(item => {
+                const tgl = item.tglPembayaran;
+                if (tgl) {
+                    let dateParts = null;
+                    if (tgl.includes('-')) dateParts = tgl.split('-');
+                    else if (tgl.includes('/')) dateParts = tgl.split('/');
+                    if (dateParts && dateParts.length === 3) {
+                        let year, month;
+                        if (dateParts[0].length === 4) { year = dateParts[0];
+                            month = dateParts[1]; } else { year = dateParts[2];
+                            month = dateParts[1]; }
+                        month = month.padStart(2, '0');
+                        if ((parseInt(month) < parseInt(prev.month) && parseInt(year) <= parseInt(prev.year)) ||
+                            (parseInt(month) === parseInt(prev.month) && parseInt(year) === parseInt(prev.year))) {
+                            saldoAkhirBulanLalu -= parseFloat(item.jumlahHarga) || 0;
+                        }
+                    }
+                }
+            });
+            // Tambahkan pemasukan anggaran jika tanggal <= bulan lalu
+            const tgl1 = settingsData.tanggalPemasukan1 || '';
+            const tgl2 = settingsData.tanggalPemasukan2 || '';
+            const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
+            const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
+
+            function addAnggaran(tgl, jumlah) {
+                if (!tgl || jumlah <= 0) return;
+                let dateParts = null;
+                if (tgl.includes('-')) dateParts = tgl.split('-');
+                else if (tgl.includes('/')) dateParts = tgl.split('/');
+                if (dateParts && dateParts.length === 3) {
+                    let year, month;
+                    if (dateParts[0].length === 4) { year = dateParts[0];
+                        month = dateParts[1]; } else { year = dateParts[2];
+                        month = dateParts[1]; }
+                    month = month.padStart(2, '0');
+                    if (parseInt(month) <= parseInt(prev.month) && parseInt(year) <= parseInt(prev.year)) {
+                        saldoAkhirBulanLalu += jumlah;
+                    }
+                }
+            }
+            addAnggaran(tgl1, anggaran1);
+            addAnggaran(tgl2, anggaran2);
+
+            // Bangun array transaksi untuk bulan yang dipilih
+            const result = [];
+            // Saldo awal
+            result.push({
                 tanggal: '',
                 kodeKegiatan: '',
                 kodeRekening: '',
@@ -1639,7 +1737,7 @@
                 isSaldoAwal: true,
                 jenis: 'saldo_awal'
             });
-            transaksi.push({
+            result.push({
                 tanggal: '',
                 kodeKegiatan: '',
                 kodeRekening: '',
@@ -1652,36 +1750,28 @@
                 jenis: 'saldo_awal'
             });
 
-            snapshot.forEach(doc => {
-                const d = doc.data();
-                d._id = doc.id;
-                const tgl = d.tglPembayaran;
+            // Transaksi pengeluaran di bulan ini
+            transaksiRaw.forEach(item => {
+                const tgl = item.tglPembayaran;
                 if (tgl) {
                     let dateParts = null;
-                    if (tgl.includes('-')) {
-                        dateParts = tgl.split('-');
-                    } else if (tgl.includes('/')) {
-                        dateParts = tgl.split('/');
-                    }
+                    if (tgl.includes('-')) dateParts = tgl.split('-');
+                    else if (tgl.includes('/')) dateParts = tgl.split('/');
                     if (dateParts && dateParts.length === 3) {
                         let year, month;
-                        if (dateParts[0].length === 4) {
-                            year = dateParts[0];
-                            month = dateParts[1];
-                        } else {
-                            year = dateParts[2];
-                            month = dateParts[1];
-                        }
+                        if (dateParts[0].length === 4) { year = dateParts[0];
+                            month = dateParts[1]; } else { year = dateParts[2];
+                            month = dateParts[1]; }
                         month = month.padStart(2, '0');
                         if (month === bulan && year === tahun) {
-                            transaksi.push({
+                            result.push({
                                 tanggal: tgl,
-                                kodeKegiatan: d.kodeKegiatan || '',
-                                kodeRekening: d.noRek || '',
-                                noBukti: d.noBukti || '',
-                                uraian: d.uraian || '',
+                                kodeKegiatan: item.kodeKegiatan || '',
+                                kodeRekening: item.noRek || '',
+                                noBukti: item.noBukti || '',
+                                uraian: item.uraian || '',
                                 penerimaan: 0,
-                                pengeluaran: parseFloat(d.jumlahHarga) || 0,
+                                pengeluaran: parseFloat(item.jumlahHarga) || 0,
                                 saldo: 0,
                                 isSaldoAwal: false,
                                 jenis: 'pengeluaran'
@@ -1691,31 +1781,20 @@
                 }
             });
 
-            const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
-            const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
-            const tgl1 = settingsData.tanggalPemasukan1 || '';
-            const tgl2 = settingsData.tanggalPemasukan2 || '';
-
+            // Pemasukan anggaran di bulan ini
             function addPemasukan(tgl, jumlah, keterangan) {
                 if (!tgl || jumlah <= 0) return;
                 let dateParts = null;
-                if (tgl.includes('-')) {
-                    dateParts = tgl.split('-');
-                } else if (tgl.includes('/')) {
-                    dateParts = tgl.split('/');
-                }
+                if (tgl.includes('-')) dateParts = tgl.split('-');
+                else if (tgl.includes('/')) dateParts = tgl.split('/');
                 if (dateParts && dateParts.length === 3) {
                     let year, month;
-                    if (dateParts[0].length === 4) {
-                        year = dateParts[0];
-                        month = dateParts[1];
-                    } else {
-                        year = dateParts[2];
-                        month = dateParts[1];
-                    }
+                    if (dateParts[0].length === 4) { year = dateParts[0];
+                        month = dateParts[1]; } else { year = dateParts[2];
+                        month = dateParts[1]; }
                     month = month.padStart(2, '0');
                     if (month === bulan && year === tahun) {
-                        transaksi.push({
+                        result.push({
                             tanggal: tgl,
                             kodeKegiatan: '',
                             kodeRekening: '',
@@ -1730,17 +1809,19 @@
                     }
                 }
             }
-            addPemasukan(tgl1, anggaran1, 'Penerimaan Anggaran Tahap 1');
-            addPemasukan(tgl2, anggaran2, 'Penerimaan Anggaran Tahap 2');
+            addPemasukan(settingsData.tanggalPemasukan1 || '', parseFloat(settingsData.anggaran1) || 0, 'Penerimaan Anggaran Tahap 1');
+            addPemasukan(settingsData.tanggalPemasukan2 || '', parseFloat(settingsData.anggaran2) || 0, 'Penerimaan Anggaran Tahap 2');
 
-            transaksi.sort((a, b) => {
+            // Urutkan
+            result.sort((a, b) => {
                 if (a.isSaldoAwal && !b.isSaldoAwal) return -1;
                 if (!a.isSaldoAwal && b.isSaldoAwal) return 1;
                 return a.tanggal.localeCompare(b.tanggal);
             });
 
+            // Hitung saldo kumulatif
             let saldoKumulatif = saldoAkhirBulanLalu;
-            transaksi.forEach(item => {
+            result.forEach(item => {
                 if (item.isSaldoAwal) {
                     item.saldo = item.saldo;
                 } else {
@@ -1749,7 +1830,8 @@
                 }
             });
 
-            transaksi.push({
+            // Tambahkan Bunga & Pajak Bunga (hanya untuk bank)
+            result.push({
                 tanggal: '',
                 kodeKegiatan: '',
                 kodeRekening: '',
@@ -1761,7 +1843,7 @@
                 isSaldoAwal: false,
                 jenis: 'bunga'
             });
-            transaksi.push({
+            result.push({
                 tanggal: '',
                 kodeKegiatan: '',
                 kodeRekening: '',
@@ -1774,14 +1856,25 @@
                 jenis: 'pajak'
             });
 
-            allKasData = transaksi;
-            renderKasTable(transaksi);
-            updateClosingStatement(transaksi);
+            return result;
         }
 
         // ─────────────────────────────────────────────
-        // 11. Render Buku Kas Table
+        // 11. Load Buku Kas
         // ─────────────────────────────────────────────
+        async function loadKasData() {
+            const bulan = bulanSelect.value;
+            const tahun = tahunSelect.value;
+            displayBulan.textContent = getMonthName(bulan);
+            displayTahun.textContent = tahun;
+
+            const raw = await fetchTransaksi();
+            const transaksi = buildSaldoTransaksi(raw, bulan, tahun);
+            allKasData = transaksi;
+            renderKasTable(transaksi);
+            updateClosingKas(transaksi);
+        }
+
         function renderKasTable(data) {
             if (data.length === 0) {
                 kasTableBody.innerHTML =
@@ -1825,10 +1918,7 @@
             kasTableBody.innerHTML = html;
         }
 
-        // ─────────────────────────────────────────────
-        // 12. Update Closing Statement (Buku Kas)
-        // ─────────────────────────────────────────────
-        function updateClosingStatement(data) {
+        function updateClosingKas(data) {
             const bulan = parseInt(bulanSelect.value);
             const tahun = parseInt(tahunSelect.value);
             const lastDay = new Date(tahun, bulan, 0);
@@ -1840,10 +1930,7 @@
             closingTahun.textContent = tahun;
 
             let saldoAkhir = 0;
-            if (data.length > 0) {
-                const last = data[data.length - 1];
-                saldoAkhir = last.saldo || 0;
-            }
+            if (data.length > 0) saldoAkhir = data[data.length - 1].saldo || 0;
             saldoBank.textContent = formatRupiah(saldoAkhir);
             saldoTunai.textContent = formatRupiah(0);
             saldoTotal.textContent = formatRupiah(saldoAkhir);
@@ -1853,7 +1940,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 13. Load Buku Tunai Data
+        // 12. Load Buku Tunai
         // ─────────────────────────────────────────────
         function loadTunaiData() {
             const bulan = bulanSelectTunai.value;
@@ -1876,17 +1963,11 @@
                 isSaldoAwal: true,
                 jenis: 'saldo_awal'
             }];
-
-            // Simpan data tunai ke state global
             allTunaiData = transaksi;
-
             renderTunaiTable(transaksi);
             updateClosingTunai(transaksi);
         }
 
-        // ─────────────────────────────────────────────
-        // 14. Render Buku Tunai Table
-        // ─────────────────────────────────────────────
         function renderTunaiTable(data) {
             if (data.length === 0) {
                 tunaiTableBody.innerHTML =
@@ -1921,9 +2002,6 @@
             tunaiTableBody.innerHTML = html;
         }
 
-        // ─────────────────────────────────────────────
-        // 15. Update Closing Tunai
-        // ─────────────────────────────────────────────
         function updateClosingTunai(data) {
             const bulan = parseInt(bulanSelectTunai.value);
             const tahun = parseInt(tahunSelectTunai.value);
@@ -1936,13 +2014,90 @@
             closingTahunTunai.textContent = tahun;
 
             saldoTunaiFinal.textContent = formatRupiah(0);
-
             const signDate = new Date(tahun, bulan, 0);
             signTanggalTunai.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
         }
 
         // ─────────────────────────────────────────────
-        // 16. Tabs
+        // 13. Load Buku Bank
+        // ─────────────────────────────────────────────
+        async function loadBankData() {
+            const bulan = bulanSelectBank.value;
+            const tahun = tahunSelectBank.value;
+            displayBulanBank.textContent = getMonthName(bulan);
+            displayTahunBank.textContent = tahun;
+
+            const raw = await fetchTransaksi();
+            const transaksi = buildSaldoTransaksi(raw, bulan, tahun);
+            allBankData = transaksi;
+            renderBankTable(transaksi);
+            updateClosingBank(transaksi);
+        }
+
+        function renderBankTable(data) {
+            if (data.length === 0) {
+                bankTableBody.innerHTML =
+                    `<tr><td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada data untuk bulan ini.</td></tr>`;
+                return;
+            }
+            let html = '';
+            data.forEach((item) => {
+                const tgl = item.tanggal || '';
+                const kode = item.kodeKegiatan || '';
+                const rek = item.kodeRekening || '';
+                const bukti = item.noBukti || '';
+                const uraian = item.uraian || '';
+                const penerimaan = item.penerimaan || 0;
+                const pengeluaran = item.pengeluaran || 0;
+                const saldo = item.saldo || 0;
+
+                let displayKode = kode,
+                    displayRek = rek,
+                    displayBukti = bukti;
+                if (item.jenis === 'pemasukan' || item.isSaldoAwal || item.jenis === 'bunga' || item.jenis === 'pajak') {
+                    displayKode = '';
+                    displayRek = '';
+                    displayBukti = '';
+                }
+                const isBold = item.isSaldoAwal || item.jenis === 'bunga' || item.jenis === 'pajak';
+                const tanggalFormatted = formatDateToDDMMYY(tgl);
+                html += `
+                    <tr style="${isBold ? 'font-weight:600;' : ''}">
+                        <td>${tanggalFormatted}</td>
+                        <td>${displayKode}</td>
+                        <td>${displayRek}</td>
+                        <td>${displayBukti}</td>
+                        <td class="left">${uraian}</td>
+                        <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                        <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                        <td class="right">${formatRupiah(saldo)}</td>
+                    </tr>
+                `;
+            });
+            bankTableBody.innerHTML = html;
+        }
+
+        function updateClosingBank(data) {
+            const bulan = parseInt(bulanSelectBank.value);
+            const tahun = parseInt(tahunSelectBank.value);
+            const lastDay = new Date(tahun, bulan, 0);
+            const dayName = getDayName(lastDay);
+
+            closingHariBank.textContent = dayName;
+            closingTanggalBank.textContent = lastDay.getDate();
+            closingBulanBank.textContent = getMonthName(String(bulan));
+            closingTahunBank.textContent = tahun;
+
+            let saldoAkhir = 0;
+            if (data.length > 0) saldoAkhir = data[data.length - 1].saldo || 0;
+            saldoBankFinal.textContent = formatRupiah(saldoAkhir);
+
+            const signDate = new Date(tahun, bulan, 0);
+            signTanggalBank.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        // ─────────────────────────────────────────────
+        // 14. Tabs
         // ─────────────────────────────────────────────
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -1951,20 +2106,20 @@
                 document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
                 const target = document.getElementById('tab-' + this.dataset.tab);
                 if (target) target.classList.add('active');
-                if (this.dataset.tab === 'buku-tunai') {
-                    loadTunaiData();
-                }
+
+                if (this.dataset.tab === 'buku-tunai') loadTunaiData();
+                if (this.dataset.tab === 'buku-bank') loadBankData();
             });
         });
 
         // ─────────────────────────────────────────────
-        // 17. Build A4 preview content for Buku Kas
+        // 15. Build A4 preview untuk masing-masing tab
         // ─────────────────────────────────────────────
         function buildA4PreviewKas() {
             const bulan = bulanSelect.value;
             const tahun = tahunSelect.value;
             const bulanNama = getMonthName(bulan);
-            const saldoAkhir = allKasData.length > 0 ? (allKasData[allKasData.length - 1].saldo || 0) : 0;
+            const saldoAkhir = allKasData.length > 0 ? allKasData[allKasData.length - 1].saldo || 0 : 0;
 
             let tableRows = '';
             if (allKasData.length === 0) {
@@ -2080,14 +2235,11 @@
             `;
         }
 
-        // ─────────────────────────────────────────────
-        // 18. Build A4 preview content for Buku Tunai
-        // ─────────────────────────────────────────────
         function buildA4PreviewTunai() {
             const bulan = bulanSelectTunai.value;
             const tahun = tahunSelectTunai.value;
             const bulanNama = getMonthName(bulan);
-            const saldoAkhir = allTunaiData.length > 0 ? (allTunaiData[allTunaiData.length - 1].saldo || 0) : 0;
+            const saldoAkhir = allTunaiData.length > 0 ? allTunaiData[allTunaiData.length - 1].saldo || 0 : 0;
 
             let tableRows = '';
             if (allTunaiData.length === 0) {
@@ -2103,7 +2255,6 @@
                     const penerimaan = item.penerimaan || 0;
                     const pengeluaran = item.pengeluaran || 0;
                     const saldo = item.saldo || 0;
-
                     const isBold = item.isSaldoAwal;
                     const boldStyle = isBold ? 'font-weight:600;' : '';
                     const tanggalFormatted = formatDateToDDMMYY(tgl);
@@ -2193,23 +2344,137 @@
             `;
         }
 
+        function buildA4PreviewBank() {
+            const bulan = bulanSelectBank.value;
+            const tahun = tahunSelectBank.value;
+            const bulanNama = getMonthName(bulan);
+            const saldoAkhir = allBankData.length > 0 ? allBankData[allBankData.length - 1].saldo || 0 : 0;
+
+            let tableRows = '';
+            if (allBankData.length === 0) {
+                tableRows =
+                    `<tr><td colspan="8" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada data untuk bulan ini.</td></tr>`;
+            } else {
+                allBankData.forEach(item => {
+                    const tgl = item.tanggal || '';
+                    const kode = item.kodeKegiatan || '';
+                    const rek = item.kodeRekening || '';
+                    const bukti = item.noBukti || '';
+                    const uraian = item.uraian || '';
+                    const penerimaan = item.penerimaan || 0;
+                    const pengeluaran = item.pengeluaran || 0;
+                    const saldo = item.saldo || 0;
+
+                    let displayKode = kode,
+                        displayRek = rek,
+                        displayBukti = bukti;
+                    if (item.jenis === 'pemasukan' || item.isSaldoAwal || item.jenis === 'bunga' || item.jenis === 'pajak') {
+                        displayKode = '';
+                        displayRek = '';
+                        displayBukti = '';
+                    }
+                    const isBold = item.isSaldoAwal || item.jenis === 'bunga' || item.jenis === 'pajak';
+                    const boldStyle = isBold ? 'font-weight:600;' : '';
+                    const tanggalFormatted = formatDateToDDMMYY(tgl);
+                    tableRows += `
+                        <tr style="${boldStyle}">
+                            <td>${tanggalFormatted}</td>
+                            <td>${displayKode}</td>
+                            <td>${displayRek}</td>
+                            <td>${displayBukti}</td>
+                            <td class="left">${uraian}</td>
+                            <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                            <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                            <td class="right">${formatRupiah(saldo)}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            const lastDay = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const dayName = getDayName(lastDay);
+            const tglClosing = lastDay.getDate();
+            const bulanClosing = getMonthName(String(bulan));
+            const tahunClosing = tahun;
+
+            const npsn = settingsData.npsn || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+            const kepalaSekolah = settingsData.kepalaSekolah || '-';
+            const bendahara = settingsData.bendahara || '-';
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            return `
+                <div class="book-header">
+                    <h2>BUKU BANK</h2>
+                    <div class="sub-info">
+                        Bulan: ${bulanNama}
+                        <span>|</span> Tahun: ${tahun}
+                    </div>
+                </div>
+                <div class="book-meta">
+                    <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                    <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                    <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                    <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                    <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                    <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                </div>
+                <div class="table-wrapper">
+                    <table class="book-table" id="previewTableBank">
+                        <thead>
+                            <tr>
+                                <th style="width:80px;">TANGGAL</th>
+                                <th style="width:100px;">KODE KEGIATAN</th>
+                                <th style="width:100px;">KODE REKENING</th>
+                                <th style="width:100px;">NO. BUKTI</th>
+                                <th style="width:200px;">URAIAN</th>
+                                <th style="width:120px;">PENERIMAAN</th>
+                                <th style="width:120px;">PENGELUARAN</th>
+                                <th style="width:120px;">SALDO</th>
+                            </tr>
+                        </thead>
+                        <tbody>${tableRows}</tbody>
+                    </table>
+                </div>
+                <div class="closing-statement">
+                    <div style="margin-bottom:6pt;">
+                        Pada hari ini ${dayName}, tanggal ${tglClosing} bulan ${bulanClosing} Tahun ${tahunClosing}, Buku Bank ditutup dengan keadaan/posisi buku sebagai berikut:
+                    </div>
+                    <div class="closing-grid">
+                        <div class="item"><span>Saldo Bank</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                    </div>
+                    <div class="signature">
+                        <div class="sign-block">
+                            <div class="label">Menyetujui,</div>
+                            <div class="label" style="margin-top:2pt;">Kec. Bola, ${signDateStr}</div>
+                            <div class="name">${kepalaSekolah}</div>
+                            <div class="title">Kepala Sekolah</div>
+                        </div>
+                        <div class="sign-block">
+                            <div class="label">&nbsp;</div>
+                            <div class="label" style="margin-top:2pt;">&nbsp;</div>
+                            <div class="name">${bendahara}</div>
+                            <div class="title">Bendahara BOS</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         // ─────────────────────────────────────────────
-        // 19. Show print preview (berdasarkan jenis)
+        // 16. Show print preview
         // ─────────────────────────────────────────────
         function showPrintPreview(type) {
             a4PreviewContent.innerHTML = '';
             let content = '';
-            if (type === 'kas') {
-                content = buildA4PreviewKas();
-            } else if (type === 'tunai') {
-                content = buildA4PreviewTunai();
-            } else {
-                return;
-            }
+            if (type === 'kas') content = buildA4PreviewKas();
+            else if (type === 'tunai') content = buildA4PreviewTunai();
+            else if (type === 'bank') content = buildA4PreviewBank();
+            else return;
             a4PreviewContent.innerHTML = content;
             printPreviewOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
-            // Inisialisasi resizer setelah konten dimuat
             setTimeout(() => initPreviewResizers(), 100);
         }
 
@@ -2219,7 +2484,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 20. Resize kolom di preview
+        // 17. Resize kolom
         // ─────────────────────────────────────────────
         let previewColumnWidths = {};
         function loadPreviewColumnWidths() {
@@ -2235,7 +2500,6 @@
             } catch (e) { /* ignore */ }
         }
         function initPreviewResizers() {
-            // Cari tabel di preview (bisa kas atau tunai)
             const table = document.querySelector('#a4PreviewContent table.book-table');
             if (!table) return;
             const headers = table.querySelectorAll('thead th');
@@ -2278,7 +2542,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 21. Print / PDF
+        // 18. Print / PDF
         // ─────────────────────────────────────────────
         function doPrint() {
             const toolbar = document.querySelector('.print-preview-toolbar');
@@ -2295,12 +2559,12 @@
         }
 
         // ─────────────────────────────────────────────
-        // 22. Event listeners
+        // 19. Event listeners
         // ─────────────────────────────────────────────
         loadDataBtn.addEventListener('click', loadKasData);
         loadDataBtnTunai.addEventListener('click', loadTunaiData);
+        loadDataBtnBank.addEventListener('click', loadBankData);
 
-        // Cetak Buku Kas
         printBtnKas.addEventListener('click', () => {
             if (allKasData.length === 0) {
                 showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
@@ -2310,7 +2574,6 @@
             showPrintPreview('kas');
         });
 
-        // Cetak Buku Tunai
         printBtnTunai.addEventListener('click', () => {
             if (allTunaiData.length === 0) {
                 showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
@@ -2318,6 +2581,15 @@
             }
             loadPreviewColumnWidths();
             showPrintPreview('tunai');
+        });
+
+        printBtnBank.addEventListener('click', () => {
+            if (allBankData.length === 0) {
+                showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
+                return;
+            }
+            loadPreviewColumnWidths();
+            showPrintPreview('bank');
         });
 
         closePreviewBtn.addEventListener('click', closePrintPreview);
@@ -2342,20 +2614,22 @@
         });
 
         // ─────────────────────────────────────────────
-        // 23. Init
+        // 20. Init
         // ─────────────────────────────────────────────
         loadSettings();
         const now = new Date();
         const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
         bulanSelect.value = currentMonth;
         bulanSelectTunai.value = currentMonth;
+        bulanSelectBank.value = currentMonth;
 
         setTimeout(() => {
             loadKasData();
             loadTunaiData();
+            loadBankData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Buku Kas dan Buku Tunai siap (cetak per tab)');
+        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank) siap');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
