@@ -2597,7 +2597,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 16. Load ROB (Rincian Objek Belanja) - DIPERBAIKI dengan mengambil saldo dari bulan sebelumnya
+        // 16. Load ROB (Rincian Objek Belanja) - DIPERBAIKI TOTAL
         // ─────────────────────────────────────────────
         async function loadRobData() {
             const bulan = bulanSelectRob.value;
@@ -2608,10 +2608,6 @@
             const raw = await fetchTransaksi();
             const prev = getPreviousMonth(bulan, tahun);
             const prevMonthName = getMonthName(prev.month);
-
-            // Ambil saldo bulan lalu dari data yang tersimpan
-            // Kita cari transaksi di bulan lalu dan hitung saldo akhirnya
-            let saldoAwal = 0;
 
             // Fungsi untuk mengecek apakah tanggal masuk dalam periode tertentu
             function isInMonth(tgl, targetMonth, targetYear) {
@@ -2628,7 +2624,10 @@
                 return (month === targetMonth && year === targetYear);
             }
 
-            // Ambil semua transaksi dari bulan lalu (selain pajak) + anggaran masuk
+            // ===== HITUNG SALDO AWAL (BULAN LALU) =====
+            let saldoAwal = 0;
+
+            // Ambil semua transaksi dari bulan lalu (selain pajak)
             const transaksiBulanLalu = [];
 
             raw.forEach(item => {
@@ -2642,7 +2641,8 @@
                     transaksiBulanLalu.push({
                         tanggal: tgl,
                         jumlah: jumlah,
-                        debetKredit: debetKredit
+                        debetKredit: debetKredit,
+                        uraian: item.uraian || ''
                     });
                 }
             });
@@ -2657,14 +2657,16 @@
                 transaksiBulanLalu.push({
                     tanggal: tgl1,
                     jumlah: anggaran1,
-                    debetKredit: 'Debet'
+                    debetKredit: 'Debet',
+                    uraian: 'Penerimaan Anggaran Tahap 1'
                 });
             }
             if (isInMonth(tgl2, prev.month, prev.year) && anggaran2 > 0) {
                 transaksiBulanLalu.push({
                     tanggal: tgl2,
                     jumlah: anggaran2,
-                    debetKredit: 'Debet'
+                    debetKredit: 'Debet',
+                    uraian: 'Penerimaan Anggaran Tahap 2'
                 });
             }
 
@@ -2680,7 +2682,7 @@
                 }
             });
 
-            // Bangun data ROB
+            // ===== BANGUN DATA ROB =====
             const robRows = [];
 
             // Baris 1: Saldo Bulan Lalu
