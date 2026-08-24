@@ -12,12 +12,13 @@
     </script>
 
     <style>
-        /* ── Reset & Base ── (sama seperti file Anda, tidak diubah) ── */
+        /* ── Reset & Base ── */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f4f8fc;
@@ -25,7 +26,498 @@
             padding: 16px 24px 40px;
             min-height: 100vh;
         }
-        /* ... semua style dari file Anda tetap sama persis sampai bagian @media print ... */
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            max-width: 100%;
+            margin: 0 auto 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2edf6;
+        }
+        .app-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .app-header .brand img {
+            height: 38px;
+            width: 38px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #f0f4fa;
+            padding: 4px;
+        }
+        .app-header .brand .fallback-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background: #0a2e5c;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .app-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0a2e5c;
+        }
+        .app-header .sub {
+            font-size: 12px;
+            color: #7a8fa6;
+            font-weight: 400;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .header-actions .user-badge {
+            font-size: 12px;
+            color: #1f3a5f;
+            background: #e9f0f7;
+            padding: 5px 14px;
+            border-radius: 16px;
+            font-weight: 500;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #d0dde9;
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 12px;
+            color: #1f3a5f;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-outline:hover {
+            background: #f0f4fa;
+            border-color: #b0c4d8;
+        }
+        .btn-logout {
+            background: transparent;
+            border: 1.5px solid #d0dde9;
+            padding: 6px 16px;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 12px;
+            color: #1f3a5f;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        .btn-logout:hover {
+            background: #f0f4fa;
+            border-color: #b0c4d8;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 12px 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 20, 40, 0.06);
+        }
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-icon {
+            background: transparent;
+            border: 1.5px solid #dce6ef;
+            border-radius: 8px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            color: #1f3a5f;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .btn-icon:hover {
+            background: #f0f4fa;
+            border-color: #b0c4d8;
+        }
+        .btn-icon.active {
+            background: #0a2e5c;
+            color: #fff;
+            border-color: #0a2e5c;
+        }
+        .btn-icon.active:hover {
+            background: #123f72;
+        }
+        .btn-primary {
+            background: #0a2e5c;
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .btn-primary:hover {
+            background: #123f72;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 6px 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 20, 40, 0.06);
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: transparent;
+            color: #5a7a9a;
+        }
+        .tab-btn:hover {
+            background: #f2f7fc;
+            color: #0a2e5c;
+        }
+        .tab-btn.active {
+            background: #0a2e5c;
+            color: #fff;
+        }
+        .tab-content {
+            display: none;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px 28px;
+            box-shadow: 0 2px 12px rgba(0, 20, 40, 0.06);
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .filter-row label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #1f3a5f;
+        }
+        .filter-row select {
+            padding: 6px 12px;
+            font-size: 13px;
+            border: 1.5px solid #dce6ef;
+            border-radius: 8px;
+            outline: none;
+            font-family: inherit;
+            background: #fafcfe;
+        }
+        .filter-row select:focus {
+            border-color: #0a2e5c;
+        }
+
+        .book-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .book-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0a2e5c;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .book-header .sub-info {
+            font-size: 13px;
+            color: #5a7a9a;
+        }
+        .book-header .sub-info span {
+            margin: 0 8px;
+        }
+
+        .book-meta {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 4px 16px;
+            background: #f8fafc;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #eef4f9;
+            align-items: center;
+        }
+        .book-meta .meta-row {
+            display: contents;
+        }
+        .book-meta .meta-label {
+            text-align: left;
+            font-weight: 600;
+            color: #1f3a5f;
+            white-space: nowrap;
+            padding-right: 8px;
+        }
+        .book-meta .meta-value {
+            text-align: left;
+            color: #0a1e33;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        table.book-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            border: 1px solid #dce6ef;
+        }
+        table.book-table thead {
+            background: #f2f7fc;
+        }
+        table.book-table th {
+            padding: 8px 8px;
+            text-align: center;
+            font-weight: 600;
+            color: #1f3a5f;
+            font-size: 11px;
+            text-transform: uppercase;
+            border: 1px solid #dce6ef;
+            white-space: normal;
+            word-break: break-word;
+            position: relative;
+        }
+        table.book-table td {
+            padding: 6px 8px;
+            text-align: center;
+            border: 1px solid #dce6ef;
+            vertical-align: middle;
+            font-size: 12px;
+        }
+        table.book-table td.left {
+            text-align: left;
+        }
+        table.book-table td.right {
+            text-align: right;
+        }
+        table.book-table .total-row {
+            background: #f8fafc;
+            font-weight: 600;
+        }
+
+        .col-resizer {
+            position: absolute;
+            top: 0;
+            right: -4px;
+            width: 8px;
+            height: 100%;
+            cursor: col-resize;
+            z-index: 10;
+            background: transparent;
+            transition: background 0.15s ease;
+        }
+        .col-resizer:hover,
+        .col-resizer.active {
+            background: #0a2e5c;
+            opacity: 0.25;
+        }
+        .col-resizer.active {
+            opacity: 0.5;
+        }
+
+        .closing-statement {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #eef4f9;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        .closing-statement .closing-grid {
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 4px 12px;
+            width: fit-content;
+            max-width: 100%;
+        }
+        .closing-statement .closing-grid .item {
+            display: contents;
+        }
+        .closing-statement .closing-grid .item span:first-child {
+            text-align: left;
+            font-weight: 400;
+        }
+        .closing-statement .closing-grid .item span:last-child {
+            text-align: left;
+            font-weight: 400;
+        }
+        .closing-statement .closing-grid .item.total {
+            font-weight: 600;
+            border-top: 1px solid #dce6ef;
+            padding-top: 4px;
+            margin-top: 4px;
+        }
+        .closing-statement .closing-grid .item.total span:first-child {
+            font-weight: 600;
+        }
+        .closing-statement .closing-grid .item.total span:last-child {
+            font-weight: 600;
+        }
+
+        .signature {
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid #eef4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .signature .sign-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 0 40px;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+        }
+        .signature .sign-grid .sign-place-date {
+            font-size: 12px;
+            color: #5a7a9a;
+            text-align: center;
+            margin-bottom: 0;
+            grid-column: 2;
+            grid-row: 1;
+            justify-self: center;
+        }
+        .signature .sign-grid .sign-label {
+            font-size: 12px;
+            color: #5a7a9a;
+            text-align: center;
+            margin-bottom: 4px;
+            font-weight: 400;
+            align-self: end;
+        }
+        .signature .sign-grid .sign-label-kepsek {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        .signature .sign-grid .sign-label-bendahara {
+            grid-column: 2;
+            grid-row: 2;
+        }
+        .signature .sign-grid .sign-name {
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            display: inline-block;
+            min-width: 160px;
+            align-self: start;
+            border-top: none;
+            padding-top: 0;
+            margin-top: 40px;
+        }
+        .signature .sign-grid .sign-name-kepsek {
+            grid-column: 1;
+            grid-row: 3;
+        }
+        .signature .sign-grid .sign-name-bendahara {
+            grid-column: 2;
+            grid-row: 3;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0a2e5c;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 13px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.16);
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .toast.success {
+            background: #1a7a3a;
+        }
+        .toast.error {
+            background: #b00020;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            .tab-content {
+                padding: 16px;
+            }
+            .signature .sign-grid {
+                gap: 0 20px;
+                max-width: 100%;
+            }
+            .closing-statement .closing-grid {
+                max-width: 100%;
+            }
+            .book-meta {
+                grid-template-columns: auto 1fr;
+                gap: 4px 12px;
+            }
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
 
         /* ============================================================
            PRINT STYLES – diperbaiki untuk multi‑halaman A4
@@ -85,7 +577,6 @@
                 flex: none !important;
                 width: 100% !important;
             }
-            /* Setiap halaman A4 menjadi satu halaman cetak */
             .a4-page {
                 width: 100% !important;
                 max-width: 210mm !important;
@@ -339,14 +830,13 @@
             flex: 1;
             overflow-y: auto;
             padding: 20px 24px 30px;
-            background: #e8ecf0; /* background abu‑abu di luar halaman */
+            background: #e8ecf0;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 20px;
         }
 
-        /* Setiap halaman A4 di preview */
         .a4-page {
             width: 210mm;
             min-height: 297mm;
@@ -366,7 +856,6 @@
             table-layout: fixed !important;
         }
 
-        /* Gaya konten di dalam halaman preview (sama dengan print) */
         .a4-page .book-header h2 {
             font-size: 14pt !important;
             font-weight: 700 !important;
@@ -547,7 +1036,6 @@
             margin-bottom: 6pt !important;
         }
 
-        /* Resizer di preview (tetap berfungsi) */
         .a4-page .col-resizer {
             position: absolute;
             top: 0;
@@ -568,7 +1056,6 @@
             opacity: 0.5;
         }
 
-        /* Responsif preview */
         @media (max-width: 860px) {
             .a4-page {
                 width: 100%;
@@ -602,11 +1089,6 @@
                 justify-content: flex-end;
             }
         }
-
-        /* ── sisanya adalah style dari file Anda (header, toolbar, tabs, dll.) ── */
-        /* ... karena sangat panjang, saya tidak menulis ulang semua, tetapi file asli sudah punya */
-        /* Saya asumsikan Anda sudah memiliki semua style tersebut, dan saya hanya menambahkan bagian di atas */
-        /* Untuk kepastian, saya sertakan semua style dari file Anda di versi final */
     </style>
 </head>
 <body>
@@ -666,54 +1148,2128 @@
         <button class="tab-btn" data-tab="rob">📄 ROB</button>
     </div>
 
-    <!-- ─── Tab Content: Buku Kas ─── (sama seperti file Anda) ─── -->
+    <!-- ─── Tab Content: Buku Kas ─── -->
     <div class="tab-content active" id="tab-buku-kas">
-        <!-- ... semua konten tab (saya tidak tulis ulang, tetapi tetap ada) ... -->
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelect">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelect"></select>
+            <button class="btn-primary" id="loadDataBtn" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
+            <button class="btn-primary" id="printBtnKas" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
+        </div>
+
+        <div id="bukuKasContent">
+            <div class="book-header">
+                <h2>BUKU KAS UMUM</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulan">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahun">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMeta">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsn">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolah">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="kasTable">
+                    <thead>
+                        <tr>
+                            <th style="width:80px;">TANGGAL</th>
+                            <th style="width:100px;">KODE KEGIATAN</th>
+                            <th style="width:100px;">KODE REKENING</th>
+                            <th style="width:100px;">NO. BUKTI</th>
+                            <th style="width:200px;">URAIAN</th>
+                            <th style="width:120px;">PENERIMAAN</th>
+                            <th style="width:120px;">PENGELUARAN</th>
+                            <th style="width:120px;">SALDO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kasTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="closing-statement" id="closingStatement">
+                <div style="font-size:13px;margin-bottom:8px;">
+                    Pada hari ini <span id="closingHari">-</span>, tanggal <span id="closingTanggal">-</span> bulan <span id="closingBulan">-</span> Tahun <span id="closingTahun">-</span>, Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut:
+                </div>
+                <div class="closing-grid">
+                    <div class="item"><span>Saldo Bank</span> <span id="saldoBank">Rp 0</span></div>
+                    <div class="item"><span>Saldo Tunai</span> <span id="saldoTunai">Rp 0</span></div>
+                    <div class="item total"><span>Jumlah</span> <span id="saldoTotal">Rp 0</span></div>
+                </div>
+
+                <div class="signature">
+                    <div class="sign-grid">
+                        <div class="sign-place-date">Kec. Bola, <span id="signTanggal">-</span></div>
+                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                        <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                        <div class="sign-name sign-name-kepsek" id="signKepsek">-</div>
+                        <div class="sign-name sign-name-bendahara" id="signBendahara">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
     <!-- ─── Tab Content: Buku Tunai ─── -->
     <div class="tab-content" id="tab-buku-tunai">
-        <!-- ... -->
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelectTunai">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelectTunai"></select>
+            <button class="btn-primary" id="loadDataBtnTunai" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
+            <button class="btn-primary" id="printBtnTunai" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
+        </div>
+
+        <div id="bukuTunaiContent">
+            <div class="book-header">
+                <h2>BUKU KAS PEMBANTU TUNAI</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulanTunai">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahunTunai">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMetaTunai">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnTunai">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahTunai">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="tunaiTable">
+                    <thead>
+                        <tr>
+                            <th style="width:80px;">TANGGAL</th>
+                            <th style="width:100px;">KODE KEGIATAN</th>
+                            <th style="width:100px;">KODE REKENING</th>
+                            <th style="width:100px;">NO. BUKTI</th>
+                            <th style="width:200px;">URAIAN</th>
+                            <th style="width:120px;">PENERIMAAN</th>
+                            <th style="width:120px;">PENGELUARAN</th>
+                            <th style="width:120px;">SALDO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tunaiTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="closing-statement" id="closingStatementTunai">
+                <div style="font-size:13px;margin-bottom:8px;">
+                    Pada hari ini <span id="closingHariTunai">-</span>, tanggal <span id="closingTanggalTunai">-</span> bulan <span id="closingBulanTunai">-</span> Tahun <span id="closingTahunTunai">-</span> Buku Kas Tunai ditutup dengan keadaan/posisi buku sebagai berikut :
+                </div>
+                <div class="closing-grid">
+                    <div class="item"><span>Saldo Buku Kas Tunai</span> <span id="saldoTunaiFinal">Rp 0</span></div>
+                </div>
+
+                <div class="signature">
+                    <div class="sign-grid">
+                        <div class="sign-place-date">Kec. Bola, <span id="signTanggalTunai">-</span></div>
+                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                        <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                        <div class="sign-name sign-name-kepsek" id="signKepsekTunai">-</div>
+                        <div class="sign-name sign-name-bendahara" id="signBendaharaTunai">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
     <!-- ─── Tab Content: Buku Bank ─── -->
     <div class="tab-content" id="tab-buku-bank">
-        <!-- ... -->
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelectBank">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelectBank"></select>
+            <button class="btn-primary" id="loadDataBtnBank" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
+            <button class="btn-primary" id="printBtnBank" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
+        </div>
+
+        <div id="bukuBankContent">
+            <div class="book-header">
+                <h2>BUKU BANK</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulanBank">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahunBank">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMetaBank">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnBank">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahBank">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="bankTable">
+                    <thead>
+                        <tr>
+                            <th style="width:80px;">TANGGAL</th>
+                            <th style="width:100px;">KODE KEGIATAN</th>
+                            <th style="width:100px;">KODE REKENING</th>
+                            <th style="width:100px;">NO. BUKTI</th>
+                            <th style="width:200px;">URAIAN</th>
+                            <th style="width:120px;">PENERIMAAN</th>
+                            <th style="width:120px;">PENGELUARAN</th>
+                            <th style="width:120px;">SALDO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bankTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="closing-statement" id="closingStatementBank">
+                <div style="font-size:13px;margin-bottom:8px;">
+                    Pada hari ini <span id="closingHariBank">-</span>, tanggal <span id="closingTanggalBank">-</span> bulan <span id="closingBulanBank">-</span> Tahun <span id="closingTahunBank">-</span>, Buku Bank ditutup dengan keadaan/posisi buku sebagai berikut:
+                </div>
+                <div class="closing-grid">
+                    <div class="item"><span>Saldo Bank</span> <span id="saldoBankFinal">Rp 0</span></div>
+                </div>
+
+                <div class="signature">
+                    <div class="sign-grid">
+                        <div class="sign-place-date">Kec. Bola, <span id="signTanggalBank">-</span></div>
+                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                        <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                        <div class="sign-name sign-name-kepsek" id="signKepsekBank">-</div>
+                        <div class="sign-name sign-name-bendahara" id="signBendaharaBank">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
     <!-- ─── Tab Content: Buku Pajak ─── -->
     <div class="tab-content" id="tab-buku-pajak">
-        <!-- ... -->
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelectPajak">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelectPajak"></select>
+            <button class="btn-primary" id="loadDataBtnPajak" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
+            <button class="btn-primary" id="printBtnPajak" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
+        </div>
+
+        <div id="bukuPajakContent">
+            <div class="book-header">
+                <h2>BUKU PEMBANTU PAJAK</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulanPajak">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahunPajak">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMetaPajak">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnPajak">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahPajak">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="pajakTable">
+                    <thead>
+                        <tr>
+                            <th style="width:80px;">TANGGAL</th>
+                            <th style="width:100px;">NO.KODE</th>
+                            <th style="width:200px;">URAIAN</th>
+                            <th style="width:100px;">PPN</th>
+                            <th style="width:100px;">PPh 21</th>
+                            <th style="width:100px;">PPh 23</th>
+                            <th style="width:100px;">PPh 4</th>
+                            <th style="width:100px;">SSPD</th>
+                            <th style="width:150px;">PENGELUARAN / KREDIT</th>
+                            <th style="width:150px;">SALDO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pajakTableBody">
+                        <tr>
+                            <td colspan="10" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tanda tangan (tanpa closing statement) -->
+            <div class="signature">
+                <div class="sign-grid">
+                    <div class="sign-place-date">Kec. Bola, <span id="signTanggalPajak">-</span></div>
+                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                    <div class="sign-name sign-name-kepsek" id="signKepsekPajak">-</div>
+                    <div class="sign-name sign-name-bendahara" id="signBendaharaPajak">-</div>
+                </div>
+            </div>
+        </div>
     </div>
+
     <!-- ─── Tab Content: Buku Utang ─── -->
     <div class="tab-content" id="tab-buku-utang">
-        <!-- ... -->
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelectUtang">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelectUtang"></select>
+            <button class="btn-primary" id="printBtnUtang" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
+        </div>
+
+        <div id="bukuUtangContent">
+            <div class="book-header">
+                <h2>BUKU PEMBANTU UTANG</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulanUtang">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahunUtang">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMetaUtang">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnUtang">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahUtang">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="utangTable">
+                    <thead>
+                        <tr>
+                            <th style="width:100px;">TANGGAL</th>
+                            <th style="width:100px;">NO. KODE</th>
+                            <th style="width:120px;">NO. FAKTUR</th>
+                            <th style="width:200px;">URAIAN</th>
+                            <th style="width:200px;">NAMA KREDITUR / TOKO</th>
+                            <th style="width:150px;">JUMLAH</th>
+                        </tr>
+                    </thead>
+                    <tbody id="utangTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada data utang.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tanda tangan -->
+            <div class="signature">
+                <div class="sign-grid">
+                    <div class="sign-place-date">Kec. Bola, <span id="signTanggalUtang">-</span></div>
+                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                    <div class="sign-name sign-name-kepsek" id="signKepsekUtang">-</div>
+                    <div class="sign-name sign-name-bendahara" id="signBendaharaUtang">-</div>
+                </div>
+            </div>
+        </div>
     </div>
+
     <!-- ─── Tab Content: ROB ─── -->
     <div class="tab-content" id="tab-rob">
-        <!-- ... -->
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelectRob">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelectRob"></select>
+            <button class="btn-primary" id="loadDataBtnRob" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
+            <button class="btn-primary" id="printBtnRob" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
+        </div>
+
+        <div id="bukuRobContent">
+            <div class="book-header">
+                <h2>RINCIAN OBJEK BELANJA (ROB)</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulanRob">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahunRob">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMetaRob">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnRob">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahRob">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="robTable">
+                    <thead>
+                        <tr>
+                            <th style="width:100px;">TANGGAL</th>
+                            <th style="width:100px;">NO. BKU</th>
+                            <th style="width:250px;">URAIAN</th>
+                            <th style="width:150px;">REALISASI</th>
+                            <th style="width:150px;">JUMLAH</th>
+                            <th style="width:150px;">SISA ANGGARAN</th>
+                        </tr>
+                    </thead>
+                    <tbody id="robTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
+                        </tr>
+                    </tbody>
+                    <tfoot id="robTableFoot">
+                        <tr class="total-row">
+                            <td colspan="3" style="text-align:right;font-weight:600;">Jumlah</td>
+                            <td id="robTotalRealisasi" style="text-align:right;font-weight:600;">Rp 0</td>
+                            <td id="robTotalJumlah" style="text-align:right;font-weight:600;">Rp 0</td>
+                            <td id="robTotalSisa" style="text-align:right;font-weight:600;">Rp 0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- Tanda tangan -->
+            <div class="signature">
+                <div class="sign-grid">
+                    <div class="sign-place-date">Kec. Bola, <span id="signTanggalRob">-</span></div>
+                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                    <div class="sign-name sign-name-kepsek" id="signKepsekRob">-</div>
+                    <div class="sign-name sign-name-bendahara" id="signBendaharaRob">-</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // ================================================================
-        // 1. Firebase init, session check, state, DOM refs, toast,
-        //    populateTahun, format functions, loadSettings, fetchTransaksi,
-        //    buildSaldoTransaksi, loadKasData, renderKasTable,
-        //    updateClosingKas, loadTunaiData, loadBankData, loadPajakData,
-        //    loadUtangData, loadRobData, renderRobTable, tabs, dll.
-        //    SEMUA TETAP SAMA SEPERTI FILE ANDA.
-        //    Saya hanya menambahkan/modifikasi bagian PREVIEW & PRINT.
-        // ================================================================
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 1. Firebase init
+        // ─────────────────────────────────────────────────────────────────────────────
+        const firebaseConfig = {
+            apiKey: "AIzaSyD61HLphga_Egy_VTGeqx5D8_XmqgWzMsE",
+            authDomain: "bos-nbs.firebaseapp.com",
+            projectId: "bos-nbs",
+            storageBucket: "bos-nbs.firebasestorage.app",
+            messagingSenderId: "691310998051",
+            appId: "1:691310998051:web:fe576f0c14f37f84c6f796"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        // ─── Semua kode yang sudah ada dari file Anda (Firebase, load data, dll.) ───
-        // ... (saya tidak menulis ulang karena sudah ada di file Anda) ...
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 2. Session check
+        // ─────────────────────────────────────────────────────────────────────────────
+        const sessionJenjang = localStorage.getItem('bosnbs_jenjang');
+        const sessionTahun = localStorage.getItem('bosnbs_tahun');
+        if (!sessionJenjang || !sessionTahun) {
+            window.location.href = 'index.html';
+        }
+        document.getElementById('userBadge').textContent = `${sessionJenjang} · ${sessionTahun}`;
 
-        // ================================================================
-        // TAMBAHAN: Fungsi pagination dan perbaikan preview/print
-        // ================================================================
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 3. State
+        // ─────────────────────────────────────────────────────────────────────────────
+        let settingsData = {};
+        let allKasData = [];
+        let allTunaiData = [];
+        let allBankData = [];
+        let allPajakData = [];
+        let allRobData = [];
+        const COLLECTION = 'data_bos';
+        const SETTINGS_COLLECTION = 'settings_bos';
 
-        /**
-         * Membagi konten HTML menjadi beberapa halaman A4 berdasarkan tinggi.
-         * @param {string} htmlString - HTML lengkap dari satu halaman (tanpa pagination).
-         * @returns {string[]} Array HTML untuk setiap halaman.
-         */
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 4. DOM refs
+        // ─────────────────────────────────────────────────────────────────────────────
+        // Buku Kas
+        const bulanSelect = document.getElementById('bulanSelect');
+        const tahunSelect = document.getElementById('tahunSelect');
+        const loadDataBtn = document.getElementById('loadDataBtn');
+        const kasTableBody = document.getElementById('kasTableBody');
+        const displayBulan = document.getElementById('displayBulan');
+        const displayTahun = document.getElementById('displayTahun');
+        const metaNpsn = document.getElementById('metaNpsn');
+        const metaSekolah = document.getElementById('metaSekolah');
+        const closingHari = document.getElementById('closingHari');
+        const closingTanggal = document.getElementById('closingTanggal');
+        const closingBulan = document.getElementById('closingBulan');
+        const closingTahun = document.getElementById('closingTahun');
+        const saldoBank = document.getElementById('saldoBank');
+        const saldoTunai = document.getElementById('saldoTunai');
+        const saldoTotal = document.getElementById('saldoTotal');
+        const signTanggal = document.getElementById('signTanggal');
+        const signKepsek = document.getElementById('signKepsek');
+        const signBendahara = document.getElementById('signBendahara');
+        const toast = document.getElementById('toast');
+
+        // Buku Tunai
+        const bulanSelectTunai = document.getElementById('bulanSelectTunai');
+        const tahunSelectTunai = document.getElementById('tahunSelectTunai');
+        const loadDataBtnTunai = document.getElementById('loadDataBtnTunai');
+        const tunaiTableBody = document.getElementById('tunaiTableBody');
+        const displayBulanTunai = document.getElementById('displayBulanTunai');
+        const displayTahunTunai = document.getElementById('displayTahunTunai');
+        const metaNpsnTunai = document.getElementById('metaNpsnTunai');
+        const metaSekolahTunai = document.getElementById('metaSekolahTunai');
+        const closingHariTunai = document.getElementById('closingHariTunai');
+        const closingTanggalTunai = document.getElementById('closingTanggalTunai');
+        const closingBulanTunai = document.getElementById('closingBulanTunai');
+        const closingTahunTunai = document.getElementById('closingTahunTunai');
+        const saldoTunaiFinal = document.getElementById('saldoTunaiFinal');
+        const signTanggalTunai = document.getElementById('signTanggalTunai');
+        const signKepsekTunai = document.getElementById('signKepsekTunai');
+        const signBendaharaTunai = document.getElementById('signBendaharaTunai');
+
+        // Buku Bank
+        const bulanSelectBank = document.getElementById('bulanSelectBank');
+        const tahunSelectBank = document.getElementById('tahunSelectBank');
+        const loadDataBtnBank = document.getElementById('loadDataBtnBank');
+        const bankTableBody = document.getElementById('bankTableBody');
+        const displayBulanBank = document.getElementById('displayBulanBank');
+        const displayTahunBank = document.getElementById('displayTahunBank');
+        const metaNpsnBank = document.getElementById('metaNpsnBank');
+        const metaSekolahBank = document.getElementById('metaSekolahBank');
+        const closingHariBank = document.getElementById('closingHariBank');
+        const closingTanggalBank = document.getElementById('closingTanggalBank');
+        const closingBulanBank = document.getElementById('closingBulanBank');
+        const closingTahunBank = document.getElementById('closingTahunBank');
+        const saldoBankFinal = document.getElementById('saldoBankFinal');
+        const signTanggalBank = document.getElementById('signTanggalBank');
+        const signKepsekBank = document.getElementById('signKepsekBank');
+        const signBendaharaBank = document.getElementById('signBendaharaBank');
+
+        // Buku Pajak
+        const bulanSelectPajak = document.getElementById('bulanSelectPajak');
+        const tahunSelectPajak = document.getElementById('tahunSelectPajak');
+        const loadDataBtnPajak = document.getElementById('loadDataBtnPajak');
+        const pajakTableBody = document.getElementById('pajakTableBody');
+        const displayBulanPajak = document.getElementById('displayBulanPajak');
+        const displayTahunPajak = document.getElementById('displayTahunPajak');
+        const metaNpsnPajak = document.getElementById('metaNpsnPajak');
+        const metaSekolahPajak = document.getElementById('metaSekolahPajak');
+        const signTanggalPajak = document.getElementById('signTanggalPajak');
+        const signKepsekPajak = document.getElementById('signKepsekPajak');
+        const signBendaharaPajak = document.getElementById('signBendaharaPajak');
+
+        // Buku Utang
+        const bulanSelectUtang = document.getElementById('bulanSelectUtang');
+        const tahunSelectUtang = document.getElementById('tahunSelectUtang');
+        const printBtnUtang = document.getElementById('printBtnUtang');
+        const displayBulanUtang = document.getElementById('displayBulanUtang');
+        const displayTahunUtang = document.getElementById('displayTahunUtang');
+        const metaNpsnUtang = document.getElementById('metaNpsnUtang');
+        const metaSekolahUtang = document.getElementById('metaSekolahUtang');
+        const signTanggalUtang = document.getElementById('signTanggalUtang');
+        const signKepsekUtang = document.getElementById('signKepsekUtang');
+        const signBendaharaUtang = document.getElementById('signBendaharaUtang');
+
+        // ROB
+        const bulanSelectRob = document.getElementById('bulanSelectRob');
+        const tahunSelectRob = document.getElementById('tahunSelectRob');
+        const loadDataBtnRob = document.getElementById('loadDataBtnRob');
+        const printBtnRob = document.getElementById('printBtnRob');
+        const robTableBody = document.getElementById('robTableBody');
+        const robTableFoot = document.getElementById('robTableFoot');
+        const displayBulanRob = document.getElementById('displayBulanRob');
+        const displayTahunRob = document.getElementById('displayTahunRob');
+        const metaNpsnRob = document.getElementById('metaNpsnRob');
+        const metaSekolahRob = document.getElementById('metaSekolahRob');
+        const signTanggalRob = document.getElementById('signTanggalRob');
+        const signKepsekRob = document.getElementById('signKepsekRob');
+        const signBendaharaRob = document.getElementById('signBendaharaRob');
+        const robTotalRealisasi = document.getElementById('robTotalRealisasi');
+        const robTotalJumlah = document.getElementById('robTotalJumlah');
+        const robTotalSisa = document.getElementById('robTotalSisa');
+
+        // Print preview
+        const printPreviewOverlay = document.getElementById('printPreviewOverlay');
+        const closePreviewBtn = document.getElementById('closePreviewBtn');
+        const confirmPrintBtn = document.getElementById('confirmPrintBtn');
+
+        const printBtnKas = document.getElementById('printBtnKas');
+        const printBtnTunai = document.getElementById('printBtnTunai');
+        const printBtnBank = document.getElementById('printBtnBank');
+        const printBtnPajak = document.getElementById('printBtnPajak');
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 5. Toast
+        // ─────────────────────────────────────────────────────────────────────────────
+        let toastTimer = null;
+
+        function showToast(msg, type = 'info') {
+            toast.textContent = msg;
+            toast.className = 'toast show ' + type;
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.className = 'toast';
+            }, 3000);
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 6. Populate tahun
+        // ─────────────────────────────────────────────────────────────────────────────
+        function populateTahun(selectElement) {
+            const currentYear = new Date().getFullYear();
+            const start = 2024;
+            const end = 2034;
+            selectElement.innerHTML = '';
+            for (let y = start; y <= end; y++) {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                if (y === currentYear) opt.selected = true;
+                selectElement.appendChild(opt);
+            }
+            if (currentYear < start || currentYear > end) {
+                selectElement.value = start;
+            }
+        }
+        populateTahun(tahunSelect);
+        populateTahun(tahunSelectTunai);
+        populateTahun(tahunSelectBank);
+        populateTahun(tahunSelectPajak);
+        populateTahun(tahunSelectUtang);
+        populateTahun(tahunSelectRob);
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 7. Format number & date
+        // ─────────────────────────────────────────────────────────────────────────────
+        function formatRupiah(val) {
+            if (val === undefined || val === null || val === '') return 'Rp 0';
+            const num = parseFloat(val);
+            if (isNaN(num) || num === 0) return 'Rp 0';
+            return 'Rp ' + num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        function getMonthName(month) {
+            const names = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+            ];
+            return names[parseInt(month) - 1] || month;
+        }
+
+        function getDayName(date) {
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            return days[date.getDay()];
+        }
+
+        function getPreviousMonth(month, year) {
+            let m = parseInt(month) - 1;
+            let y = parseInt(year);
+            if (m === 0) {
+                m = 12;
+                y = y - 1;
+            }
+            return { month: String(m).padStart(2, '0'), year: String(y) };
+        }
+
+        function formatDateToDDMMYY(dateStr) {
+            if (!dateStr) return '';
+            let parts = null;
+            if (dateStr.includes('-')) {
+                parts = dateStr.split('-');
+            } else if (dateStr.includes('/')) {
+                parts = dateStr.split('/');
+            } else {
+                return dateStr;
+            }
+            if (parts.length !== 3) return dateStr;
+            let day, month, year;
+            if (parts[0].length === 4) {
+                year = parts[0];
+                month = parts[1];
+                day = parts[2];
+            } else {
+                day = parts[0];
+                month = parts[1];
+                year = parts[2];
+            }
+            const shortYear = year.slice(-2);
+            return `${day.padStart(2,'0')}/${month.padStart(2,'0')}/${shortYear}`;
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 8. Load settings (update semua meta)
+        // ─────────────────────────────────────────────────────────────────────────────
+        function loadSettings() {
+            const docId = `${sessionJenjang}_${sessionTahun}`;
+            db.collection(SETTINGS_COLLECTION).doc(docId)
+                .onSnapshot((doc) => {
+                    if (doc.exists) {
+                        settingsData = doc.data();
+                    } else {
+                        settingsData = {
+                            kepalaSekolah: '',
+                            bendahara: '',
+                            anggaran1: 0,
+                            anggaran2: 0,
+                            npsn: '',
+                            namaSekolah: '',
+                            tanggalPemasukan1: '',
+                            tanggalPemasukan2: ''
+                        };
+                    }
+                    const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+                    const npsn = settingsData.npsn || '-';
+                    const kepala = settingsData.kepalaSekolah || '-';
+                    const bendahara = settingsData.bendahara || '-';
+
+                    // Kas
+                    metaNpsn.textContent = npsn;
+                    metaSekolah.textContent = namaSekolah;
+                    signKepsek.textContent = kepala;
+                    signBendahara.textContent = bendahara;
+
+                    // Tunai
+                    metaNpsnTunai.textContent = npsn;
+                    metaSekolahTunai.textContent = namaSekolah;
+                    signKepsekTunai.textContent = kepala;
+                    signBendaharaTunai.textContent = bendahara;
+
+                    // Bank
+                    metaNpsnBank.textContent = npsn;
+                    metaSekolahBank.textContent = namaSekolah;
+                    signKepsekBank.textContent = kepala;
+                    signBendaharaBank.textContent = bendahara;
+
+                    // Pajak
+                    metaNpsnPajak.textContent = npsn;
+                    metaSekolahPajak.textContent = namaSekolah;
+                    signKepsekPajak.textContent = kepala;
+                    signBendaharaPajak.textContent = bendahara;
+
+                    // Utang
+                    metaNpsnUtang.textContent = npsn;
+                    metaSekolahUtang.textContent = namaSekolah;
+                    signKepsekUtang.textContent = kepala;
+                    signBendaharaUtang.textContent = bendahara;
+
+                    // ROB
+                    metaNpsnRob.textContent = npsn;
+                    metaSekolahRob.textContent = namaSekolah;
+                    signKepsekRob.textContent = kepala;
+                    signBendaharaRob.textContent = bendahara;
+                }, (error) => {
+                    console.error('Settings read error:', error);
+                });
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 9. Fungsi bantu untuk ambil transaksi dari Firestore + URUTKAN BERDASARKAN 'no'
+        // ─────────────────────────────────────────────────────────────────────────────
+        async function fetchTransaksi() {
+            const snapshot = await db.collection(COLLECTION)
+                .where('jenjang', '==', sessionJenjang)
+                .where('tahun', '==', sessionTahun)
+                .get();
+            const transaksi = [];
+            snapshot.forEach(doc => {
+                const d = doc.data();
+                d._id = doc.id;
+                if (d.debetKredit === undefined) d.debetKredit = 'Kredit';
+                if (d.jenisBerisi === undefined) d.jenisBerisi = 'Tunai';
+                if (d.jenisPajak === undefined) d.jenisPajak = 'PPN';
+                if (d.no === undefined) d.no = '';
+                transaksi.push(d);
+            });
+
+            // ⭐ URUTKAN berdasarkan 'no' (angka) dari terkecil ke terbesar
+            transaksi.sort((a, b) => {
+                const noA = parseInt(a.no) || 0;
+                const noB = parseInt(b.no) || 0;
+                return noA - noB;
+            });
+
+            return transaksi;
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 10. Hitung saldo kumulatif untuk Buku Kas & Bank (dengan anggaran)
+        // ─────────────────────────────────────────────────────────────────────────────
+        function buildSaldoTransaksi(transaksiRaw, bulan, tahun, jenisFilter = null, includeAnggaran = false) {
+            const prev = getPreviousMonth(bulan, tahun);
+            const prevMonthName = getMonthName(prev.month);
+
+            let filtered = transaksiRaw;
+            if (jenisFilter) {
+                filtered = transaksiRaw.filter(item => item.jenisBerisi === jenisFilter);
+            }
+
+            let saldoAkhirBulanLalu = 0;
+            filtered.forEach(item => {
+                const tgl = item.tglPembayaran;
+                if (tgl) {
+                    let dateParts = null;
+                    if (tgl.includes('-')) dateParts = tgl.split('-');
+                    else if (tgl.includes('/')) dateParts = tgl.split('/');
+                    if (dateParts && dateParts.length === 3) {
+                        let year, month;
+                        if (dateParts[0].length === 4) { year = dateParts[0];
+                            month = dateParts[1]; } else { year = dateParts[2];
+                            month = dateParts[1]; }
+                        month = month.padStart(2, '0');
+                        if ((parseInt(month) < parseInt(prev.month) && parseInt(year) <= parseInt(prev.year)) ||
+                            (parseInt(month) === parseInt(prev.month) && parseInt(year) === parseInt(prev.year))) {
+                            const jumlah = parseFloat(item.jumlahHarga) || 0;
+                            if (item.debetKredit === 'Debet') {
+                                saldoAkhirBulanLalu += jumlah;
+                            } else {
+                                saldoAkhirBulanLalu -= jumlah;
+                            }
+                        }
+                    }
+                }
+            });
+
+            if (includeAnggaran && (jenisFilter === null || jenisFilter === 'Bank')) {
+                const tgl1 = settingsData.tanggalPemasukan1 || '';
+                const tgl2 = settingsData.tanggalPemasukan2 || '';
+                const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
+                const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
+
+                const addAnggaran = (tgl, jumlah) => {
+                    if (!tgl || jumlah <= 0) return;
+                    let dateParts = null;
+                    if (tgl.includes('-')) dateParts = tgl.split('-');
+                    else if (tgl.includes('/')) dateParts = tgl.split('/');
+                    if (dateParts && dateParts.length === 3) {
+                        let year, month;
+                        if (dateParts[0].length === 4) { year = dateParts[0];
+                            month = dateParts[1]; } else { year = dateParts[2];
+                            month = dateParts[1]; }
+                        month = month.padStart(2, '0');
+                        if (parseInt(month) <= parseInt(prev.month) && parseInt(year) <= parseInt(prev.year)) {
+                            saldoAkhirBulanLalu += jumlah;
+                        }
+                    }
+                };
+                addAnggaran(tgl1, anggaran1);
+                addAnggaran(tgl2, anggaran2);
+            }
+
+            const result = [];
+            // Baris saldo bulan lalu
+            result.push({
+                tanggal: '',
+                kodeKegiatan: '',
+                kodeRekening: '',
+                noBukti: '',
+                uraian: `Saldo Bulan Lalu (${prevMonthName} ${prev.year})`,
+                penerimaan: 0,
+                pengeluaran: 0,
+                saldo: saldoAkhirBulanLalu,
+                isSaldoAwal: true,
+                jenis: 'saldo_awal'
+            });
+
+            filtered.forEach(item => {
+                const tgl = item.tglPembayaran;
+                if (tgl) {
+                    let dateParts = null;
+                    if (tgl.includes('-')) dateParts = tgl.split('-');
+                    else if (tgl.includes('/')) dateParts = tgl.split('/');
+                    if (dateParts && dateParts.length === 3) {
+                        let year, month;
+                        if (dateParts[0].length === 4) { year = dateParts[0];
+                            month = dateParts[1]; } else { year = dateParts[2];
+                            month = dateParts[1]; }
+                        month = month.padStart(2, '0');
+                        if (month === bulan && year === tahun) {
+                            const jumlah = parseFloat(item.jumlahHarga) || 0;
+                            let penerimaan = 0,
+                                pengeluaran = 0;
+                            if (item.debetKredit === 'Debet') {
+                                penerimaan = jumlah;
+                            } else {
+                                pengeluaran = jumlah;
+                            }
+                            result.push({
+                                tanggal: tgl,
+                                kodeKegiatan: item.kodeKegiatan || '',
+                                kodeRekening: item.noRek || '',
+                                noBukti: item.noBukti || '',
+                                uraian: item.uraian || '',
+                                penerimaan: penerimaan,
+                                pengeluaran: pengeluaran,
+                                saldo: 0,
+                                isSaldoAwal: false,
+                                jenis: 'transaksi'
+                            });
+                        }
+                    }
+                }
+            });
+
+            if (includeAnggaran && (jenisFilter === null || jenisFilter === 'Bank')) {
+                const addPemasukanAnggaran = (tgl, jumlah, keterangan) => {
+                    if (!tgl || jumlah <= 0) return;
+                    let dateParts = null;
+                    if (tgl.includes('-')) dateParts = tgl.split('-');
+                    else if (tgl.includes('/')) dateParts = tgl.split('/');
+                    if (dateParts && dateParts.length === 3) {
+                        let year, month;
+                        if (dateParts[0].length === 4) { year = dateParts[0];
+                            month = dateParts[1]; } else { year = dateParts[2];
+                            month = dateParts[1]; }
+                        month = month.padStart(2, '0');
+                        if (month === bulan && year === tahun) {
+                            result.push({
+                                tanggal: tgl,
+                                kodeKegiatan: '',
+                                kodeRekening: '',
+                                noBukti: '',
+                                uraian: keterangan,
+                                penerimaan: jumlah,
+                                pengeluaran: 0,
+                                saldo: 0,
+                                isSaldoAwal: false,
+                                jenis: 'pemasukan'
+                            });
+                        }
+                    }
+                };
+                addPemasukanAnggaran(settingsData.tanggalPemasukan1 || '', parseFloat(settingsData.anggaran1) || 0,
+                    'Penerimaan Anggaran Tahap 1');
+                addPemasukanAnggaran(settingsData.tanggalPemasukan2 || '', parseFloat(settingsData.anggaran2) || 0,
+                    'Penerimaan Anggaran Tahap 2');
+            }
+
+            result.sort((a, b) => {
+                if (a.isSaldoAwal && !b.isSaldoAwal) return -1;
+                if (!a.isSaldoAwal && b.isSaldoAwal) return 1;
+                return a.tanggal.localeCompare(b.tanggal);
+            });
+
+            let saldoKumulatif = saldoAkhirBulanLalu;
+            result.forEach(item => {
+                if (item.isSaldoAwal) {
+                    item.saldo = saldoKumulatif;
+                } else {
+                    saldoKumulatif += (item.penerimaan || 0) - (item.pengeluaran || 0);
+                    item.saldo = saldoKumulatif;
+                }
+            });
+
+            return result;
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 11. Load Buku Kas
+        // ─────────────────────────────────────────────────────────────────────────────
+        async function loadKasData() {
+            const bulan = bulanSelect.value;
+            const tahun = tahunSelect.value;
+            displayBulan.textContent = getMonthName(bulan);
+            displayTahun.textContent = tahun;
+
+            const raw = await fetchTransaksi();
+            const transaksi = buildSaldoTransaksi(raw, bulan, tahun, null, true);
+            allKasData = transaksi;
+            renderKasTable(transaksi);
+            updateClosingKas(transaksi);
+        }
+
+        function renderKasTable(data) {
+            if (data.length === 0) {
+                kasTableBody.innerHTML =
+                    `<tr><td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada data untuk bulan ini.</td></tr>`;
+                return;
+            }
+            let html = '';
+            data.forEach((item) => {
+                const tgl = item.tanggal || '';
+                const kode = item.kodeKegiatan || '';
+                const rek = item.kodeRekening || '';
+                const bukti = item.noBukti || '';
+                const uraian = item.uraian || '';
+                const penerimaan = item.penerimaan || 0;
+                const pengeluaran = item.pengeluaran || 0;
+                const saldo = item.saldo || 0;
+
+                let displayKode = kode,
+                    displayRek = rek,
+                    displayBukti = bukti;
+                if (item.jenis === 'pemasukan' || item.isSaldoAwal) {
+                    displayKode = '';
+                    displayRek = '';
+                    displayBukti = '';
+                }
+                const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
+                const tanggalFormatted = formatDateToDDMMYY(tgl);
+                html += `
+                        <tr style="${isBold ? 'font-weight:600;' : ''}">
+                            <td>${tanggalFormatted}</td>
+                            <td>${displayKode}</td>
+                            <td>${displayRek}</td>
+                            <td>${displayBukti}</td>
+                            <td class="left">${uraian}</td>
+                            <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                            <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                            <td class="right">${formatRupiah(saldo)}</td>
+                        </tr>
+                    `;
+            });
+            kasTableBody.innerHTML = html;
+        }
+
+        function updateClosingKas(data) {
+            const bulan = parseInt(bulanSelect.value);
+            const tahun = parseInt(tahunSelect.value);
+            const lastDay = new Date(tahun, bulan, 0);
+            const dayName = getDayName(lastDay);
+
+            closingHari.textContent = dayName;
+            closingTanggal.textContent = lastDay.getDate();
+            closingBulan.textContent = getMonthName(String(bulan));
+            closingTahun.textContent = tahun;
+
+            let saldoAkhir = 0;
+            if (data.length > 0) saldoAkhir = data[data.length - 1].saldo || 0;
+            saldoBank.textContent = formatRupiah(saldoAkhir);
+            saldoTunai.textContent = formatRupiah(0);
+            saldoTotal.textContent = formatRupiah(saldoAkhir);
+
+            const signDate = new Date(tahun, bulan, 0);
+            signTanggal.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 12. Load Buku Tunai
+        // ─────────────────────────────────────────────────────────────────────────────
+        async function loadTunaiData() {
+            const bulan = bulanSelectTunai.value;
+            const tahun = tahunSelectTunai.value;
+            displayBulanTunai.textContent = getMonthName(bulan);
+            displayTahunTunai.textContent = tahun;
+
+            const raw = await fetchTransaksi();
+            const transaksi = buildSaldoTransaksi(raw, bulan, tahun, 'Tunai', false);
+            allTunaiData = transaksi;
+            renderTunaiTable(transaksi);
+            updateClosingTunai(transaksi);
+        }
+
+        function renderTunaiTable(data) {
+            if (data.length === 0) {
+                tunaiTableBody.innerHTML =
+                    `<tr><td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada data untuk bulan ini.</td></tr>`;
+                return;
+            }
+            let html = '';
+            data.forEach((item) => {
+                const tgl = item.tanggal || '';
+                const kode = item.kodeKegiatan || '';
+                const rek = item.kodeRekening || '';
+                const bukti = item.noBukti || '';
+                const uraian = item.uraian || '';
+                const penerimaan = item.penerimaan || 0;
+                const pengeluaran = item.pengeluaran || 0;
+                const saldo = item.saldo || 0;
+                const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
+                const tanggalFormatted = formatDateToDDMMYY(tgl);
+                html += `
+                        <tr style="${isBold ? 'font-weight:600;' : ''}">
+                            <td>${tanggalFormatted}</td>
+                            <td>${kode}</td>
+                            <td>${rek}</td>
+                            <td>${bukti}</td>
+                            <td class="left">${uraian}</td>
+                            <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                            <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                            <td class="right">${formatRupiah(saldo)}</td>
+                        </tr>
+                    `;
+            });
+            tunaiTableBody.innerHTML = html;
+        }
+
+        function updateClosingTunai(data) {
+            const bulan = parseInt(bulanSelectTunai.value);
+            const tahun = parseInt(tahunSelectTunai.value);
+            const lastDay = new Date(tahun, bulan, 0);
+            const dayName = getDayName(lastDay);
+
+            closingHariTunai.textContent = dayName;
+            closingTanggalTunai.textContent = lastDay.getDate();
+            closingBulanTunai.textContent = getMonthName(String(bulan));
+            closingTahunTunai.textContent = tahun;
+
+            let saldoAkhir = 0;
+            if (data.length > 0) saldoAkhir = data[data.length - 1].saldo || 0;
+            saldoTunaiFinal.textContent = formatRupiah(saldoAkhir);
+
+            const signDate = new Date(tahun, bulan, 0);
+            signTanggalTunai.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 13. Load Buku Bank
+        // ─────────────────────────────────────────────────────────────────────────────
+        async function loadBankData() {
+            const bulan = bulanSelectBank.value;
+            const tahun = tahunSelectBank.value;
+            displayBulanBank.textContent = getMonthName(bulan);
+            displayTahunBank.textContent = tahun;
+
+            const raw = await fetchTransaksi();
+            const transaksi = buildSaldoTransaksi(raw, bulan, tahun, 'Bank', true);
+            allBankData = transaksi;
+            renderBankTable(transaksi);
+            updateClosingBank(transaksi);
+        }
+
+        function renderBankTable(data) {
+            if (data.length === 0) {
+                bankTableBody.innerHTML =
+                    `<tr><td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada data untuk bulan ini.</td></tr>`;
+                return;
+            }
+            let html = '';
+            data.forEach((item) => {
+                const tgl = item.tanggal || '';
+                const kode = item.kodeKegiatan || '';
+                const rek = item.kodeRekening || '';
+                const bukti = item.noBukti || '';
+                const uraian = item.uraian || '';
+                const penerimaan = item.penerimaan || 0;
+                const pengeluaran = item.pengeluaran || 0;
+                const saldo = item.saldo || 0;
+                const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
+                const tanggalFormatted = formatDateToDDMMYY(tgl);
+                html += `
+                        <tr style="${isBold ? 'font-weight:600;' : ''}">
+                            <td>${tanggalFormatted}</td>
+                            <td>${kode}</td>
+                            <td>${rek}</td>
+                            <td>${bukti}</td>
+                            <td class="left">${uraian}</td>
+                            <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                            <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                            <td class="right">${formatRupiah(saldo)}</td>
+                        </tr>
+                    `;
+            });
+            bankTableBody.innerHTML = html;
+        }
+
+        function updateClosingBank(data) {
+            const bulan = parseInt(bulanSelectBank.value);
+            const tahun = parseInt(tahunSelectBank.value);
+            const lastDay = new Date(tahun, bulan, 0);
+            const dayName = getDayName(lastDay);
+
+            closingHariBank.textContent = dayName;
+            closingTanggalBank.textContent = lastDay.getDate();
+            closingBulanBank.textContent = getMonthName(String(bulan));
+            closingTahunBank.textContent = tahun;
+
+            let saldoAkhir = 0;
+            if (data.length > 0) saldoAkhir = data[data.length - 1].saldo || 0;
+            saldoBankFinal.textContent = formatRupiah(saldoAkhir);
+
+            const signDate = new Date(tahun, bulan, 0);
+            signTanggalBank.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 14. Load Buku Pajak
+        // ─────────────────────────────────────────────────────────────────────────────
+        async function loadPajakData() {
+            const bulan = bulanSelectPajak.value;
+            const tahun = tahunSelectPajak.value;
+            displayBulanPajak.textContent = getMonthName(bulan);
+            displayTahunPajak.textContent = tahun;
+
+            const raw = await fetchTransaksi();
+            const pajakRows = [];
+            const prev = getPreviousMonth(bulan, tahun);
+            const prevMonthName = getMonthName(prev.month);
+            let saldoAwal = 0;
+
+            raw.forEach(item => {
+                const tgl = item.tglPembayaran;
+                if (!tgl) return;
+                if (item.jenisBerisi !== 'Pajak') return;
+                let dateParts = null;
+                if (tgl.includes('-')) dateParts = tgl.split('-');
+                else if (tgl.includes('/')) dateParts = tgl.split('/');
+                if (!dateParts || dateParts.length !== 3) return;
+                let year, month;
+                if (dateParts[0].length === 4) { year = dateParts[0];
+                    month = dateParts[1]; } else { year = dateParts[2];
+                    month = dateParts[1]; }
+                month = month.padStart(2, '0');
+                if (month === prev.month && year === prev.year) {
+                    const jumlah = parseFloat(item.jumlahHarga) || 0;
+                    const debetKredit = item.debetKredit || 'Kredit';
+                    if (debetKredit === 'Debet') {
+                        saldoAwal += jumlah;
+                    } else {
+                        saldoAwal -= jumlah;
+                    }
+                }
+            });
+
+            pajakRows.push({
+                tanggal: '',
+                kode: '',
+                uraian: `Saldo Bulan Lalu (${prevMonthName} ${prev.year})`,
+                ppn: 0,
+                pph21: 0,
+                pph23: 0,
+                pph4: 0,
+                sspd: 0,
+                pengeluaran: 0,
+                saldo: saldoAwal,
+                isSaldoAwal: true
+            });
+
+            let saldoBerjalan = saldoAwal;
+            raw.forEach(item => {
+                const tgl = item.tglPembayaran;
+                if (!tgl) return;
+                if (item.jenisBerisi !== 'Pajak') return;
+                let dateParts = null;
+                if (tgl.includes('-')) dateParts = tgl.split('-');
+                else if (tgl.includes('/')) dateParts = tgl.split('/');
+                if (!dateParts || dateParts.length !== 3) return;
+                let year, month;
+                if (dateParts[0].length === 4) { year = dateParts[0];
+                    month = dateParts[1]; } else { year = dateParts[2];
+                    month = dateParts[1]; }
+                month = month.padStart(2, '0');
+                if (month === bulan && year === tahun) {
+                    const jumlah = parseFloat(item.jumlahHarga) || 0;
+                    const jenisPajak = item.jenisPajak || 'PPN';
+                    const debetKredit = item.debetKredit || 'Kredit';
+                    let ppn = 0,
+                        pph21 = 0,
+                        pph23 = 0,
+                        pph4 = 0,
+                        sspd = 0;
+                    let pengeluaranKredit = 0;
+
+                    if (debetKredit === 'Debet') {
+                        const pajakMap = {
+                            'PPN': 'ppn',
+                            'PPh 21': 'pph21',
+                            'PPh 23': 'pph23',
+                            'PPh 4': 'pph4',
+                            'SSPD': 'sspd'
+                        };
+                        const field = pajakMap[jenisPajak];
+                        if (field) {
+                            if (field === 'ppn') ppn = jumlah;
+                            else if (field === 'pph21') pph21 = jumlah;
+                            else if (field === 'pph23') pph23 = jumlah;
+                            else if (field === 'pph4') pph4 = jumlah;
+                            else if (field === 'sspd') sspd = jumlah;
+                        }
+                        saldoBerjalan += jumlah;
+                    } else {
+                        pengeluaranKredit = jumlah;
+                        saldoBerjalan -= jumlah;
+                    }
+
+                    pajakRows.push({
+                        tanggal: tgl,
+                        kode: item.kodeKegiatan || '',
+                        uraian: item.uraian || '',
+                        ppn,
+                        pph21,
+                        pph23,
+                        pph4,
+                        sspd,
+                        pengeluaran: pengeluaranKredit,
+                        saldo: saldoBerjalan,
+                        isSaldoAwal: false
+                    });
+                }
+            });
+
+            allPajakData = pajakRows;
+            renderPajakTable(pajakRows);
+            updateClosingPajak(pajakRows);
+        }
+
+        function renderPajakTable(data) {
+            if (data.length === 0) {
+                pajakTableBody.innerHTML =
+                    `<tr><td colspan="10" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada transaksi pajak untuk bulan ini.</td></tr>`;
+                return;
+            }
+            let html = '';
+            data.forEach((item) => {
+                const tanggalFormatted = formatDateToDDMMYY(item.tanggal);
+                const isSaldoAwal = item.isSaldoAwal || false;
+                html += `
+                        <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
+                            <td>${tanggalFormatted}</td>
+                            <td>${item.kode}</td>
+                            <td class="left">${item.uraian}</td>
+                            <td class="right">${formatRupiah(item.ppn)}</td>
+                            <td class="right">${formatRupiah(item.pph21)}</td>
+                            <td class="right">${formatRupiah(item.pph23)}</td>
+                            <td class="right">${formatRupiah(item.pph4)}</td>
+                            <td class="right">${formatRupiah(item.sspd)}</td>
+                            <td class="right">${formatRupiah(item.pengeluaran)}</td>
+                            <td class="right">${formatRupiah(item.saldo)}</td>
+                        </tr>
+                    `;
+            });
+            pajakTableBody.innerHTML = html;
+        }
+
+        function updateClosingPajak(data) {
+            const bulan = parseInt(bulanSelectPajak.value);
+            const tahun = parseInt(tahunSelectPajak.value);
+            const signDate = new Date(tahun, bulan, 0);
+            signTanggalPajak.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 15. Load Buku Utang (kosong)
+        // ─────────────────────────────────────────────────────────────────────────────
+        function loadUtangData() {
+            const bulan = bulanSelectUtang.value;
+            const tahun = tahunSelectUtang.value;
+            displayBulanUtang.textContent = getMonthName(bulan);
+            displayTahunUtang.textContent = tahun;
+
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            signTanggalUtang.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 16. Load ROB (Rincian Objek Belanja)
+        // ─────────────────────────────────────────────────────────────────────────────
+        async function loadRobData() {
+            const bulan = bulanSelectRob.value;
+            const tahun = tahunSelectRob.value;
+            displayBulanRob.textContent = getMonthName(bulan);
+            displayTahunRob.textContent = tahun;
+
+            const raw = await fetchTransaksi();
+            const prev = getPreviousMonth(bulan, tahun);
+            const prevMonthName = getMonthName(prev.month);
+
+            function isInMonth(tgl, targetMonth, targetYear) {
+                if (!tgl) return false;
+                let dateParts = null;
+                if (tgl.includes('-')) dateParts = tgl.split('-');
+                else if (tgl.includes('/')) dateParts = tgl.split('/');
+                if (!dateParts || dateParts.length !== 3) return false;
+                let year, month;
+                if (dateParts[0].length === 4) { year = dateParts[0];
+                    month = dateParts[1]; } else { year = dateParts[2];
+                    month = dateParts[1]; }
+                month = month.padStart(2, '0');
+                return (month === targetMonth && year === targetYear);
+            }
+
+            function isInOrBeforeMonth(tgl, targetMonth, targetYear) {
+                if (!tgl) return false;
+                let dateParts = null;
+                if (tgl.includes('-')) dateParts = tgl.split('-');
+                else if (tgl.includes('/')) dateParts = tgl.split('/');
+                if (!dateParts || dateParts.length !== 3) return false;
+                let year, month;
+                if (dateParts[0].length === 4) { year = dateParts[0];
+                    month = dateParts[1]; } else { year = dateParts[2];
+                    month = dateParts[1]; }
+                month = month.padStart(2, '0');
+                if (parseInt(year) < parseInt(targetYear)) return true;
+                if (parseInt(year) === parseInt(targetYear) && parseInt(month) <= parseInt(targetMonth)) return true;
+                return false;
+            }
+
+            let saldoKumulatif = 0;
+            const transaksiSampaiBulanLalu = [];
+            raw.forEach(item => {
+                const tgl = item.tglPembayaran;
+                if (!tgl) return;
+                if (item.jenisBerisi === 'Pajak') return;
+                if (isInOrBeforeMonth(tgl, prev.month, prev.year)) {
+                    transaksiSampaiBulanLalu.push({
+                        tanggal: tgl,
+                        jumlah: parseFloat(item.jumlahHarga) || 0,
+                        debetKredit: item.debetKredit || 'Kredit',
+                        uraian: item.uraian || ''
+                    });
+                }
+            });
+
+            const tgl1 = settingsData.tanggalPemasukan1 || '';
+            const tgl2 = settingsData.tanggalPemasukan2 || '';
+            const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
+            const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
+
+            if (isInOrBeforeMonth(tgl1, prev.month, prev.year) && anggaran1 > 0) {
+                transaksiSampaiBulanLalu.push({
+                    tanggal: tgl1,
+                    jumlah: anggaran1,
+                    debetKredit: 'Debet',
+                    uraian: 'Penerimaan Anggaran Tahap 1'
+                });
+            }
+            if (isInOrBeforeMonth(tgl2, prev.month, prev.year) && anggaran2 > 0) {
+                transaksiSampaiBulanLalu.push({
+                    tanggal: tgl2,
+                    jumlah: anggaran2,
+                    debetKredit: 'Debet',
+                    uraian: 'Penerimaan Anggaran Tahap 2'
+                });
+            }
+
+            transaksiSampaiBulanLalu.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
+            transaksiSampaiBulanLalu.forEach(item => {
+                if (item.debetKredit === 'Debet') {
+                    saldoKumulatif += item.jumlah;
+                } else {
+                    saldoKumulatif -= item.jumlah;
+                }
+            });
+
+            const robRows = [];
+            robRows.push({
+                tanggal: '',
+                noBku: '',
+                uraian: `Saldo Bulan Lalu (${prevMonthName} ${prev.year})`,
+                realisasi: 0,
+                jumlah: 0,
+                sisaAnggaran: saldoKumulatif,
+                isSaldoAwal: true
+            });
+
+            let sisaAnggaran = saldoKumulatif;
+            const transaksiBulanIni = [];
+            raw.forEach(item => {
+                const tgl = item.tglPembayaran;
+                if (!tgl) return;
+                if (item.jenisBerisi === 'Pajak') return;
+                if (isInMonth(tgl, bulan, tahun)) {
+                    const jumlah = parseFloat(item.jumlahHarga) || 0;
+                    const debetKredit = item.debetKredit || 'Kredit';
+                    transaksiBulanIni.push({
+                        tanggal: tgl,
+                        noBku: item.noBukti || '',
+                        uraian: item.uraian || '',
+                        jumlah: jumlah,
+                        debetKredit: debetKredit,
+                        jenisBerisi: item.jenisBerisi || ''
+                    });
+                }
+            });
+
+            if (isInMonth(tgl1, bulan, tahun) && anggaran1 > 0) {
+                transaksiBulanIni.push({
+                    tanggal: tgl1,
+                    noBku: '',
+                    uraian: 'Penerimaan Anggaran Tahap 1',
+                    jumlah: anggaran1,
+                    debetKredit: 'Debet',
+                    jenisBerisi: 'Anggaran'
+                });
+            }
+            if (isInMonth(tgl2, bulan, tahun) && anggaran2 > 0) {
+                transaksiBulanIni.push({
+                    tanggal: tgl2,
+                    noBku: '',
+                    uraian: 'Penerimaan Anggaran Tahap 2',
+                    jumlah: anggaran2,
+                    debetKredit: 'Debet',
+                    jenisBerisi: 'Anggaran'
+                });
+            }
+
+            transaksiBulanIni.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
+            let totalRealisasi = 0,
+                totalJumlah = 0;
+            transaksiBulanIni.forEach(item => {
+                const realisasi = item.jumlah;
+                const debetKredit = item.debetKredit;
+                if (debetKredit === 'Debet') {
+                    sisaAnggaran += realisasi;
+                } else {
+                    sisaAnggaran -= realisasi;
+                }
+                robRows.push({
+                    tanggal: item.tanggal,
+                    noBku: item.noBku,
+                    uraian: item.uraian,
+                    realisasi: realisasi,
+                    jumlah: realisasi,
+                    sisaAnggaran: sisaAnggaran,
+                    isSaldoAwal: false
+                });
+                totalRealisasi += realisasi;
+                totalJumlah += realisasi;
+            });
+
+            allRobData = robRows;
+            renderRobTable(robRows, totalRealisasi, totalJumlah, sisaAnggaran);
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            signTanggalRob.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        function renderRobTable(data, totalRealisasi, totalJumlah, sisaAkhir) {
+            if (data.length === 0 || (data.length === 1 && data[0].isSaldoAwal && data[0].sisaAnggaran === 0)) {
+                robTableBody.innerHTML =
+                    `<tr><td colspan="6" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada transaksi untuk bulan ini.</td></tr>`;
+                robTableFoot.style.display = 'none';
+                return;
+            }
+            robTableFoot.style.display = 'table-footer-group';
+            let html = '';
+            data.forEach((item) => {
+                const tanggalFormatted = formatDateToDDMMYY(item.tanggal);
+                const isSaldoAwal = item.isSaldoAwal || false;
+                html += `
+                            <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
+                                <td>${tanggalFormatted}</td>
+                                <td>${item.noBku}</td>
+                                <td class="left">${item.uraian}</td>
+                                <td class="right">${formatRupiah(item.realisasi)}</td>
+                                <td class="right">${formatRupiah(item.jumlah)}</td>
+                                <td class="right">${formatRupiah(item.sisaAnggaran)}</td>
+                            </tr>
+                        `;
+            });
+            robTableBody.innerHTML = html;
+            robTotalRealisasi.textContent = formatRupiah(totalRealisasi);
+            robTotalJumlah.textContent = formatRupiah(totalJumlah);
+            robTotalSisa.textContent = formatRupiah(sisaAkhir);
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 17. Tabs
+        // ─────────────────────────────────────────────────────────────────────────────
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+                const target = document.getElementById('tab-' + this.dataset.tab);
+                if (target) target.classList.add('active');
+
+                if (this.dataset.tab === 'buku-tunai') loadTunaiData();
+                if (this.dataset.tab === 'buku-bank') loadBankData();
+                if (this.dataset.tab === 'buku-pajak') loadPajakData();
+                if (this.dataset.tab === 'buku-utang') loadUtangData();
+                if (this.dataset.tab === 'rob') loadRobData();
+            });
+        });
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 18. Build A4 preview HTML
+        // ─────────────────────────────────────────────────────────────────────────────
+        function buildA4PreviewKas() {
+            const bulan = bulanSelect.value;
+            const tahun = tahunSelect.value;
+            const bulanNama = getMonthName(bulan);
+            let tableRows = '';
+            if (allKasData.length === 0) {
+                tableRows =
+                    `<tr><td colspan="8" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada data.</td></tr>`;
+            } else {
+                allKasData.forEach(item => {
+                    const tgl = formatDateToDDMMYY(item.tanggal);
+                    const penerimaan = item.penerimaan || 0;
+                    const pengeluaran = item.pengeluaran || 0;
+                    const saldo = item.saldo || 0;
+                    const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
+                    const kode = (item.jenis === 'pemasukan' || item.isSaldoAwal) ? '' : item.kodeKegiatan || '';
+                    const rek = (item.jenis === 'pemasukan' || item.isSaldoAwal) ? '' : item.kodeRekening || '';
+                    const bukti = (item.jenis === 'pemasukan' || item.isSaldoAwal) ? '' : item.noBukti || '';
+                    tableRows += `
+                                <tr style="${isBold ? 'font-weight:600;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${kode}</td>
+                                    <td>${rek}</td>
+                                    <td>${bukti}</td>
+                                    <td class="left">${item.uraian || ''}</td>
+                                    <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                                    <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                                    <td class="right">${formatRupiah(saldo)}</td>
+                                </tr>
+                            `;
+                });
+            }
+
+            const npsn = settingsData.npsn || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+            const kepalaSekolah = settingsData.kepalaSekolah || '-';
+            const bendahara = settingsData.bendahara || '-';
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            let saldoAkhir = 0;
+            if (allKasData.length > 0) saldoAkhir = allKasData[allKasData.length - 1].saldo || 0;
+
+            return `
+                        <div class="book-header">
+                            <h2>BUKU KAS UMUM</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
+                        </div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">TANGGAL</th>
+                                        <th style="width:100px;">KODE KEGIATAN</th>
+                                        <th style="width:100px;">KODE REKENING</th>
+                                        <th style="width:100px;">NO. BUKTI</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:120px;">PENERIMAAN</th>
+                                        <th style="width:120px;">PENGELUARAN</th>
+                                        <th style="width:120px;">SALDO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                            </table>
+                        </div>
+                        <div class="closing-statement">
+                            <div style="font-size:13px;margin-bottom:8px;">
+                                Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut:
+                            </div>
+                            <div class="closing-grid">
+                                <div class="item"><span>Saldo Bank</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                                <div class="item"><span>Saldo Tunai</span> <span>Rp 0</span></div>
+                                <div class="item total"><span>Jumlah</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                            </div>
+                            <div class="signature">
+                                <div class="sign-grid">
+                                    <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                    <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                    <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        function buildA4PreviewTunai() {
+            const bulan = bulanSelectTunai.value;
+            const tahun = tahunSelectTunai.value;
+            const bulanNama = getMonthName(bulan);
+            let tableRows = '';
+            if (allTunaiData.length === 0) {
+                tableRows =
+                    `<tr><td colspan="8" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada data.</td></tr>`;
+            } else {
+                allTunaiData.forEach(item => {
+                    const tgl = formatDateToDDMMYY(item.tanggal);
+                    const penerimaan = item.penerimaan || 0;
+                    const pengeluaran = item.pengeluaran || 0;
+                    const saldo = item.saldo || 0;
+                    const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
+                    tableRows += `
+                                <tr style="${isBold ? 'font-weight:600;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${item.kodeKegiatan || ''}</td>
+                                    <td>${item.kodeRekening || ''}</td>
+                                    <td>${item.noBukti || ''}</td>
+                                    <td class="left">${item.uraian || ''}</td>
+                                    <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                                    <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                                    <td class="right">${formatRupiah(saldo)}</td>
+                                </tr>
+                            `;
+                });
+            }
+
+            const npsn = settingsData.npsn || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+            const kepalaSekolah = settingsData.kepalaSekolah || '-';
+            const bendahara = settingsData.bendahara || '-';
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            let saldoAkhir = 0;
+            if (allTunaiData.length > 0) saldoAkhir = allTunaiData[allTunaiData.length - 1].saldo || 0;
+
+            return `
+                        <div class="book-header">
+                            <h2>BUKU KAS PEMBANTU TUNAI</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
+                        </div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">TANGGAL</th>
+                                        <th style="width:100px;">KODE KEGIATAN</th>
+                                        <th style="width:100px;">KODE REKENING</th>
+                                        <th style="width:100px;">NO. BUKTI</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:120px;">PENERIMAAN</th>
+                                        <th style="width:120px;">PENGELUARAN</th>
+                                        <th style="width:120px;">SALDO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                            </table>
+                        </div>
+                        <div class="closing-statement">
+                            <div style="font-size:13px;margin-bottom:8px;">
+                                Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Kas Tunai ditutup dengan keadaan/posisi buku sebagai berikut:
+                            </div>
+                            <div class="closing-grid">
+                                <div class="item"><span>Saldo Buku Kas Tunai</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                            </div>
+                            <div class="signature">
+                                <div class="sign-grid">
+                                    <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                    <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                    <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        function buildA4PreviewBank() {
+            const bulan = bulanSelectBank.value;
+            const tahun = tahunSelectBank.value;
+            const bulanNama = getMonthName(bulan);
+            let tableRows = '';
+            if (allBankData.length === 0) {
+                tableRows =
+                    `<tr><td colspan="8" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada data.</td></tr>`;
+            } else {
+                allBankData.forEach(item => {
+                    const tgl = formatDateToDDMMYY(item.tanggal);
+                    const penerimaan = item.penerimaan || 0;
+                    const pengeluaran = item.pengeluaran || 0;
+                    const saldo = item.saldo || 0;
+                    const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
+                    tableRows += `
+                                <tr style="${isBold ? 'font-weight:600;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${item.kodeKegiatan || ''}</td>
+                                    <td>${item.kodeRekening || ''}</td>
+                                    <td>${item.noBukti || ''}</td>
+                                    <td class="left">${item.uraian || ''}</td>
+                                    <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                                    <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                                    <td class="right">${formatRupiah(saldo)}</td>
+                                </tr>
+                            `;
+                });
+            }
+
+            const npsn = settingsData.npsn || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+            const kepalaSekolah = settingsData.kepalaSekolah || '-';
+            const bendahara = settingsData.bendahara || '-';
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            let saldoAkhir = 0;
+            if (allBankData.length > 0) saldoAkhir = allBankData[allBankData.length - 1].saldo || 0;
+
+            return `
+                        <div class="book-header">
+                            <h2>BUKU BANK</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
+                        </div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">TANGGAL</th>
+                                        <th style="width:100px;">KODE KEGIATAN</th>
+                                        <th style="width:100px;">KODE REKENING</th>
+                                        <th style="width:100px;">NO. BUKTI</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:120px;">PENERIMAAN</th>
+                                        <th style="width:120px;">PENGELUARAN</th>
+                                        <th style="width:120px;">SALDO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                            </table>
+                        </div>
+                        <div class="closing-statement">
+                            <div style="font-size:13px;margin-bottom:8px;">
+                                Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Bank ditutup dengan keadaan/posisi buku sebagai berikut:
+                            </div>
+                            <div class="closing-grid">
+                                <div class="item"><span>Saldo Bank</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                            </div>
+                            <div class="signature">
+                                <div class="sign-grid">
+                                    <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                    <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                    <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        function buildA4PreviewPajak() {
+            const bulan = bulanSelectPajak.value;
+            const tahun = tahunSelectPajak.value;
+            const bulanNama = getMonthName(bulan);
+
+            let tableRows = '';
+            if (allPajakData.length === 0) {
+                tableRows =
+                    `<tr><td colspan="10" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada transaksi pajak.</td></tr>`;
+            } else {
+                allPajakData.forEach(item => {
+                    const tgl = formatDateToDDMMYY(item.tanggal);
+                    const isSaldoAwal = item.isSaldoAwal || false;
+                    tableRows += `
+                                <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${item.kode}</td>
+                                    <td class="left">${item.uraian}</td>
+                                    <td class="right">${formatRupiah(item.ppn)}</td>
+                                    <td class="right">${formatRupiah(item.pph21)}</td>
+                                    <td class="right">${formatRupiah(item.pph23)}</td>
+                                    <td class="right">${formatRupiah(item.pph4)}</td>
+                                    <td class="right">${formatRupiah(item.sspd)}</td>
+                                    <td class="right">${formatRupiah(item.pengeluaran)}</td>
+                                    <td class="right">${formatRupiah(item.saldo)}</td>
+                                </tr>
+                            `;
+                });
+            }
+
+            const npsn = settingsData.npsn || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+            const kepalaSekolah = settingsData.kepalaSekolah || '-';
+            const bendahara = settingsData.bendahara || '-';
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            return `
+                        <div class="book-header">
+                            <h2>BUKU PEMBANTU PAJAK</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
+                        </div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">TANGGAL</th>
+                                        <th style="width:100px;">NO.KODE</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:100px;">PPN</th>
+                                        <th style="width:100px;">PPh 21</th>
+                                        <th style="width:100px;">PPh 23</th>
+                                        <th style="width:100px;">PPh 4</th>
+                                        <th style="width:100px;">SSPD</th>
+                                        <th style="width:150px;">PENGELUARAN / KREDIT</th>
+                                        <th style="width:150px;">SALDO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                            </table>
+                        </div>
+                        <div class="signature">
+                            <div class="sign-grid">
+                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        function buildA4PreviewUtang() {
+            const bulan = bulanSelectUtang.value;
+            const tahun = tahunSelectUtang.value;
+            const bulanNama = getMonthName(bulan);
+
+            const npsn = settingsData.npsn || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+            const kepalaSekolah = settingsData.kepalaSekolah || '-';
+            const bendahara = settingsData.bendahara || '-';
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            return `
+                        <div class="book-header">
+                            <h2>BUKU PEMBANTU UTANG</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
+                        </div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:100px;">TANGGAL</th>
+                                        <th style="width:100px;">NO. KODE</th>
+                                        <th style="width:120px;">NO. FAKTUR</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:200px;">NAMA KREDITUR / TOKO</th>
+                                        <th style="width:150px;">JUMLAH</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" style="text-align:center;padding:30px 0;color:#888;font-size:9pt;">Tidak ada data utang.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="signature">
+                            <div class="sign-grid">
+                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        function buildA4PreviewRob() {
+            const bulan = bulanSelectRob.value;
+            const tahun = tahunSelectRob.value;
+            const bulanNama = getMonthName(bulan);
+
+            let tableRows = '';
+            let totalRealisasi = 0;
+            let totalJumlah = 0;
+            let sisaAkhir = 0;
+
+            if (allRobData.length === 0) {
+                tableRows =
+                    `<tr><td colspan="6" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada transaksi.</td></tr>`;
+            } else {
+                allRobData.forEach((item, index) => {
+                    const tgl = formatDateToDDMMYY(item.tanggal);
+                    const isSaldoAwal = item.isSaldoAwal || false;
+                    if (!isSaldoAwal) {
+                        totalRealisasi += item.realisasi || 0;
+                        totalJumlah += item.jumlah || 0;
+                    }
+                    if (index === allRobData.length - 1) {
+                        sisaAkhir = item.sisaAnggaran || 0;
+                    }
+                    tableRows += `
+                                <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${item.noBku || ''}</td>
+                                    <td class="left">${item.uraian || ''}</td>
+                                    <td class="right">${formatRupiah(item.realisasi || 0)}</td>
+                                    <td class="right">${formatRupiah(item.jumlah || 0)}</td>
+                                    <td class="right">${formatRupiah(item.sisaAnggaran || 0)}</td>
+                                </tr>
+                            `;
+                });
+            }
+
+            const npsn = settingsData.npsn || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+            const kepalaSekolah = settingsData.kepalaSekolah || '-';
+            const bendahara = settingsData.bendahara || '-';
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            return `
+                        <div class="book-header">
+                            <h2>RINCIAN OBJEK BELANJA (ROB)</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
+                        </div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:100px;">TANGGAL</th>
+                                        <th style="width:100px;">NO. BKU</th>
+                                        <th style="width:250px;">URAIAN</th>
+                                        <th style="width:150px;">REALISASI</th>
+                                        <th style="width:150px;">JUMLAH</th>
+                                        <th style="width:150px;">SISA ANGGARAN</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                                <tfoot>
+                                    <tr class="total-row">
+                                        <td colspan="3" style="text-align:right;font-weight:600;">Jumlah</td>
+                                        <td style="text-align:right;font-weight:600;">${formatRupiah(totalRealisasi)}</td>
+                                        <td style="text-align:right;font-weight:600;">${formatRupiah(totalJumlah)}</td>
+                                        <td style="text-align:right;font-weight:600;">${formatRupiah(sisaAkhir)}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="signature">
+                            <div class="sign-grid">
+                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 19. Pagination & Preview
+        // ─────────────────────────────────────────────────────────────────────────────
         function paginateContent(htmlString) {
             const container = document.createElement('div');
             container.style.cssText =
@@ -833,9 +3389,7 @@
             return pages;
         }
 
-        // ─── Override showPrintPreview agar menggunakan pagination ───
-        const originalShowPrintPreview = window.showPrintPreview || function() {};
-        window.showPrintPreview = function(type) {
+        function showPrintPreview(type) {
             let rawHtml = '';
             if (type === 'kas') rawHtml = buildA4PreviewKas();
             else if (type === 'tunai') rawHtml = buildA4PreviewTunai();
@@ -862,19 +3416,32 @@
 
             // Inisialisasi resizer untuk setiap halaman
             setTimeout(() => initPreviewResizers(), 100);
-        };
+        }
 
-        // ─── Override doPrint ───
-        window.doPrint = function() {
-            const toolbar = document.querySelector('.print-preview-toolbar');
-            if (toolbar) toolbar.style.display = 'none';
-            window.print();
-            setTimeout(() => {
-                if (toolbar) toolbar.style.display = 'flex';
-            }, 500);
-        };
+        function closePrintPreview() {
+            document.getElementById('printPreviewOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
-        // ─── Fungsi initPreviewResizers (diperbarui untuk semua halaman) ───
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 20. Resize kolom preview
+        // ─────────────────────────────────────────────────────────────────────────────
+        let previewColumnWidths = {};
+
+        function loadPreviewColumnWidths() {
+            try {
+                const saved = localStorage.getItem('bosnbs_preview_col_widths');
+                if (saved) previewColumnWidths = JSON.parse(saved);
+                else previewColumnWidths = {};
+            } catch (e) { previewColumnWidths = {}; }
+        }
+
+        function savePreviewColumnWidths() {
+            try {
+                localStorage.setItem('bosnbs_preview_col_widths', JSON.stringify(previewColumnWidths));
+            } catch (e) { /* ignore */ }
+        }
+
         function initPreviewResizers() {
             const pages = document.querySelectorAll('.a4-page');
             pages.forEach(page => {
@@ -890,7 +3457,7 @@
                     resizer.dataset.col = colKey;
                     th.style.position = 'relative';
                     th.appendChild(resizer);
-                    if (previewColumnWidths && previewColumnWidths[colKey]) {
+                    if (previewColumnWidths[colKey]) {
                         th.style.width = previewColumnWidths[colKey] + 'px';
                         th.style.minWidth = previewColumnWidths[colKey] + 'px';
                     }
@@ -920,34 +3487,125 @@
             });
         }
 
-        // ─── Variabel previewColumnWidths dan fungsi simpan/load ───
-        let previewColumnWidths = {};
-        function loadPreviewColumnWidths() {
-            try {
-                const saved = localStorage.getItem('bosnbs_preview_col_widths');
-                if (saved) previewColumnWidths = JSON.parse(saved);
-                else previewColumnWidths = {};
-            } catch (e) { previewColumnWidths = {}; }
-        }
-        function savePreviewColumnWidths() {
-            try {
-                localStorage.setItem('bosnbs_preview_col_widths', JSON.stringify(previewColumnWidths));
-            } catch (e) { /* ignore */ }
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 21. Print / PDF
+        // ─────────────────────────────────────────────────────────────────────────────
+        function doPrint() {
+            const toolbar = document.querySelector('.print-preview-toolbar');
+            if (toolbar) toolbar.style.display = 'none';
+            window.print();
+            setTimeout(() => {
+                if (toolbar) toolbar.style.display = 'flex';
+            }, 500);
         }
 
-        // ─── Pastikan event listener tetap menggunakan fungsi baru ───
-        // (Saya tidak mengubah event listener karena sudah memanggil showPrintPreview)
-        // Namun jika ada yang memanggil showPrintPreview langsung, sudah tertimpa.
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 22. Event listeners
+        // ─────────────────────────────────────────────────────────────────────────────
+        loadDataBtn.addEventListener('click', loadKasData);
+        loadDataBtnTunai.addEventListener('click', loadTunaiData);
+        loadDataBtnBank.addEventListener('click', loadBankData);
+        loadDataBtnPajak.addEventListener('click', loadPajakData);
+        loadDataBtnRob.addEventListener('click', loadRobData);
 
-        // ─── Init ───
-        // ... semua init yang sudah ada tetap dipanggil ...
-        // Saya hanya menambahkan loadPreviewColumnWidths di awal
-        loadPreviewColumnWidths();
+        printBtnKas.addEventListener('click', () => {
+            if (allKasData.length === 0) {
+                showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
+                return;
+            }
+            loadPreviewColumnWidths();
+            showPrintPreview('kas');
+        });
 
-        // Lanjutkan dengan init lainnya seperti biasa (loadSettings, set bulan, dll.)
-        // ... (kode init dari file Anda) ...
+        printBtnTunai.addEventListener('click', () => {
+            if (allTunaiData.length === 0) {
+                showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
+                return;
+            }
+            loadPreviewColumnWidths();
+            showPrintPreview('tunai');
+        });
 
-        console.log('📋 BOS-NBS · Buku dengan pagination A4 siap');
+        printBtnBank.addEventListener('click', () => {
+            if (allBankData.length === 0) {
+                showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
+                return;
+            }
+            loadPreviewColumnWidths();
+            showPrintPreview('bank');
+        });
+
+        printBtnPajak.addEventListener('click', () => {
+            if (allPajakData.length === 0) {
+                showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
+                return;
+            }
+            loadPreviewColumnWidths();
+            showPrintPreview('pajak');
+        });
+
+        printBtnUtang.addEventListener('click', () => {
+            loadPreviewColumnWidths();
+            showPrintPreview('utang');
+        });
+
+        printBtnRob.addEventListener('click', () => {
+            if (allRobData.length === 0 || (allRobData.length === 1 && allRobData[0].isSaldoAwal && allRobData[0]
+                    .sisaAnggaran === 0)) {
+                showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
+                return;
+            }
+            loadPreviewColumnWidths();
+            showPrintPreview('rob');
+        });
+
+        closePreviewBtn.addEventListener('click', closePrintPreview);
+        document.getElementById('printPreviewOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('printPreviewOverlay')) {
+                closePrintPreview();
+            }
+        });
+        confirmPrintBtn.addEventListener('click', doPrint);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('printPreviewOverlay').classList.contains('active')) {
+                closePrintPreview();
+            }
+        });
+
+        document.getElementById('backBtn').addEventListener('click', () => {
+            window.location.href = 'database.html';
+        });
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('bosnbs_jenjang');
+            localStorage.removeItem('bosnbs_tahun');
+            window.location.href = 'index.html';
+        });
+
+        // ─────────────────────────────────────────────────────────────────────────────
+        // 23. Init
+        // ─────────────────────────────────────────────────────────────────────────────
+        loadSettings();
+        const now = new Date();
+        const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
+        bulanSelect.value = currentMonth;
+        bulanSelectTunai.value = currentMonth;
+        bulanSelectBank.value = currentMonth;
+        bulanSelectPajak.value = currentMonth;
+        bulanSelectUtang.value = currentMonth;
+        bulanSelectRob.value = currentMonth;
+
+        setTimeout(() => {
+            loadKasData();
+            loadTunaiData();
+            loadBankData();
+            loadPajakData();
+            loadUtangData();
+            loadRobData();
+        }, 500);
+
+        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank, Pajak, Utang, ROB) siap');
+        console.log('✅ Urutan data berdasarkan nomor urut (No) dari terkecil ke terbesar');
         console.log('✅ Preview multi-halaman dengan background abu-abu');
         console.log('✅ Print identik dengan preview');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
