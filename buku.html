@@ -450,12 +450,13 @@
             font-weight: 600;
             font-size: 14px;
             text-align: center;
-            padding-top: 4px;
-            border-top: 1px solid #0a2e5c;
             display: inline-block;
             min-width: 160px;
-            margin-top: 56px;
             align-self: start;
+            /* Hilangkan border-top */
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0;
         }
         .signature .sign-grid .sign-name-kepsek {
             grid-column: 1;
@@ -788,13 +789,14 @@
                 font-weight: 700 !important;
                 font-size: 10pt !important;
                 text-align: center !important;
-                padding-top: 3pt !important;
-                border-top: 1px solid #000 !important;
                 display: inline-block !important;
                 min-width: 120pt !important;
                 color: #000 !important;
-                margin-top: 32pt !important;
                 align-self: start !important;
+                /* Hilangkan border-top di print */
+                border-top: none !important;
+                padding-top: 0 !important;
+                margin-top: 0 !important;
             }
             #a4PreviewContent .signature .sign-grid .sign-name-kepsek {
                 grid-column: 1 !important;
@@ -1091,13 +1093,14 @@
             font-weight: 700 !important;
             font-size: 10pt !important;
             text-align: center !important;
-            padding-top: 3pt !important;
-            border-top: 1px solid #000 !important;
             display: inline-block !important;
             min-width: 120pt !important;
             color: #000 !important;
-            margin-top: 32pt !important;
             align-self: start !important;
+            /* Hilangkan border-top di preview */
+            border-top: none !important;
+            padding-top: 0 !important;
+            margin-top: 0 !important;
         }
         .print-preview-body .a4-page .signature .sign-grid .sign-name-kepsek {
             grid-column: 1 !important;
