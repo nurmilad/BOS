@@ -2595,7 +2595,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 16. Load ROB (Rincian Objek Belanja)
+        // 16. Load ROB (Rincian Objek Belanja) - DIPERBAIKI
         // ─────────────────────────────────────────────
         async function loadRobData() {
             const bulan = bulanSelectRob.value;
@@ -2605,46 +2605,38 @@
 
             const raw = await fetchTransaksi();
             const prev = getPreviousMonth(bulan, tahun);
-            
+
             // Hitung saldo anggaran awal (dari bulan lalu)
             let saldoAwal = 0;
-            
-            // Tambahkan anggaran yang masuk pada bulan lalu
+
+            // Ambil tanggal pemasukan anggaran dari settings
             const tgl1 = settingsData.tanggalPemasukan1 || '';
             const tgl2 = settingsData.tanggalPemasukan2 || '';
             const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
             const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
-            
-            // Fungsi untuk mengecek apakah tanggal masuk dalam bulan lalu
-            function isInPrevMonth(tgl) {
+
+            // Fungsi untuk mengecek apakah tanggal masuk dalam periode tertentu
+            function isInMonth(tgl, targetMonth, targetYear) {
                 if (!tgl) return false;
                 let dateParts = null;
                 if (tgl.includes('-')) dateParts = tgl.split('-');
                 else if (tgl.includes('/')) dateParts = tgl.split('/');
                 if (!dateParts || dateParts.length !== 3) return false;
                 let year, month;
-                if (dateParts[0].length === 4) { year = dateParts[0]; month = dateParts[1]; } 
-                else { year = dateParts[2]; month = dateParts[1]; }
+                if (dateParts[0].length === 4) { year = dateParts[0];
+                    month = dateParts[1]; } else { year = dateParts[2];
+                    month = dateParts[1]; }
                 month = month.padStart(2, '0');
-                return (month === prev.month && year === prev.year);
+                return (month === targetMonth && year === targetYear);
             }
-            
-            // Hitung saldo awal dari transaksi bulan lalu (selain pajak)
+
+            // Hitung saldo awal dari transaksi bulan lalu (selain pajak) + anggaran bulan lalu
             raw.forEach(item => {
                 const tgl = item.tglPembayaran;
                 if (!tgl) return;
-                if (item.jenisBerisi === 'Pajak') return; // Abaikan pajak
-                
-                let dateParts = null;
-                if (tgl.includes('-')) dateParts = tgl.split('-');
-                else if (tgl.includes('/')) dateParts = tgl.split('/');
-                if (!dateParts || dateParts.length !== 3) return;
-                let year, month;
-                if (dateParts[0].length === 4) { year = dateParts[0]; month = dateParts[1]; } 
-                else { year = dateParts[2]; month = dateParts[1]; }
-                month = month.padStart(2, '0');
-                
-                if (month === prev.month && year === prev.year) {
+                if (item.jenisBerisi === 'Pajak') return;
+
+                if (isInMonth(tgl, prev.month, prev.year)) {
                     const jumlah = parseFloat(item.jumlahHarga) || 0;
                     const debetKredit = item.debetKredit || 'Kredit';
                     if (debetKredit === 'Debet') {
@@ -2654,14 +2646,14 @@
                     }
                 }
             });
-            
-            // Tambahkan anggaran bulan lalu jika ada
-            if (isInPrevMonth(tgl1)) saldoAwal += anggaran1;
-            if (isInPrevMonth(tgl2)) saldoAwal += anggaran2;
-            
+
+            // Tambahkan anggaran yang masuk pada bulan lalu
+            if (isInMonth(tgl1, prev.month, prev.year)) saldoAwal += anggaran1;
+            if (isInMonth(tgl2, prev.month, prev.year)) saldoAwal += anggaran2;
+
             // Bangun data ROB
             const robRows = [];
-            
+
             // Baris 1: Saldo Awal
             robRows.push({
                 tanggal: '',
@@ -2672,28 +2664,18 @@
                 sisaAnggaran: saldoAwal,
                 isSaldoAwal: true
             });
-            
+
             let sisaAnggaran = saldoAwal;
-            
-            // Ambil transaksi bulan ini (selain pajak) + anggaran masuk
-            // Kumpulkan semua transaksi bulan ini (selain pajak)
+
+            // Kumpulkan semua transaksi bulan ini (selain pajak) + anggaran masuk
             const transaksiBulanIni = [];
-            
+
             raw.forEach(item => {
                 const tgl = item.tglPembayaran;
                 if (!tgl) return;
                 if (item.jenisBerisi === 'Pajak') return;
-                
-                let dateParts = null;
-                if (tgl.includes('-')) dateParts = tgl.split('-');
-                else if (tgl.includes('/')) dateParts = tgl.split('/');
-                if (!dateParts || dateParts.length !== 3) return;
-                let year, month;
-                if (dateParts[0].length === 4) { year = dateParts[0]; month = dateParts[1]; } 
-                else { year = dateParts[2]; month = dateParts[1]; }
-                month = month.padStart(2, '0');
-                
-                if (month === bulan && year === tahun) {
+
+                if (isInMonth(tgl, bulan, tahun)) {
                     const jumlah = parseFloat(item.jumlahHarga) || 0;
                     const debetKredit = item.debetKredit || 'Kredit';
                     transaksiBulanIni.push({
@@ -2706,22 +2688,9 @@
                     });
                 }
             });
-            
-            // Tambahkan anggaran masuk bulan ini
-            function isInThisMonth(tgl) {
-                if (!tgl) return false;
-                let dateParts = null;
-                if (tgl.includes('-')) dateParts = tgl.split('-');
-                else if (tgl.includes('/')) dateParts = tgl.split('/');
-                if (!dateParts || dateParts.length !== 3) return false;
-                let year, month;
-                if (dateParts[0].length === 4) { year = dateParts[0]; month = dateParts[1]; } 
-                else { year = dateParts[2]; month = dateParts[1]; }
-                month = month.padStart(2, '0');
-                return (month === bulan && year === tahun);
-            }
-            
-            if (isInThisMonth(tgl1) && anggaran1 > 0) {
+
+            // Tambahkan anggaran masuk bulan ini (jika ada)
+            if (isInMonth(tgl1, bulan, tahun) && anggaran1 > 0) {
                 transaksiBulanIni.push({
                     tanggal: tgl1,
                     noBku: '',
@@ -2731,7 +2700,7 @@
                     jenisBerisi: 'Anggaran'
                 });
             }
-            if (isInThisMonth(tgl2) && anggaran2 > 0) {
+            if (isInMonth(tgl2, bulan, tahun) && anggaran2 > 0) {
                 transaksiBulanIni.push({
                     tanggal: tgl2,
                     noBku: '',
@@ -2741,26 +2710,26 @@
                     jenisBerisi: 'Anggaran'
                 });
             }
-            
+
             // Urutkan berdasarkan tanggal
             transaksiBulanIni.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
-            
+
             // Proses setiap transaksi
             let totalRealisasi = 0;
             let totalJumlah = 0;
-            
+
             transaksiBulanIni.forEach(item => {
                 const realisasi = item.jumlah;
                 const debetKredit = item.debetKredit;
-                
-                // Untuk ROB: realisasi dan jumlah sama dengan nilai transaksi
-                // Sisa anggaran = sisa sebelumnya - realisasi (jika Kredit) atau + realisasi (jika Debet)
+
+                // ROB: realisasi = jumlah transaksi
+                // Sisa anggaran = sisa sebelumnya + pemasukan - pengeluaran
                 if (debetKredit === 'Debet') {
                     sisaAnggaran += realisasi;
                 } else {
                     sisaAnggaran -= realisasi;
                 }
-                
+
                 robRows.push({
                     tanggal: item.tanggal,
                     noBku: item.noBku,
@@ -2770,14 +2739,14 @@
                     sisaAnggaran: sisaAnggaran,
                     isSaldoAwal: false
                 });
-                
+
                 totalRealisasi += realisasi;
                 totalJumlah += realisasi;
             });
-            
+
             allRobData = robRows;
             renderRobTable(robRows, totalRealisasi, totalJumlah, sisaAnggaran);
-            
+
             const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
             signTanggalRob.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
         }
@@ -2785,33 +2754,33 @@
         function renderRobTable(data, totalRealisasi, totalJumlah, sisaAkhir) {
             if (data.length === 0 || (data.length === 1 && data[0].isSaldoAwal && data[0].sisaAnggaran === 0)) {
                 robTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada transaksi untuk bulan ini.</td>
-                    </tr>
-                `;
+                        <tr>
+                            <td colspan="6" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada transaksi untuk bulan ini.</td>
+                        </tr>
+                    `;
                 robTableFoot.style.display = 'none';
                 return;
             }
-            
+
             robTableFoot.style.display = 'table-footer-group';
-            
+
             let html = '';
             data.forEach((item) => {
                 const tanggalFormatted = formatDateToDDMMYY(item.tanggal);
                 const isSaldoAwal = item.isSaldoAwal || false;
                 html += `
-                        <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
-                            <td>${tanggalFormatted}</td>
-                            <td>${item.noBku}</td>
-                            <td class="left">${item.uraian}</td>
-                            <td class="right">${formatRupiah(item.realisasi)}</td>
-                            <td class="right">${formatRupiah(item.jumlah)}</td>
-                            <td class="right">${formatRupiah(item.sisaAnggaran)}</td>
-                        </tr>
-                    `;
+                            <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
+                                <td>${tanggalFormatted}</td>
+                                <td>${item.noBku}</td>
+                                <td class="left">${item.uraian}</td>
+                                <td class="right">${formatRupiah(item.realisasi)}</td>
+                                <td class="right">${formatRupiah(item.jumlah)}</td>
+                                <td class="right">${formatRupiah(item.sisaAnggaran)}</td>
+                            </tr>
+                        `;
             });
             robTableBody.innerHTML = html;
-            
+
             robTotalRealisasi.textContent = formatRupiah(totalRealisasi);
             robTotalJumlah.textContent = formatRupiah(totalJumlah);
             robTotalSisa.textContent = formatRupiah(sisaAkhir);
@@ -2858,17 +2827,17 @@
                     const rek = (item.jenis === 'pemasukan' || item.isSaldoAwal) ? '' : item.kodeRekening || '';
                     const bukti = (item.jenis === 'pemasukan' || item.isSaldoAwal) ? '' : item.noBukti || '';
                     tableRows += `
-                            <tr style="${isBold ? 'font-weight:600;' : ''}">
-                                <td>${tgl}</td>
-                                <td>${kode}</td>
-                                <td>${rek}</td>
-                                <td>${bukti}</td>
-                                <td class="left">${item.uraian || ''}</td>
-                                <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
-                                <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
-                                <td class="right">${formatRupiah(saldo)}</td>
-                            </tr>
-                        `;
+                                <tr style="${isBold ? 'font-weight:600;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${kode}</td>
+                                    <td>${rek}</td>
+                                    <td>${bukti}</td>
+                                    <td class="left">${item.uraian || ''}</td>
+                                    <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                                    <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                                    <td class="right">${formatRupiah(saldo)}</td>
+                                </tr>
+                            `;
                 });
             }
 
@@ -2883,55 +2852,55 @@
             if (allKasData.length > 0) saldoAkhir = allKasData[allKasData.length - 1].saldo || 0;
 
             return `
-                    <div class="book-header">
-                        <h2>BUKU KAS UMUM</h2>
-                        <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
-                    </div>
-                    <div class="book-meta">
-                        <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
-                        <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
-                        <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                        <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                        <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                        <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="book-table">
-                            <thead>
-                                <tr>
-                                    <th style="width:80px;">TANGGAL</th>
-                                    <th style="width:100px;">KODE KEGIATAN</th>
-                                    <th style="width:100px;">KODE REKENING</th>
-                                    <th style="width:100px;">NO. BUKTI</th>
-                                    <th style="width:200px;">URAIAN</th>
-                                    <th style="width:120px;">PENERIMAAN</th>
-                                    <th style="width:120px;">PENGELUARAN</th>
-                                    <th style="width:120px;">SALDO</th>
-                                </tr>
-                            </thead>
-                            <tbody>${tableRows}</tbody>
-                        </table>
-                    </div>
-                    <div class="closing-statement">
-                        <div style="font-size:13px;margin-bottom:8px;">
-                            Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut:
+                        <div class="book-header">
+                            <h2>BUKU KAS UMUM</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
                         </div>
-                        <div class="closing-grid">
-                            <div class="item"><span>Saldo Bank</span> <span>${formatRupiah(saldoAkhir)}</span></div>
-                            <div class="item"><span>Saldo Tunai</span> <span>Rp 0</span></div>
-                            <div class="item total"><span>Jumlah</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
                         </div>
-                        <div class="signature">
-                            <div class="sign-grid">
-                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
-                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
-                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">TANGGAL</th>
+                                        <th style="width:100px;">KODE KEGIATAN</th>
+                                        <th style="width:100px;">KODE REKENING</th>
+                                        <th style="width:100px;">NO. BUKTI</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:120px;">PENERIMAAN</th>
+                                        <th style="width:120px;">PENGELUARAN</th>
+                                        <th style="width:120px;">SALDO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                            </table>
+                        </div>
+                        <div class="closing-statement">
+                            <div style="font-size:13px;margin-bottom:8px;">
+                                Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut:
+                            </div>
+                            <div class="closing-grid">
+                                <div class="item"><span>Saldo Bank</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                                <div class="item"><span>Saldo Tunai</span> <span>Rp 0</span></div>
+                                <div class="item total"><span>Jumlah</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                            </div>
+                            <div class="signature">
+                                <div class="sign-grid">
+                                    <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                    <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                    <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
         }
 
         function buildA4PreviewTunai() {
@@ -2950,17 +2919,17 @@
                     const saldo = item.saldo || 0;
                     const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
                     tableRows += `
-                            <tr style="${isBold ? 'font-weight:600;' : ''}">
-                                <td>${tgl}</td>
-                                <td>${item.kodeKegiatan || ''}</td>
-                                <td>${item.kodeRekening || ''}</td>
-                                <td>${item.noBukti || ''}</td>
-                                <td class="left">${item.uraian || ''}</td>
-                                <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
-                                <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
-                                <td class="right">${formatRupiah(saldo)}</td>
-                            </tr>
-                        `;
+                                <tr style="${isBold ? 'font-weight:600;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${item.kodeKegiatan || ''}</td>
+                                    <td>${item.kodeRekening || ''}</td>
+                                    <td>${item.noBukti || ''}</td>
+                                    <td class="left">${item.uraian || ''}</td>
+                                    <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                                    <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                                    <td class="right">${formatRupiah(saldo)}</td>
+                                </tr>
+                            `;
                 });
             }
 
@@ -2975,53 +2944,53 @@
             if (allTunaiData.length > 0) saldoAkhir = allTunaiData[allTunaiData.length - 1].saldo || 0;
 
             return `
-                    <div class="book-header">
-                        <h2>BUKU KAS PEMBANTU TUNAI</h2>
-                        <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
-                    </div>
-                    <div class="book-meta">
-                        <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
-                        <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
-                        <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                        <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                        <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                        <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="book-table">
-                            <thead>
-                                <tr>
-                                    <th style="width:80px;">TANGGAL</th>
-                                    <th style="width:100px;">KODE KEGIATAN</th>
-                                    <th style="width:100px;">KODE REKENING</th>
-                                    <th style="width:100px;">NO. BUKTI</th>
-                                    <th style="width:200px;">URAIAN</th>
-                                    <th style="width:120px;">PENERIMAAN</th>
-                                    <th style="width:120px;">PENGELUARAN</th>
-                                    <th style="width:120px;">SALDO</th>
-                                </tr>
-                            </thead>
-                            <tbody>${tableRows}</tbody>
-                        </table>
-                    </div>
-                    <div class="closing-statement">
-                        <div style="font-size:13px;margin-bottom:8px;">
-                            Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Kas Tunai ditutup dengan keadaan/posisi buku sebagai berikut:
+                        <div class="book-header">
+                            <h2>BUKU KAS PEMBANTU TUNAI</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
                         </div>
-                        <div class="closing-grid">
-                            <div class="item"><span>Saldo Buku Kas Tunai</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
                         </div>
-                        <div class="signature">
-                            <div class="sign-grid">
-                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
-                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
-                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">TANGGAL</th>
+                                        <th style="width:100px;">KODE KEGIATAN</th>
+                                        <th style="width:100px;">KODE REKENING</th>
+                                        <th style="width:100px;">NO. BUKTI</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:120px;">PENERIMAAN</th>
+                                        <th style="width:120px;">PENGELUARAN</th>
+                                        <th style="width:120px;">SALDO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                            </table>
+                        </div>
+                        <div class="closing-statement">
+                            <div style="font-size:13px;margin-bottom:8px;">
+                                Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Kas Tunai ditutup dengan keadaan/posisi buku sebagai berikut:
+                            </div>
+                            <div class="closing-grid">
+                                <div class="item"><span>Saldo Buku Kas Tunai</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                            </div>
+                            <div class="signature">
+                                <div class="sign-grid">
+                                    <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                    <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                    <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
         }
 
         function buildA4PreviewBank() {
@@ -3040,17 +3009,17 @@
                     const saldo = item.saldo || 0;
                     const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
                     tableRows += `
-                            <tr style="${isBold ? 'font-weight:600;' : ''}">
-                                <td>${tgl}</td>
-                                <td>${item.kodeKegiatan || ''}</td>
-                                <td>${item.kodeRekening || ''}</td>
-                                <td>${item.noBukti || ''}</td>
-                                <td class="left">${item.uraian || ''}</td>
-                                <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
-                                <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
-                                <td class="right">${formatRupiah(saldo)}</td>
-                            </tr>
-                        `;
+                                <tr style="${isBold ? 'font-weight:600;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${item.kodeKegiatan || ''}</td>
+                                    <td>${item.kodeRekening || ''}</td>
+                                    <td>${item.noBukti || ''}</td>
+                                    <td class="left">${item.uraian || ''}</td>
+                                    <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                                    <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                                    <td class="right">${formatRupiah(saldo)}</td>
+                                </tr>
+                            `;
                 });
             }
 
@@ -3065,53 +3034,53 @@
             if (allBankData.length > 0) saldoAkhir = allBankData[allBankData.length - 1].saldo || 0;
 
             return `
-                    <div class="book-header">
-                        <h2>BUKU BANK</h2>
-                        <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
-                    </div>
-                    <div class="book-meta">
-                        <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
-                        <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
-                        <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                        <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                        <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                        <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="book-table">
-                            <thead>
-                                <tr>
-                                    <th style="width:80px;">TANGGAL</th>
-                                    <th style="width:100px;">KODE KEGIATAN</th>
-                                    <th style="width:100px;">KODE REKENING</th>
-                                    <th style="width:100px;">NO. BUKTI</th>
-                                    <th style="width:200px;">URAIAN</th>
-                                    <th style="width:120px;">PENERIMAAN</th>
-                                    <th style="width:120px;">PENGELUARAN</th>
-                                    <th style="width:120px;">SALDO</th>
-                                </tr>
-                            </thead>
-                            <tbody>${tableRows}</tbody>
-                        </table>
-                    </div>
-                    <div class="closing-statement">
-                        <div style="font-size:13px;margin-bottom:8px;">
-                            Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Bank ditutup dengan keadaan/posisi buku sebagai berikut:
+                        <div class="book-header">
+                            <h2>BUKU BANK</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
                         </div>
-                        <div class="closing-grid">
-                            <div class="item"><span>Saldo Bank</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
                         </div>
-                        <div class="signature">
-                            <div class="sign-grid">
-                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
-                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
-                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">TANGGAL</th>
+                                        <th style="width:100px;">KODE KEGIATAN</th>
+                                        <th style="width:100px;">KODE REKENING</th>
+                                        <th style="width:100px;">NO. BUKTI</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:120px;">PENERIMAAN</th>
+                                        <th style="width:120px;">PENGELUARAN</th>
+                                        <th style="width:120px;">SALDO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                            </table>
+                        </div>
+                        <div class="closing-statement">
+                            <div style="font-size:13px;margin-bottom:8px;">
+                                Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Bank ditutup dengan keadaan/posisi buku sebagai berikut:
+                            </div>
+                            <div class="closing-grid">
+                                <div class="item"><span>Saldo Bank</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                            </div>
+                            <div class="signature">
+                                <div class="sign-grid">
+                                    <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                    <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                    <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
         }
 
         function buildA4PreviewPajak() {
@@ -3128,19 +3097,19 @@
                     const tgl = formatDateToDDMMYY(item.tanggal);
                     const isSaldoAwal = item.isSaldoAwal || false;
                     tableRows += `
-                            <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
-                                <td>${tgl}</td>
-                                <td>${item.kode}</td>
-                                <td class="left">${item.uraian}</td>
-                                <td class="right">${formatRupiah(item.ppn)}</td>
-                                <td class="right">${formatRupiah(item.pph21)}</td>
-                                <td class="right">${formatRupiah(item.pph23)}</td>
-                                <td class="right">${formatRupiah(item.pph4)}</td>
-                                <td class="right">${formatRupiah(item.sspd)}</td>
-                                <td class="right">${formatRupiah(item.pengeluaran)}</td>
-                                <td class="right">${formatRupiah(item.saldo)}</td>
-                            </tr>
-                        `;
+                                <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${item.kode}</td>
+                                    <td class="left">${item.uraian}</td>
+                                    <td class="right">${formatRupiah(item.ppn)}</td>
+                                    <td class="right">${formatRupiah(item.pph21)}</td>
+                                    <td class="right">${formatRupiah(item.pph23)}</td>
+                                    <td class="right">${formatRupiah(item.pph4)}</td>
+                                    <td class="right">${formatRupiah(item.sspd)}</td>
+                                    <td class="right">${formatRupiah(item.pengeluaran)}</td>
+                                    <td class="right">${formatRupiah(item.saldo)}</td>
+                                </tr>
+                            `;
                 });
             }
 
@@ -3152,47 +3121,47 @@
             const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
             return `
-                    <div class="book-header">
-                        <h2>BUKU PEMBANTU PAJAK</h2>
-                        <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
-                    </div>
-                    <div class="book-meta">
-                        <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
-                        <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
-                        <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                        <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                        <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                        <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="book-table">
-                            <thead>
-                                <tr>
-                                    <th style="width:80px;">TANGGAL</th>
-                                    <th style="width:100px;">NO.KODE</th>
-                                    <th style="width:200px;">URAIAN</th>
-                                    <th style="width:100px;">PPN</th>
-                                    <th style="width:100px;">PPh 21</th>
-                                    <th style="width:100px;">PPh 23</th>
-                                    <th style="width:100px;">PPh 4</th>
-                                    <th style="width:100px;">SSPD</th>
-                                    <th style="width:150px;">PENGELUARAN / KREDIT</th>
-                                    <th style="width:150px;">SALDO</th>
-                                </tr>
-                            </thead>
-                            <tbody>${tableRows}</tbody>
-                        </table>
-                    </div>
-                    <div class="signature">
-                        <div class="sign-grid">
-                            <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
-                            <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                            <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                            <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
-                            <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                        <div class="book-header">
+                            <h2>BUKU PEMBANTU PAJAK</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
                         </div>
-                    </div>
-                `;
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">TANGGAL</th>
+                                        <th style="width:100px;">NO.KODE</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:100px;">PPN</th>
+                                        <th style="width:100px;">PPh 21</th>
+                                        <th style="width:100px;">PPh 23</th>
+                                        <th style="width:100px;">PPh 4</th>
+                                        <th style="width:100px;">SSPD</th>
+                                        <th style="width:150px;">PENGELUARAN / KREDIT</th>
+                                        <th style="width:150px;">SALDO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                            </table>
+                        </div>
+                        <div class="signature">
+                            <div class="sign-grid">
+                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                            </div>
+                        </div>
+                    `;
         }
 
         function buildA4PreviewUtang() {
@@ -3208,47 +3177,47 @@
             const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
             return `
-                    <div class="book-header">
-                        <h2>BUKU PEMBANTU UTANG</h2>
-                        <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
-                    </div>
-                    <div class="book-meta">
-                        <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
-                        <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
-                        <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                        <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                        <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                        <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="book-table">
-                            <thead>
-                                <tr>
-                                    <th style="width:100px;">TANGGAL</th>
-                                    <th style="width:100px;">NO. KODE</th>
-                                    <th style="width:120px;">NO. FAKTUR</th>
-                                    <th style="width:200px;">URAIAN</th>
-                                    <th style="width:200px;">NAMA KREDITUR / TOKO</th>
-                                    <th style="width:150px;">JUMLAH</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="6" style="text-align:center;padding:30px 0;color:#888;font-size:9pt;">Tidak ada data utang.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="signature">
-                        <div class="sign-grid">
-                            <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
-                            <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                            <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                            <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
-                            <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                        <div class="book-header">
+                            <h2>BUKU PEMBANTU UTANG</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
                         </div>
-                    </div>
-                `;
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:100px;">TANGGAL</th>
+                                        <th style="width:100px;">NO. KODE</th>
+                                        <th style="width:120px;">NO. FAKTUR</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:200px;">NAMA KREDITUR / TOKO</th>
+                                        <th style="width:150px;">JUMLAH</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" style="text-align:center;padding:30px 0;color:#888;font-size:9pt;">Tidak ada data utang.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="signature">
+                            <div class="sign-grid">
+                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                            </div>
+                        </div>
+                    `;
         }
 
         function buildA4PreviewRob() {
@@ -3260,7 +3229,7 @@
             let totalRealisasi = 0;
             let totalJumlah = 0;
             let sisaAkhir = 0;
-            
+
             if (allRobData.length === 0) {
                 tableRows =
                     `<tr><td colspan="6" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada transaksi.</td></tr>`;
@@ -3276,15 +3245,15 @@
                         sisaAkhir = item.sisaAnggaran || 0;
                     }
                     tableRows += `
-                            <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
-                                <td>${tgl}</td>
-                                <td>${item.noBku || ''}</td>
-                                <td class="left">${item.uraian || ''}</td>
-                                <td class="right">${formatRupiah(item.realisasi || 0)}</td>
-                                <td class="right">${formatRupiah(item.jumlah || 0)}</td>
-                                <td class="right">${formatRupiah(item.sisaAnggaran || 0)}</td>
-                            </tr>
-                        `;
+                                <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${item.noBku || ''}</td>
+                                    <td class="left">${item.uraian || ''}</td>
+                                    <td class="right">${formatRupiah(item.realisasi || 0)}</td>
+                                    <td class="right">${formatRupiah(item.jumlah || 0)}</td>
+                                    <td class="right">${formatRupiah(item.sisaAnggaran || 0)}</td>
+                                </tr>
+                            `;
                 });
             }
 
@@ -3296,51 +3265,51 @@
             const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
             return `
-                    <div class="book-header">
-                        <h2>RINCIAN OBJEK BELANJA (ROB)</h2>
-                        <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
-                    </div>
-                    <div class="book-meta">
-                        <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
-                        <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
-                        <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
-                        <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
-                        <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
-                        <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="book-table">
-                            <thead>
-                                <tr>
-                                    <th style="width:100px;">TANGGAL</th>
-                                    <th style="width:100px;">NO. BKU</th>
-                                    <th style="width:250px;">URAIAN</th>
-                                    <th style="width:150px;">REALISASI</th>
-                                    <th style="width:150px;">JUMLAH</th>
-                                    <th style="width:150px;">SISA ANGGARAN</th>
-                                </tr>
-                            </thead>
-                            <tbody>${tableRows}</tbody>
-                            <tfoot>
-                                <tr class="total-row">
-                                    <td colspan="3" style="text-align:right;font-weight:600;">Jumlah</td>
-                                    <td style="text-align:right;font-weight:600;">${formatRupiah(totalRealisasi)}</td>
-                                    <td style="text-align:right;font-weight:600;">${formatRupiah(totalJumlah)}</td>
-                                    <td style="text-align:right;font-weight:600;">${formatRupiah(sisaAkhir)}</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <div class="signature">
-                        <div class="sign-grid">
-                            <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
-                            <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
-                            <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
-                            <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
-                            <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                        <div class="book-header">
+                            <h2>RINCIAN OBJEK BELANJA (ROB)</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
                         </div>
-                    </div>
-                `;
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:100px;">TANGGAL</th>
+                                        <th style="width:100px;">NO. BKU</th>
+                                        <th style="width:250px;">URAIAN</th>
+                                        <th style="width:150px;">REALISASI</th>
+                                        <th style="width:150px;">JUMLAH</th>
+                                        <th style="width:150px;">SISA ANGGARAN</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                                <tfoot>
+                                    <tr class="total-row">
+                                        <td colspan="3" style="text-align:right;font-weight:600;">Jumlah</td>
+                                        <td style="text-align:right;font-weight:600;">${formatRupiah(totalRealisasi)}</td>
+                                        <td style="text-align:right;font-weight:600;">${formatRupiah(totalJumlah)}</td>
+                                        <td style="text-align:right;font-weight:600;">${formatRupiah(sisaAkhir)}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="signature">
+                            <div class="sign-grid">
+                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                            </div>
+                        </div>
+                    `;
         }
 
         // ─────────────────────────────────────────────
@@ -3496,7 +3465,8 @@
         });
 
         printBtnRob.addEventListener('click', () => {
-            if (allRobData.length === 0 || (allRobData.length === 1 && allRobData[0].isSaldoAwal && allRobData[0].sisaAnggaran === 0)) {
+            if (allRobData.length === 0 || (allRobData.length === 1 && allRobData[0].isSaldoAwal && allRobData[0]
+                    .sisaAnggaran === 0)) {
                 showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
                 return;
             }
