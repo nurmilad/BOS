@@ -378,7 +378,8 @@
         }
 
         .table-wrapper {
-            overflow-x: auto;
+            overflow: auto;
+            max-height: 70vh;
             padding: 0 2px 2px 2px;
             position: relative;
         }
@@ -400,6 +401,9 @@
 
         thead {
             background: #f2f7fc;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         thead th {
@@ -412,7 +416,7 @@
             text-transform: uppercase;
             position: sticky;
             top: 0;
-            z-index: 5;
+            z-index: 10;
             background: #f2f7fc;
             cursor: pointer;
             user-select: none;
@@ -464,7 +468,7 @@
             width: 8px;
             height: 100%;
             cursor: col-resize;
-            z-index: 10;
+            z-index: 20;
             background: transparent;
             transition: background 0.15s ease;
         }
@@ -552,16 +556,6 @@
 
         .editable-cell.readonly:hover {
             background: #f8fafc;
-        }
-
-        /* ── Row number ── */
-        .row-num {
-            text-align: center;
-            font-weight: 500;
-            color: #5a7a9a;
-            font-size: 11px;
-            width: 32px;
-            min-width: 32px;
         }
 
         /* ── Add row ── */
@@ -1011,7 +1005,7 @@
             <table id="mainTable">
                 <thead>
                     <tr id="headerRow">
-                        <th style="width:32px;min-width:32px;text-align:center;" data-col="no" data-sort="no" data-required="true">No</th>
+                        <th style="width:60px;min-width:60px;text-align:center;" data-col="no" data-sort="no" data-required="true">No</th>
                         <th data-col="debetKredit" data-sort="debetKredit" style="min-width:90px;">Debet/Kredit <span class="sort-hint">↕</span></th>
                         <th data-col="jenisBerisi" data-sort="jenisBerisi" style="min-width:90px;">Jenis Buku <span class="sort-hint">↕</span></th>
                         <th data-col="jenisPajak" data-sort="jenisPajak" style="min-width:100px;">Jenis Pajak <span class="sort-hint">↕</span></th>
@@ -1236,6 +1230,7 @@
 
         // Semua field yang disimpan (termasuk yang tidak ditampilkan)
         const COLUMN_KEYS_ALL = [
+            'no',
             'debetKredit', 'jenisBerisi', 'jenisPajak',
             'noBukti', 'kodeKegiatan', 'noRek', 'siplah',
             'jenisKegiatan', 'uraian', 'komponen', 'standar',
@@ -1302,12 +1297,7 @@
                 } else if (actionsTd) {
                     actionsTd.classList.remove('hidden-col');
                 }
-                const rowNumTd = row.querySelector('td.row-num');
-                if (rowNumTd && hiddenColumns.has('no')) {
-                    rowNumTd.classList.add('hidden-col');
-                } else if (rowNumTd) {
-                    rowNumTd.classList.remove('hidden-col');
-                }
+                // Kolom 'no' sekarang juga memiliki data-field, jadi tidak perlu khusus
             });
             updateColMenu();
         }
@@ -1472,8 +1462,8 @@
         // ─────────────────────────────────────────────
         // 11. Column definitions untuk data entry (semua field)
         // ─────────────────────────────────────────────
-        // Untuk keperluan edit, kita tetap punya definisi tipe untuk semua field
         const COLUMN_TYPES = {
+            no: { type: 'text' },
             debetKredit: { type: 'select', options: ['Debet', 'Kredit'] },
             jenisBerisi: { type: 'select', options: ['Tunai', 'Bank', 'Pajak'] },
             jenisPajak: { type: 'select', options: ['PPN', 'PPh 21', 'PPh 23', 'PPh 4', 'SSPD'] },
@@ -1493,8 +1483,8 @@
             jumlahHarga: { type: 'number', readonly: true },
             tglPelaksanaan: { type: 'date' },
             tglPembayaran: { type: 'date' },
-            persenPajak: { type: 'number', readonly: true }, // tidak ditampilkan
-            jmlPajak: { type: 'number', readonly: true },   // tidak ditampilkan
+            persenPajak: { type: 'number', readonly: true },
+            jmlPajak: { type: 'number', readonly: true },
             toko: { type: 'text' },
             alamatToko: { type: 'text' },
             telp: { type: 'text' }
@@ -1506,7 +1496,8 @@
         function createEmptyRow() {
             const row = {};
             COLUMN_KEYS_ALL.forEach(key => {
-                if (key === 'debetKredit') row[key] = 'Kredit';
+                if (key === 'no') row[key] = '';
+                else if (key === 'debetKredit') row[key] = 'Kredit';
                 else if (key === 'jenisBerisi') row[key] = 'Tunai';
                 else if (key === 'jenisPajak') row[key] = 'PPN';
                 else if (key === 'siplah') row[key] = 'Siplah';
@@ -1523,13 +1514,12 @@
         }
 
         // ─────────────────────────────────────────────
-        // 13. Auto-calc (hanya jumlahHarga, persenPajak dan jmlPajak tetap 0)
+        // 13. Auto-calc (hanya jumlahHarga)
         // ─────────────────────────────────────────────
         function autoCalcRow(row) {
             const vol = parseFloat(row.vol) || 0;
             const harga = parseFloat(row.harga) || 0;
             row.jumlahHarga = vol * harga;
-            // persenPajak dan jmlPajak tidak dihitung otomatis, biarkan 0
             return row;
         }
 
@@ -1583,20 +1573,17 @@
 
             let html = '';
             data.forEach((item, idx) => {
-                const rowNum = idx + 1;
                 html += `<tr data-id="${item._id || ''}" data-rowidx="${idx}">`;
-                html += `<td class="row-num">${rowNum}</td>`;
 
                 // Loop berdasarkan COLUMN_DISPLAY (urutan tampilan)
                 COLUMN_DISPLAY.forEach(col => {
                     const key = col.key;
-                    if (key === 'no' || key === 'actions') return; // skip karena sudah di-handle terpisah
+                    if (key === 'actions') return; // aksi ditangani terpisah
 
                     const colType = COLUMN_TYPES[key];
                     const val = item[key] !== undefined ? item[key] : '';
                     const isReadonly = colType && colType.readonly;
 
-                    // Untuk jenisPajak, tambahkan kondisi readonly jika jenisBerisi !== 'Pajak'
                     let extraReadonly = false;
                     if (key === 'jenisPajak' && item.jenisBerisi !== 'Pajak') {
                         extraReadonly = true;
@@ -1704,7 +1691,6 @@
             const colType = COLUMN_TYPES[field];
             if (!colType) return;
 
-            // Jika field jenisPajak dan jenisBerisi bukan 'Pajak', tolak edit
             if (field === 'jenisPajak' && item.jenisBerisi !== 'Pajak') {
                 showToast('Jenis Pajak hanya dapat diubah jika Jenis Buku = Pajak.', 'error');
                 return;
@@ -1838,7 +1824,7 @@
             const item = displayData[rowIdx];
             if (!item) return;
 
-            if (!confirm(`Hapus baris No. ${rowIdx + 1}?`)) return;
+            if (!confirm(`Hapus baris No. ${item.no || rowIdx + 1}?`)) return;
 
             const realIdx = allData.findIndex(d => d._id === item._id);
             if (realIdx !== -1) {
@@ -1904,7 +1890,6 @@
                     COLUMN_KEYS_ALL.forEach(key => {
                         dataToSave[key] = item[key] !== undefined ? item[key] : '';
                     });
-                    // Pastikan field tambahan tersimpan
                     dataToSave.jenjang = sessionJenjang;
                     dataToSave.tahun = sessionTahun;
                     dataToSave.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
@@ -1945,7 +1930,7 @@
                     snapshot.forEach(doc => {
                         const data = doc.data();
                         data._id = doc.id;
-                        // Pastikan field baru ada
+                        if (data.no === undefined) data.no = '';
                         if (data.debetKredit === undefined) data.debetKredit = 'Kredit';
                         if (data.jenisBerisi === undefined) data.jenisBerisi = 'Tunai';
                         if (data.jenisPajak === undefined) data.jenisPajak = 'PPN';
@@ -1972,7 +1957,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 23. Load settings (per jenjang & tahun) + NPSN + tanggal pemasukan
+        // 23. Load settings
         // ─────────────────────────────────────────────
         function loadSettings() {
             const docId = `${sessionJenjang}_${sessionTahun}`;
@@ -2013,7 +1998,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 25. Update Summary - Pajak tidak dihitung dalam Teranggarkan
+        // 25. Update Summary - Pajak tidak dihitung
         // ─────────────────────────────────────────────
         function updateSummary() {
             const data = getDisplayData();
@@ -2021,7 +2006,6 @@
             let total1 = 0,
                 total2 = 0;
             data.forEach(item => {
-                // Abaikan transaksi dengan jenisBuku === 'Pajak'
                 if (item.jenisBerisi === 'Pajak') return;
                 const jml = parseFloat(item.jumlahHarga) || 0;
                 if (item.tahap === 'Tahap 1') total1 += jml;
@@ -2121,7 +2105,6 @@
             }
         });
 
-        // Menu dropdown sederhana
         menuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             menuWrapper.classList.toggle('active');
@@ -2140,14 +2123,12 @@
             });
         });
 
-        // Dropdown kolom
         colMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             colMenuWrapper.classList.toggle('active');
         });
         document.addEventListener('click', () => colMenuWrapper.classList.remove('active'));
 
-        // Logout
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('bosnbs_jenjang');
             localStorage.removeItem('bosnbs_tahun');
@@ -2177,10 +2158,10 @@
 
         loadData();
 
-        console.log('📋 BOS-NBS · Database siap (kolom % Pajak & Jml Pajak disembunyikan, Jenis Pajak terkunci sesuai Jenis Buku)');
-        console.log('ℹ️  Pajak tidak dihitung dalam Teranggarkan Tahap 1/2');
+        console.log('📋 BOS-NBS · Database siap');
+        console.log('✅ Header sticky (freeze)');
+        console.log('✅ Nomor urut input manual');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
-        console.log('ℹ️  Klik "Buku" untuk menuju halaman buku.');
     </script>
 
 </body>
