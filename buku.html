@@ -3268,12 +3268,48 @@
         }
 
         // ─────────────────────────────────────────────────────────────────────────────
-        // 19. Pagination & Preview
+        // 19. Pagination & Preview – DIPERBAIKI agar halaman terisi penuh
         // ─────────────────────────────────────────────────────────────────────────────
         function paginateContent(htmlString) {
+            // Buat elemen sementara dengan gaya yang sama persis dengan .a4-page
+            const tmpContainer = document.createElement('div');
+            tmpContainer.style.cssText = `
+                        position: absolute;
+                        left: -9999px;
+                        top: -9999px;
+                        width: 210mm;
+                        padding: 10mm;
+                        box-sizing: border-box;
+                        background: white;
+                        font-family: "Inter", sans-serif;
+                        table-layout: fixed;
+                    `;
+            document.body.appendChild(tmpContainer);
+
+            // Fungsi untuk mengukur tinggi HTML
+            function measureHeight(html) {
+                tmpContainer.innerHTML = html;
+                // Pastikan tabel menggunakan table-layout: fixed dan lebar 100%
+                const table = tmpContainer.querySelector('table.book-table');
+                if (table) {
+                    table.style.tableLayout = 'fixed';
+                    table.style.width = '100%';
+                    // Terapkan lebar kolom jika ada di previewColumnWidths
+                    const ths = table.querySelectorAll('thead th');
+                    ths.forEach(th => {
+                        const colKey = th.textContent.trim();
+                        if (previewColumnWidths[colKey]) {
+                            th.style.width = previewColumnWidths[colKey] + 'px';
+                            th.style.minWidth = previewColumnWidths[colKey] + 'px';
+                        }
+                    });
+                }
+                return tmpContainer.offsetHeight;
+            }
+
+            // Salin HTML ke container utama untuk parsing
             const container = document.createElement('div');
-            container.style.cssText =
-                'position: absolute; left: -9999px; top: -9999px; width: 210mm; padding: 10mm; box-sizing: border-box; background: white; font-family: "Inter", sans-serif;';
+            container.style.cssText = tmpContainer.style.cssText;
             document.body.appendChild(container);
             container.innerHTML = htmlString;
 
@@ -3285,6 +3321,7 @@
 
             if (!table) {
                 document.body.removeChild(container);
+                document.body.removeChild(tmpContainer);
                 return [htmlString];
             }
 
@@ -3293,8 +3330,8 @@
             const tfoot = table.querySelector('tfoot');
             const rows = tbody ? tbody.querySelectorAll('tr') : [];
 
-            const pageHeightPx = 297 * 3.779527;
-            const paddingPx = 10 * 3.779527 * 2;
+            const pageHeightPx = 297 * 3.779527; // 297mm dalam px
+            const paddingPx = 10 * 3.779527 * 2; // 20mm padding
             const maxContentHeight = pageHeightPx - paddingPx;
 
             const pages = [];
@@ -3302,13 +3339,20 @@
 
             if (rowsArray.length === 0) {
                 document.body.removeChild(container);
+                document.body.removeChild(tmpContainer);
                 return [htmlString];
             }
 
             function buildPage(rowIndexStart, rowIndexEnd, isLastPage) {
                 const pageDiv = document.createElement('div');
-                pageDiv.style.cssText =
-                    'width: 210mm; padding: 10mm; box-sizing: border-box; background: white; font-family: "Inter", sans-serif;';
+                pageDiv.style.cssText = `
+                            width: 210mm;
+                            padding: 10mm;
+                            box-sizing: border-box;
+                            background: white;
+                            font-family: "Inter", sans-serif;
+                            table-layout: fixed;
+                        `;
 
                 if (rowIndexStart === 0) {
                     if (header) pageDiv.appendChild(header.cloneNode(true));
@@ -3317,39 +3361,44 @@
 
                 const newTable = document.createElement('table');
                 newTable.className = 'book-table';
+                newTable.style.tableLayout = 'fixed';
+                newTable.style.width = '100%';
+
                 if (thead) {
                     const newThead = thead.cloneNode(true);
                     newThead.querySelectorAll('.col-resizer').forEach(el => el.remove());
+                    // Terapkan lebar kolom
+                    const ths = newThead.querySelectorAll('th');
+                    ths.forEach(th => {
+                        const colKey = th.textContent.trim();
+                        if (previewColumnWidths[colKey]) {
+                            th.style.width = previewColumnWidths[colKey] + 'px';
+                            th.style.minWidth = previewColumnWidths[colKey] + 'px';
+                        }
+                    });
                     newTable.appendChild(newThead);
                 }
+
                 const newTbody = document.createElement('tbody');
                 for (let i = rowIndexStart; i <= rowIndexEnd && i < rowsArray.length; i++) {
                     const rowClone = rowsArray[i].cloneNode(true);
                     newTbody.appendChild(rowClone);
                 }
                 newTable.appendChild(newTbody);
+
                 if (tfoot && isLastPage) {
                     const newTfoot = tfoot.cloneNode(true);
                     newTable.appendChild(newTfoot);
                 }
+
                 pageDiv.appendChild(newTable);
 
                 if (isLastPage) {
                     if (closing) pageDiv.appendChild(closing.cloneNode(true));
                     if (signature) pageDiv.appendChild(signature.cloneNode(true));
                 }
-                return pageDiv.innerHTML;
-            }
 
-            function measureHeight(html) {
-                const tmp = document.createElement('div');
-                tmp.style.cssText =
-                    'position: absolute; left: -9999px; top: -9999px; width: 210mm; padding: 10mm; box-sizing: border-box; background: white; font-family: "Inter", sans-serif;';
-                document.body.appendChild(tmp);
-                tmp.innerHTML = html;
-                const height = tmp.offsetHeight;
-                document.body.removeChild(tmp);
-                return height;
+                return pageDiv.innerHTML;
             }
 
             let currentStart = 0;
@@ -3385,6 +3434,7 @@
             }
 
             document.body.removeChild(container);
+            document.body.removeChild(tmpContainer);
             if (pages.length === 0) return [htmlString];
             return pages;
         }
@@ -3474,6 +3524,20 @@
                             th.style.minWidth = newWidth + 'px';
                             previewColumnWidths[colKey] = newWidth;
                             savePreviewColumnWidths();
+                            // Perbarui semua halaman agar kolomnya sama
+                            document.querySelectorAll('.a4-page').forEach(p => {
+                                const t = p.querySelector('table.book-table');
+                                if (t) {
+                                    const ths2 = t.querySelectorAll('thead th');
+                                    ths2.forEach(th2 => {
+                                        const key = th2.textContent.trim();
+                                        if (previewColumnWidths[key]) {
+                                            th2.style.width = previewColumnWidths[key] + 'px';
+                                            th2.style.minWidth = previewColumnWidths[key] + 'px';
+                                        }
+                                    });
+                                }
+                            });
                         };
                         const onMouseUp = () => {
                             document.body.classList.remove('dragging-active');
@@ -3607,6 +3671,7 @@
         console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank, Pajak, Utang, ROB) siap');
         console.log('✅ Urutan data berdasarkan nomor urut (No) dari terkecil ke terbesar');
         console.log('✅ Preview multi-halaman dengan background abu-abu');
+        console.log('✅ Setiap halaman akan terisi penuh sebelum ke halaman berikutnya');
         console.log('✅ Print identik dengan preview');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
