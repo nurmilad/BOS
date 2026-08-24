@@ -455,7 +455,7 @@
             align-self: start;
             border-top: none;
             padding-top: 0;
-            margin-top: 40px; /* Jarak 4x enter di atas nama */
+            margin-top: 40px;
         }
         .signature .sign-grid .sign-name-kepsek {
             grid-column: 1;
@@ -794,7 +794,7 @@
                 align-self: start !important;
                 border-top: none !important;
                 padding-top: 0 !important;
-                margin-top: 32pt !important; /* Jarak 4x enter untuk print */
+                margin-top: 32pt !important;
             }
             #a4PreviewContent .signature .sign-grid .sign-name-kepsek {
                 grid-column: 1 !important;
@@ -1097,7 +1097,7 @@
             align-self: start !important;
             border-top: none !important;
             padding-top: 0 !important;
-            margin-top: 32pt !important; /* Jarak 4x enter untuk print preview */
+            margin-top: 32pt !important;
         }
         .print-preview-body .a4-page .signature .sign-grid .sign-name-kepsek {
             grid-column: 1 !important;
@@ -2020,7 +2020,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 9. Fungsi bantu untuk ambil transaksi dari Firestore
+        // 9. Fungsi bantu untuk ambil transaksi dari Firestore + URUTKAN BERDASARKAN 'no'
         // ─────────────────────────────────────────────
         async function fetchTransaksi() {
             const snapshot = await db.collection(COLLECTION)
@@ -2034,8 +2034,17 @@
                 if (d.debetKredit === undefined) d.debetKredit = 'Kredit';
                 if (d.jenisBerisi === undefined) d.jenisBerisi = 'Tunai';
                 if (d.jenisPajak === undefined) d.jenisPajak = 'PPN';
+                if (d.no === undefined) d.no = '';
                 transaksi.push(d);
             });
+
+            // ⭐ URUTKAN berdasarkan 'no' (angka) dari terkecil ke terbesar
+            transaksi.sort((a, b) => {
+                const noA = parseInt(a.no) || 0;
+                const noB = parseInt(b.no) || 0;
+                return noA - noB;
+            });
+
             return transaksi;
         }
 
@@ -3564,7 +3573,7 @@
         }, 500);
 
         console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank, Pajak, Utang, ROB) siap');
-        console.log('📋 ROB: Saldo kumulatif berantai dari bulan sebelumnya');
+        console.log('✅ Urutan data berdasarkan nomor urut (No) dari terkecil ke terbesar');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
