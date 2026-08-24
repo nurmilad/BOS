@@ -821,7 +821,8 @@
             #tab-buku-tunai,
             #tab-buku-bank,
             #tab-buku-pajak,
-            #tab-buku-utang {
+            #tab-buku-utang,
+            #tab-rob {
                 display: none !important;
             }
         }
@@ -1623,7 +1624,85 @@
 
     <!-- ─── Tab Content: ROB ─── -->
     <div class="tab-content" id="tab-rob">
-        <div style="text-align:center;padding:60px 0;color:#8aa0b8;font-size:16px;">📄 ROB (Coming Soon)</div>
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelectRob">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelectRob"></select>
+            <button class="btn-primary" id="loadDataBtnRob" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
+            <button class="btn-primary" id="printBtnRob" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
+        </div>
+
+        <div id="bukuRobContent">
+            <div class="book-header">
+                <h2>RINCIAN OBJEK BELANJA (ROB)</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulanRob">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahunRob">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMetaRob">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnRob">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahRob">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="robTable">
+                    <thead>
+                        <tr>
+                            <th style="width:100px;">TANGGAL</th>
+                            <th style="width:100px;">NO. BKU</th>
+                            <th style="width:250px;">URAIAN</th>
+                            <th style="width:150px;">REALISASI</th>
+                            <th style="width:150px;">JUMLAH</th>
+                            <th style="width:150px;">SISA ANGGARAN</th>
+                        </tr>
+                    </thead>
+                    <tbody id="robTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
+                        </tr>
+                    </tbody>
+                    <tfoot id="robTableFoot">
+                        <tr class="total-row">
+                            <td colspan="3" style="text-align:right;font-weight:600;">Jumlah</td>
+                            <td id="robTotalRealisasi" style="text-align:right;font-weight:600;">Rp 0</td>
+                            <td id="robTotalJumlah" style="text-align:right;font-weight:600;">Rp 0</td>
+                            <td id="robTotalSisa" style="text-align:right;font-weight:600;">Rp 0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- Tanda tangan -->
+            <div class="signature">
+                <div class="sign-grid">
+                    <div class="sign-place-date">Kec. Bola, <span id="signTanggalRob">-</span></div>
+                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                    <div class="sign-name sign-name-kepsek" id="signKepsekRob">-</div>
+                    <div class="sign-name sign-name-bendahara" id="signBendaharaRob">-</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1659,6 +1738,7 @@
         let allTunaiData = [];
         let allBankData = [];
         let allPajakData = [];
+        let allRobData = [];
         const COLLECTION = 'data_bos';
         const SETTINGS_COLLECTION = 'settings_bos';
 
@@ -1747,6 +1827,24 @@
         const signKepsekUtang = document.getElementById('signKepsekUtang');
         const signBendaharaUtang = document.getElementById('signBendaharaUtang');
 
+        // ROB
+        const bulanSelectRob = document.getElementById('bulanSelectRob');
+        const tahunSelectRob = document.getElementById('tahunSelectRob');
+        const loadDataBtnRob = document.getElementById('loadDataBtnRob');
+        const printBtnRob = document.getElementById('printBtnRob');
+        const robTableBody = document.getElementById('robTableBody');
+        const robTableFoot = document.getElementById('robTableFoot');
+        const displayBulanRob = document.getElementById('displayBulanRob');
+        const displayTahunRob = document.getElementById('displayTahunRob');
+        const metaNpsnRob = document.getElementById('metaNpsnRob');
+        const metaSekolahRob = document.getElementById('metaSekolahRob');
+        const signTanggalRob = document.getElementById('signTanggalRob');
+        const signKepsekRob = document.getElementById('signKepsekRob');
+        const signBendaharaRob = document.getElementById('signBendaharaRob');
+        const robTotalRealisasi = document.getElementById('robTotalRealisasi');
+        const robTotalJumlah = document.getElementById('robTotalJumlah');
+        const robTotalSisa = document.getElementById('robTotalSisa');
+
         // Print preview
         const printPreviewOverlay = document.getElementById('printPreviewOverlay');
         const a4PreviewContent = document.getElementById('a4PreviewContent');
@@ -1796,6 +1894,7 @@
         populateTahun(tahunSelectBank);
         populateTahun(tahunSelectPajak);
         populateTahun(tahunSelectUtang);
+        populateTahun(tahunSelectRob);
 
         // ─────────────────────────────────────────────
         // 7. Format number & date
@@ -1909,6 +2008,12 @@
                     metaSekolahUtang.textContent = namaSekolah;
                     signKepsekUtang.textContent = kepala;
                     signBendaharaUtang.textContent = bendahara;
+
+                    // ROB
+                    metaNpsnRob.textContent = npsn;
+                    metaSekolahRob.textContent = namaSekolah;
+                    signKepsekRob.textContent = kepala;
+                    signBendaharaRob.textContent = bendahara;
                 }, (error) => {
                     console.error('Settings read error:', error);
                 });
@@ -2490,7 +2595,230 @@
         }
 
         // ─────────────────────────────────────────────
-        // 16. Tabs
+        // 16. Load ROB (Rincian Objek Belanja)
+        // ─────────────────────────────────────────────
+        async function loadRobData() {
+            const bulan = bulanSelectRob.value;
+            const tahun = tahunSelectRob.value;
+            displayBulanRob.textContent = getMonthName(bulan);
+            displayTahunRob.textContent = tahun;
+
+            const raw = await fetchTransaksi();
+            const prev = getPreviousMonth(bulan, tahun);
+            
+            // Hitung saldo anggaran awal (dari bulan lalu)
+            let saldoAwal = 0;
+            
+            // Tambahkan anggaran yang masuk pada bulan lalu
+            const tgl1 = settingsData.tanggalPemasukan1 || '';
+            const tgl2 = settingsData.tanggalPemasukan2 || '';
+            const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
+            const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
+            
+            // Fungsi untuk mengecek apakah tanggal masuk dalam bulan lalu
+            function isInPrevMonth(tgl) {
+                if (!tgl) return false;
+                let dateParts = null;
+                if (tgl.includes('-')) dateParts = tgl.split('-');
+                else if (tgl.includes('/')) dateParts = tgl.split('/');
+                if (!dateParts || dateParts.length !== 3) return false;
+                let year, month;
+                if (dateParts[0].length === 4) { year = dateParts[0]; month = dateParts[1]; } 
+                else { year = dateParts[2]; month = dateParts[1]; }
+                month = month.padStart(2, '0');
+                return (month === prev.month && year === prev.year);
+            }
+            
+            // Hitung saldo awal dari transaksi bulan lalu (selain pajak)
+            raw.forEach(item => {
+                const tgl = item.tglPembayaran;
+                if (!tgl) return;
+                if (item.jenisBerisi === 'Pajak') return; // Abaikan pajak
+                
+                let dateParts = null;
+                if (tgl.includes('-')) dateParts = tgl.split('-');
+                else if (tgl.includes('/')) dateParts = tgl.split('/');
+                if (!dateParts || dateParts.length !== 3) return;
+                let year, month;
+                if (dateParts[0].length === 4) { year = dateParts[0]; month = dateParts[1]; } 
+                else { year = dateParts[2]; month = dateParts[1]; }
+                month = month.padStart(2, '0');
+                
+                if (month === prev.month && year === prev.year) {
+                    const jumlah = parseFloat(item.jumlahHarga) || 0;
+                    const debetKredit = item.debetKredit || 'Kredit';
+                    if (debetKredit === 'Debet') {
+                        saldoAwal += jumlah;
+                    } else {
+                        saldoAwal -= jumlah;
+                    }
+                }
+            });
+            
+            // Tambahkan anggaran bulan lalu jika ada
+            if (isInPrevMonth(tgl1)) saldoAwal += anggaran1;
+            if (isInPrevMonth(tgl2)) saldoAwal += anggaran2;
+            
+            // Bangun data ROB
+            const robRows = [];
+            
+            // Baris 1: Saldo Awal
+            robRows.push({
+                tanggal: '',
+                noBku: '',
+                uraian: `Saldo Awal (${getMonthName(prev.month)} ${prev.year})`,
+                realisasi: 0,
+                jumlah: 0,
+                sisaAnggaran: saldoAwal,
+                isSaldoAwal: true
+            });
+            
+            let sisaAnggaran = saldoAwal;
+            
+            // Ambil transaksi bulan ini (selain pajak) + anggaran masuk
+            // Kumpulkan semua transaksi bulan ini (selain pajak)
+            const transaksiBulanIni = [];
+            
+            raw.forEach(item => {
+                const tgl = item.tglPembayaran;
+                if (!tgl) return;
+                if (item.jenisBerisi === 'Pajak') return;
+                
+                let dateParts = null;
+                if (tgl.includes('-')) dateParts = tgl.split('-');
+                else if (tgl.includes('/')) dateParts = tgl.split('/');
+                if (!dateParts || dateParts.length !== 3) return;
+                let year, month;
+                if (dateParts[0].length === 4) { year = dateParts[0]; month = dateParts[1]; } 
+                else { year = dateParts[2]; month = dateParts[1]; }
+                month = month.padStart(2, '0');
+                
+                if (month === bulan && year === tahun) {
+                    const jumlah = parseFloat(item.jumlahHarga) || 0;
+                    const debetKredit = item.debetKredit || 'Kredit';
+                    transaksiBulanIni.push({
+                        tanggal: tgl,
+                        noBku: item.noBukti || '',
+                        uraian: item.uraian || '',
+                        jumlah: jumlah,
+                        debetKredit: debetKredit,
+                        jenisBerisi: item.jenisBerisi || ''
+                    });
+                }
+            });
+            
+            // Tambahkan anggaran masuk bulan ini
+            function isInThisMonth(tgl) {
+                if (!tgl) return false;
+                let dateParts = null;
+                if (tgl.includes('-')) dateParts = tgl.split('-');
+                else if (tgl.includes('/')) dateParts = tgl.split('/');
+                if (!dateParts || dateParts.length !== 3) return false;
+                let year, month;
+                if (dateParts[0].length === 4) { year = dateParts[0]; month = dateParts[1]; } 
+                else { year = dateParts[2]; month = dateParts[1]; }
+                month = month.padStart(2, '0');
+                return (month === bulan && year === tahun);
+            }
+            
+            if (isInThisMonth(tgl1) && anggaran1 > 0) {
+                transaksiBulanIni.push({
+                    tanggal: tgl1,
+                    noBku: '',
+                    uraian: 'Penerimaan Anggaran Tahap 1',
+                    jumlah: anggaran1,
+                    debetKredit: 'Debet',
+                    jenisBerisi: 'Anggaran'
+                });
+            }
+            if (isInThisMonth(tgl2) && anggaran2 > 0) {
+                transaksiBulanIni.push({
+                    tanggal: tgl2,
+                    noBku: '',
+                    uraian: 'Penerimaan Anggaran Tahap 2',
+                    jumlah: anggaran2,
+                    debetKredit: 'Debet',
+                    jenisBerisi: 'Anggaran'
+                });
+            }
+            
+            // Urutkan berdasarkan tanggal
+            transaksiBulanIni.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
+            
+            // Proses setiap transaksi
+            let totalRealisasi = 0;
+            let totalJumlah = 0;
+            
+            transaksiBulanIni.forEach(item => {
+                const realisasi = item.jumlah;
+                const debetKredit = item.debetKredit;
+                
+                // Untuk ROB: realisasi dan jumlah sama dengan nilai transaksi
+                // Sisa anggaran = sisa sebelumnya - realisasi (jika Kredit) atau + realisasi (jika Debet)
+                if (debetKredit === 'Debet') {
+                    sisaAnggaran += realisasi;
+                } else {
+                    sisaAnggaran -= realisasi;
+                }
+                
+                robRows.push({
+                    tanggal: item.tanggal,
+                    noBku: item.noBku,
+                    uraian: item.uraian,
+                    realisasi: realisasi,
+                    jumlah: realisasi,
+                    sisaAnggaran: sisaAnggaran,
+                    isSaldoAwal: false
+                });
+                
+                totalRealisasi += realisasi;
+                totalJumlah += realisasi;
+            });
+            
+            allRobData = robRows;
+            renderRobTable(robRows, totalRealisasi, totalJumlah, sisaAnggaran);
+            
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            signTanggalRob.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        function renderRobTable(data, totalRealisasi, totalJumlah, sisaAkhir) {
+            if (data.length === 0 || (data.length === 1 && data[0].isSaldoAwal && data[0].sisaAnggaran === 0)) {
+                robTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada transaksi untuk bulan ini.</td>
+                    </tr>
+                `;
+                robTableFoot.style.display = 'none';
+                return;
+            }
+            
+            robTableFoot.style.display = 'table-footer-group';
+            
+            let html = '';
+            data.forEach((item) => {
+                const tanggalFormatted = formatDateToDDMMYY(item.tanggal);
+                const isSaldoAwal = item.isSaldoAwal || false;
+                html += `
+                        <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
+                            <td>${tanggalFormatted}</td>
+                            <td>${item.noBku}</td>
+                            <td class="left">${item.uraian}</td>
+                            <td class="right">${formatRupiah(item.realisasi)}</td>
+                            <td class="right">${formatRupiah(item.jumlah)}</td>
+                            <td class="right">${formatRupiah(item.sisaAnggaran)}</td>
+                        </tr>
+                    `;
+            });
+            robTableBody.innerHTML = html;
+            
+            robTotalRealisasi.textContent = formatRupiah(totalRealisasi);
+            robTotalJumlah.textContent = formatRupiah(totalJumlah);
+            robTotalSisa.textContent = formatRupiah(sisaAkhir);
+        }
+
+        // ─────────────────────────────────────────────
+        // 17. Tabs
         // ─────────────────────────────────────────────
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -2504,11 +2832,12 @@
                 if (this.dataset.tab === 'buku-bank') loadBankData();
                 if (this.dataset.tab === 'buku-pajak') loadPajakData();
                 if (this.dataset.tab === 'buku-utang') loadUtangData();
+                if (this.dataset.tab === 'rob') loadRobData();
             });
         });
 
         // ─────────────────────────────────────────────
-        // 17. Build A4 preview
+        // 18. Build A4 preview
         // ─────────────────────────────────────────────
         function buildA4PreviewKas() {
             const bulan = bulanSelect.value;
@@ -2922,8 +3251,100 @@
                 `;
         }
 
+        function buildA4PreviewRob() {
+            const bulan = bulanSelectRob.value;
+            const tahun = tahunSelectRob.value;
+            const bulanNama = getMonthName(bulan);
+
+            let tableRows = '';
+            let totalRealisasi = 0;
+            let totalJumlah = 0;
+            let sisaAkhir = 0;
+            
+            if (allRobData.length === 0) {
+                tableRows =
+                    `<tr><td colspan="6" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada transaksi.</td></tr>`;
+            } else {
+                allRobData.forEach((item, index) => {
+                    const tgl = formatDateToDDMMYY(item.tanggal);
+                    const isSaldoAwal = item.isSaldoAwal || false;
+                    if (!isSaldoAwal) {
+                        totalRealisasi += item.realisasi || 0;
+                        totalJumlah += item.jumlah || 0;
+                    }
+                    if (index === allRobData.length - 1) {
+                        sisaAkhir = item.sisaAnggaran || 0;
+                    }
+                    tableRows += `
+                            <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
+                                <td>${tgl}</td>
+                                <td>${item.noBku || ''}</td>
+                                <td class="left">${item.uraian || ''}</td>
+                                <td class="right">${formatRupiah(item.realisasi || 0)}</td>
+                                <td class="right">${formatRupiah(item.jumlah || 0)}</td>
+                                <td class="right">${formatRupiah(item.sisaAnggaran || 0)}</td>
+                            </tr>
+                        `;
+                });
+            }
+
+            const npsn = settingsData.npsn || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+            const kepalaSekolah = settingsData.kepalaSekolah || '-';
+            const bendahara = settingsData.bendahara || '-';
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            return `
+                    <div class="book-header">
+                        <h2>RINCIAN OBJEK BELANJA (ROB)</h2>
+                        <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
+                    </div>
+                    <div class="book-meta">
+                        <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                        <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                        <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                        <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                        <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                        <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="book-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:100px;">TANGGAL</th>
+                                    <th style="width:100px;">NO. BKU</th>
+                                    <th style="width:250px;">URAIAN</th>
+                                    <th style="width:150px;">REALISASI</th>
+                                    <th style="width:150px;">JUMLAH</th>
+                                    <th style="width:150px;">SISA ANGGARAN</th>
+                                </tr>
+                            </thead>
+                            <tbody>${tableRows}</tbody>
+                            <tfoot>
+                                <tr class="total-row">
+                                    <td colspan="3" style="text-align:right;font-weight:600;">Jumlah</td>
+                                    <td style="text-align:right;font-weight:600;">${formatRupiah(totalRealisasi)}</td>
+                                    <td style="text-align:right;font-weight:600;">${formatRupiah(totalJumlah)}</td>
+                                    <td style="text-align:right;font-weight:600;">${formatRupiah(sisaAkhir)}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="signature">
+                        <div class="sign-grid">
+                            <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                            <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                            <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                            <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                            <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                        </div>
+                    </div>
+                `;
+        }
+
         // ─────────────────────────────────────────────
-        // 18. Show print preview
+        // 19. Show print preview
         // ─────────────────────────────────────────────
         function showPrintPreview(type) {
             a4PreviewContent.innerHTML = '';
@@ -2933,6 +3354,7 @@
             else if (type === 'bank') content = buildA4PreviewBank();
             else if (type === 'pajak') content = buildA4PreviewPajak();
             else if (type === 'utang') content = buildA4PreviewUtang();
+            else if (type === 'rob') content = buildA4PreviewRob();
             else return;
             a4PreviewContent.innerHTML = content;
             printPreviewOverlay.classList.add('active');
@@ -2946,7 +3368,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 19. Resize kolom preview
+        // 20. Resize kolom preview
         // ─────────────────────────────────────────────
         let previewColumnWidths = {};
 
@@ -3007,7 +3429,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 20. Print / PDF
+        // 21. Print / PDF
         // ─────────────────────────────────────────────
         function doPrint() {
             const toolbar = document.querySelector('.print-preview-toolbar');
@@ -3024,12 +3446,13 @@
         }
 
         // ─────────────────────────────────────────────
-        // 21. Event listeners
+        // 22. Event listeners
         // ─────────────────────────────────────────────
         loadDataBtn.addEventListener('click', loadKasData);
         loadDataBtnTunai.addEventListener('click', loadTunaiData);
         loadDataBtnBank.addEventListener('click', loadBankData);
         loadDataBtnPajak.addEventListener('click', loadPajakData);
+        loadDataBtnRob.addEventListener('click', loadRobData);
 
         printBtnKas.addEventListener('click', () => {
             if (allKasData.length === 0) {
@@ -3072,6 +3495,15 @@
             showPrintPreview('utang');
         });
 
+        printBtnRob.addEventListener('click', () => {
+            if (allRobData.length === 0 || (allRobData.length === 1 && allRobData[0].isSaldoAwal && allRobData[0].sisaAnggaran === 0)) {
+                showToast('Tidak ada data untuk dicetak. Silakan pilih bulan dan tahun, lalu klik Tampilkan.', 'error');
+                return;
+            }
+            loadPreviewColumnWidths();
+            showPrintPreview('rob');
+        });
+
         closePreviewBtn.addEventListener('click', closePrintPreview);
         printPreviewOverlay.addEventListener('click', (e) => {
             if (e.target === printPreviewOverlay) closePrintPreview();
@@ -3094,7 +3526,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 22. Init
+        // 23. Init
         // ─────────────────────────────────────────────
         loadSettings();
         const now = new Date();
@@ -3104,6 +3536,7 @@
         bulanSelectBank.value = currentMonth;
         bulanSelectPajak.value = currentMonth;
         bulanSelectUtang.value = currentMonth;
+        bulanSelectRob.value = currentMonth;
 
         setTimeout(() => {
             loadKasData();
@@ -3111,9 +3544,10 @@
             loadBankData();
             loadPajakData();
             loadUtangData();
+            loadRobData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank, Pajak, Utang) siap');
+        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank, Pajak, Utang, ROB) siap');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
