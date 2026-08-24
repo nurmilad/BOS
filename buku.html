@@ -2241,7 +2241,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 14. Load Buku Pajak (filter jenisBerisi === 'Pajak') - DIPERBAIKI
+        // 14. Load Buku Pajak - DIPERBAIKI dengan saldo awal
         // ─────────────────────────────────────────────
         async function loadPajakData() {
             const bulan = bulanSelectPajak.value;
@@ -2251,75 +2251,122 @@
 
             const raw = await fetchTransaksi();
             const pajakRows = [];
-            let saldoKumulatif = 0;
-
-            // Filter transaksi dengan jenisBerisi === 'Pajak' dan bulan/tahun sesuai
+            
+            // Hitung saldo pajak bulan lalu (saldo awal)
+            const prev = getPreviousMonth(bulan, tahun);
+            let saldoAwal = 0;
+            
+            // Kumpulkan semua transaksi pajak dari bulan lalu
             raw.forEach(item => {
                 const tgl = item.tglPembayaran;
                 if (!tgl) return;
+                if (item.jenisBerisi !== 'Pajak') return;
+                
                 let dateParts = null;
                 if (tgl.includes('-')) dateParts = tgl.split('-');
                 else if (tgl.includes('/')) dateParts = tgl.split('/');
                 if (!dateParts || dateParts.length !== 3) return;
+                
                 let year, month;
-                if (dateParts[0].length === 4) { year = dateParts[0];
-                    month = dateParts[1]; } else { year = dateParts[2];
-                    month = dateParts[1]; }
+                if (dateParts[0].length === 4) { year = dateParts[0]; month = dateParts[1]; } 
+                else { year = dateParts[2]; month = dateParts[1]; }
                 month = month.padStart(2, '0');
-                if (month !== bulan || year !== tahun) return;
-                if (item.jenisBerisi !== 'Pajak') return;
-
-                const jumlah = parseFloat(item.jumlahHarga) || 0;
-                const jenisPajak = item.jenisPajak || 'PPN';
-                const debetKredit = item.debetKredit || 'Kredit';
-
-                // Inisialisasi kolom
-                let ppn = 0,
-                    pph21 = 0,
-                    pph23 = 0,
-                    pph4 = 0,
-                    sspd = 0;
-                let pengeluaranKredit = 0;
-
-                if (debetKredit === 'Debet') {
-                    // Pemasukan pajak → masukkan ke kolom jenis pajak yang sesuai
-                    const pajakMap = {
-                        'PPN': 'ppn',
-                        'PPh 21': 'pph21',
-                        'PPh 23': 'pph23',
-                        'PPh 4': 'pph4',
-                        'SSPD': 'sspd'
-                    };
-                    const field = pajakMap[jenisPajak];
-                    if (field) {
-                        if (field === 'ppn') ppn = jumlah;
-                        else if (field === 'pph21') pph21 = jumlah;
-                        else if (field === 'pph23') pph23 = jumlah;
-                        else if (field === 'pph4') pph4 = jumlah;
-                        else if (field === 'sspd') sspd = jumlah;
+                
+                // Ambil transaksi dari bulan lalu
+                if (month === prev.month && year === prev.year) {
+                    const jumlah = parseFloat(item.jumlahHarga) || 0;
+                    const debetKredit = item.debetKredit || 'Kredit';
+                    
+                    // Pemasukan (Debet) menambah saldo, Pengeluaran (Kredit) mengurangi saldo
+                    if (debetKredit === 'Debet') {
+                        saldoAwal += jumlah;
+                    } else {
+                        saldoAwal -= jumlah;
                     }
-                    // pengeluaranKredit tetap 0
-                } else {
-                    // Pengeluaran pajak (Kredit) → masukkan ke kolom Pengeluaran/Kredit
-                    pengeluaranKredit = jumlah;
-                    // kolom pajak spesifik tetap 0
                 }
+            });
 
-                // Saldo diakumulasi dari pengeluaran (kredit)
-                saldoKumulatif += pengeluaranKredit;
+            // Baris pertama: Saldo Awal
+            pajakRows.push({
+                tanggal: '',
+                kode: '',
+                uraian: `Saldo Awal (${getMonthName(prev.month)} ${prev.year})`,
+                ppn: 0,
+                pph21: 0,
+                pph23: 0,
+                pph4: 0,
+                sspd: 0,
+                pengeluaran: 0,
+                saldo: saldoAwal,
+                isSaldoAwal: true
+            });
 
-                pajakRows.push({
-                    tanggal: tgl,
-                    kode: item.kodeKegiatan || '',
-                    uraian: item.uraian || '',
-                    ppn,
-                    pph21,
-                    pph23,
-                    pph4,
-                    sspd,
-                    pengeluaran: pengeluaranKredit,
-                    saldo: saldoKumulatif
-                });
+            // Proses transaksi bulan ini
+            let saldoBerjalan = saldoAwal;
+            
+            raw.forEach(item => {
+                const tgl = item.tglPembayaran;
+                if (!tgl) return;
+                if (item.jenisBerisi !== 'Pajak') return;
+                
+                let dateParts = null;
+                if (tgl.includes('-')) dateParts = tgl.split('-');
+                else if (tgl.includes('/')) dateParts = tgl.split('/');
+                if (!dateParts || dateParts.length !== 3) return;
+                
+                let year, month;
+                if (dateParts[0].length === 4) { year = dateParts[0]; month = dateParts[1]; } 
+                else { year = dateParts[2]; month = dateParts[1]; }
+                month = month.padStart(2, '0');
+                
+                if (month === bulan && year === tahun) {
+                    const jumlah = parseFloat(item.jumlahHarga) || 0;
+                    const jenisPajak = item.jenisPajak || 'PPN';
+                    const debetKredit = item.debetKredit || 'Kredit';
+                    
+                    let ppn = 0, pph21 = 0, pph23 = 0, pph4 = 0, sspd = 0;
+                    let pengeluaranKredit = 0;
+                    
+                    if (debetKredit === 'Debet') {
+                        // Pemasukan pajak → masuk ke kolom jenis pajak yang sesuai
+                        const pajakMap = {
+                            'PPN': 'ppn',
+                            'PPh 21': 'pph21',
+                            'PPh 23': 'pph23',
+                            'PPh 4': 'pph4',
+                            'SSPD': 'sspd'
+                        };
+                        const field = pajakMap[jenisPajak];
+                        if (field) {
+                            if (field === 'ppn') ppn = jumlah;
+                            else if (field === 'pph21') pph21 = jumlah;
+                            else if (field === 'pph23') pph23 = jumlah;
+                            else if (field === 'pph4') pph4 = jumlah;
+                            else if (field === 'sspd') sspd = jumlah;
+                        }
+                        // Saldo bertambah
+                        saldoBerjalan += jumlah;
+                    } else {
+                        // Pengeluaran (Kredit) → masuk ke kolom Pengeluaran/Kredit
+                        pengeluaranKredit = jumlah;
+                        // Saldo berkurang
+                        saldoBerjalan -= jumlah;
+                    }
+                    
+                    pajakRows.push({
+                        tanggal: tgl,
+                        kode: item.kodeKegiatan || '',
+                        uraian: item.uraian || '',
+                        ppn,
+                        pph21,
+                        pph23,
+                        pph4,
+                        sspd,
+                        pengeluaran: pengeluaranKredit,
+                        saldo: saldoBerjalan,
+                        isSaldoAwal: false
+                    });
+                }
             });
 
             allPajakData = pajakRows;
@@ -2336,8 +2383,9 @@
             let html = '';
             data.forEach((item) => {
                 const tanggalFormatted = formatDateToDDMMYY(item.tanggal);
+                const isSaldoAwal = item.isSaldoAwal || false;
                 html += `
-                        <tr>
+                        <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
                             <td>${tanggalFormatted}</td>
                             <td>${item.kode}</td>
                             <td class="left">${item.uraian}</td>
@@ -2668,8 +2716,9 @@
             } else {
                 allPajakData.forEach(item => {
                     const tgl = formatDateToDDMMYY(item.tanggal);
+                    const isSaldoAwal = item.isSaldoAwal || false;
                     tableRows += `
-                            <tr>
+                            <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
                                 <td>${tgl}</td>
                                 <td>${item.kode}</td>
                                 <td class="left">${item.uraian}</td>
@@ -2919,7 +2968,8 @@
             loadPajakData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Buku Pajak diperbaiki: pemasukan (Debet) masuk ke kolom jenis pajak, pengeluaran (Kredit) masuk ke Pengeluaran/Kredit.');
+        console.log('📋 BOS-NBS · Buku Pajak diperbaiki dengan saldo awal dari bulan sebelumnya.');
+        console.log('📋 Rumus saldo: Saldo sebelumnya + (PPN+PPh21+PPh23+PPh4+SSPD) - Pengeluaran/Kredit');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
