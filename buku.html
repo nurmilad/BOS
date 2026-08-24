@@ -519,10 +519,7 @@
             }
         }
 
-        /* ============================================================
-           PRINT STYLES – di sini kita atur agar print menghasilkan
-           halaman A4 yang sama persis dengan preview.
-           ============================================================ */
+        /* ── PRINT STYLES ── */
         @media print {
             /* Sembunyikan elemen yang tidak perlu */
             .app-header,
@@ -540,8 +537,7 @@
                 display: none !important;
             }
 
-            html,
-            body {
+            html, body {
                 margin: 0 !important;
                 padding: 0 !important;
                 background: #fff !important;
@@ -550,18 +546,20 @@
                 width: 100% !important;
             }
 
-            /* Overlay preview diubah menjadi statis, tanpa background abu-abu */
+            /* Overlay preview menjadi transparan */
             .print-preview-overlay {
-                display: block !important;
+                display: flex !important;
                 position: static !important;
                 background: #fff !important;
                 backdrop-filter: none !important;
                 padding: 0 !important;
                 z-index: auto !important;
+                align-items: flex-start !important;
+                justify-content: center !important;
+                visibility: visible !important;
                 width: 100% !important;
                 height: auto !important;
-                min-height: auto !important;
-                overflow: visible !important;
+                min-height: 100vh !important;
             }
 
             .print-preview-modal {
@@ -574,6 +572,7 @@
                 overflow: visible !important;
                 width: 100% !important;
                 height: auto !important;
+                visibility: visible !important;
             }
 
             .print-preview-body {
@@ -583,62 +582,60 @@
                 overflow: visible !important;
                 flex: none !important;
                 width: 100% !important;
+                visibility: visible !important;
             }
 
-            /* Setiap halaman A4 menjadi satu halaman cetak */
-            .a4-page {
+            #a4PreviewContent {
                 width: 100% !important;
                 max-width: 210mm !important;
-                min-height: 297mm !important;
-                height: auto !important;
+                min-height: auto !important;
                 margin: 0 auto !important;
                 padding: 10mm !important;
                 box-sizing: border-box !important;
                 background: #fff !important;
+                font-size: 11pt !important;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+                line-height: 1.4 !important;
+                color: #000 !important;
+                overflow: visible !important;
                 box-shadow: none !important;
                 border-radius: 0 !important;
-                page-break-after: always !important;
-                page-break-inside: avoid !important;
-                overflow: visible !important;
-                position: relative !important;
-                table-layout: fixed !important;
-            }
-
-            .a4-page:last-child {
                 page-break-after: avoid !important;
-            }
-
-            .print-preview-body {
-                background: #fff !important;
-                padding: 0 !important;
-            }
-
-            .a4-page .col-resizer {
-                display: none !important;
-            }
-
-            table.book-table {
-                page-break-inside: auto !important;
-                table-layout: fixed !important;
-                width: 100% !important;
-                border-collapse: collapse !important;
-            }
-            table.book-table thead {
-                display: table-header-group !important;
-            }
-            table.book-table tbody tr {
                 page-break-inside: avoid !important;
-                page-break-after: auto !important;
-            }
-            table.book-table tfoot {
-                display: table-footer-group !important;
+                flex-shrink: 0 !important;
+                visibility: visible !important;
             }
 
-            .closing-statement,
-            .signature {
-                page-break-inside: avoid !important;
+            #a4PreviewContent * {
+                box-sizing: border-box !important;
+                visibility: visible !important;
             }
 
+            @page {
+                size: A4 portrait;
+                margin: 10mm !important;
+            }
+
+            /* Aturan pemotongan halaman */
+            #a4PreviewContent .book-table {
+                page-break-inside: auto;
+            }
+            #a4PreviewContent .book-table tbody tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+            #a4PreviewContent .book-table thead {
+                display: table-header-group;
+            }
+            #a4PreviewContent .book-table tfoot {
+                display: table-footer-group;
+            }
+            #a4PreviewContent .closing-statement,
+            #a4PreviewContent .signature {
+                page-break-inside: avoid;
+            }
+
+            /* Sembunyikan semua tab konten kecuali yang aktif */
             #tab-buku-kas,
             #tab-buku-tunai,
             #tab-buku-bank,
@@ -648,129 +645,13 @@
                 display: none !important;
             }
 
-            .a4-page .book-header h2 {
-                font-size: 14pt !important;
-                font-weight: 700 !important;
-                color: #000 !important;
-                text-align: center !important;
-                margin: 0 0 2pt 0 !important;
-            }
-            .a4-page .book-header .sub-info {
-                font-size: 10pt !important;
-                color: #333 !important;
-                text-align: center !important;
-                margin: 0 0 6pt 0 !important;
-            }
-            .a4-page .book-meta {
-                display: grid !important;
-                grid-template-columns: auto 1fr !important;
-                gap: 2pt 12pt !important;
-                background: #f9f9f9 !important;
-                padding: 6pt 10pt !important;
-                border: 1px solid #ccc !important;
-                border-radius: 0 !important;
-                margin: 0 0 10pt 0 !important;
-                font-size: 9pt !important;
-                align-items: center !important;
-            }
-            .a4-page .book-meta .meta-label {
-                font-weight: 600 !important;
-                color: #000 !important;
-            }
-            .a4-page .book-meta .meta-value {
-                color: #000 !important;
-            }
-            .a4-page table.book-table {
-                font-size: 9pt !important;
-                border: 1px solid #000 !important;
-            }
-            .a4-page table.book-table th {
-                font-size: 8pt !important;
-                padding: 3pt 4pt !important;
-                border: 1px solid #000 !important;
-                background: #f0f0f0 !important;
-                font-weight: 700 !important;
-                color: #000 !important;
-                text-transform: uppercase !important;
-            }
-            .a4-page table.book-table td {
-                font-size: 8.5pt !important;
-                padding: 3pt 4pt !important;
-                border: 1px solid #000 !important;
-                color: #000 !important;
-            }
-            .a4-page table.book-table td.left {
-                text-align: left !important;
-            }
-            .a4-page table.book-table td.right {
-                text-align: right !important;
-            }
-            .a4-page .closing-statement {
-                margin-top: 10pt !important;
-                padding: 8pt 12pt !important;
-                background: #f9f9f9 !important;
-                border: 1px solid #ccc !important;
-                border-radius: 0 !important;
-                font-size: 9pt !important;
-                line-height: 1.4 !important;
-            }
-            .a4-page .closing-statement .closing-grid {
-                grid-template-columns: auto auto !important;
-                gap: 2pt 12pt !important;
-            }
-            .a4-page .closing-statement .closing-grid .item.total {
-                border-top: 1px solid #000 !important;
-                padding-top: 3pt !important;
-                margin-top: 3pt !important;
-            }
-            .a4-page .signature {
-                margin-top: 16pt !important;
-                padding-top: 10pt !important;
-                border-top: 1px solid #ccc !important;
-            }
-            .a4-page .signature .sign-grid {
-                gap: 0 20pt !important;
-            }
-            .a4-page .signature .sign-place-date {
-                font-size: 8pt !important;
-                color: #555 !important;
-            }
-            .a4-page .signature .sign-label {
-                font-size: 8pt !important;
-                color: #555 !important;
-            }
-            .a4-page .signature .sign-name {
-                font-size: 10pt !important;
-                font-weight: 700 !important;
-                border-top: none !important;
-                padding-top: 0 !important;
-                margin-top: 32pt !important;
-                color: #000 !important;
-            }
-            .a4-page * {
-                margin-top: 0 !important;
-                margin-bottom: 0 !important;
-            }
-            .a4-page .book-header {
-                margin-bottom: 6pt !important;
-            }
-            .a4-page .book-meta {
-                margin-bottom: 6pt !important;
-            }
-            .a4-page .table-wrapper {
-                overflow: visible !important;
-                margin: 0 0 8pt 0 !important;
-            }
-
-            @page {
-                size: A4 portrait;
-                margin: 0 !important;
+            /* Hilangkan resizer di print */
+            .col-resizer {
+                display: none !important;
             }
         }
 
-        /* ============================================================
-           PREVIEW OVERLAY (tampilan layar)
-           ============================================================ */
+        /* ── PRINT PREVIEW OVERLAY (tampilan layar) ── */
         .print-preview-overlay {
             position: fixed;
             top: 0;
@@ -842,25 +723,21 @@
         .print-preview-toolbar .actions .btn-print-pdf:hover {
             background: #123f72;
         }
-
         .print-preview-body {
             flex: 1;
             overflow-y: auto;
             padding: 20px 24px 30px;
             background: #e8ecf0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
+            justify-content: center;
         }
-
-        .a4-page {
+        .print-preview-body .a4-page {
+            background: #fff;
             width: 210mm;
             min-height: 297mm;
             height: auto;
             padding: 10mm !important;
             box-sizing: border-box !important;
-            background: #fff;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             border-radius: 2px;
             flex-shrink: 0;
@@ -869,11 +746,9 @@
             line-height: 1.4 !important;
             color: #000 !important;
             overflow: visible;
-            position: relative;
-            table-layout: fixed !important;
         }
-
-        .a4-page .book-header h2 {
+        /* Gaya untuk konten di dalam preview (sama seperti print) */
+        .print-preview-body .a4-page .book-header h2 {
             font-size: 14pt !important;
             font-weight: 700 !important;
             color: #000 !important;
@@ -881,12 +756,12 @@
             margin-bottom: 2pt !important;
             text-align: center !important;
         }
-        .a4-page .book-header .sub-info {
+        .print-preview-body .a4-page .book-header .sub-info {
             font-size: 10pt !important;
             color: #333 !important;
             text-align: center !important;
         }
-        .a4-page .book-meta {
+        .print-preview-body .a4-page .book-meta {
             display: grid !important;
             grid-template-columns: auto 1fr !important;
             gap: 2pt 12pt !important;
@@ -898,21 +773,21 @@
             font-size: 9pt !important;
             align-items: center !important;
         }
-        .a4-page .book-meta .meta-row {
+        .print-preview-body .a4-page .book-meta .meta-row {
             display: contents !important;
         }
-        .a4-page .book-meta .meta-label {
+        .print-preview-body .a4-page .book-meta .meta-label {
             text-align: left !important;
             font-weight: 600 !important;
             color: #000 !important;
             white-space: nowrap !important;
             padding-right: 6pt !important;
         }
-        .a4-page .book-meta .meta-value {
+        .print-preview-body .a4-page .book-meta .meta-value {
             text-align: left !important;
             color: #000 !important;
         }
-        .a4-page table.book-table {
+        .print-preview-body .a4-page table.book-table {
             font-size: 9pt !important;
             border-collapse: collapse !important;
             border: 1px solid #000 !important;
@@ -920,7 +795,7 @@
             line-height: 1.2 !important;
             table-layout: fixed !important;
         }
-        .a4-page table.book-table th {
+        .print-preview-body .a4-page table.book-table th {
             font-size: 8pt !important;
             padding: 3pt 4pt !important;
             border: 1px solid #000 !important;
@@ -933,7 +808,7 @@
             white-space: normal !important;
             word-break: break-word !important;
         }
-        .a4-page table.book-table td {
+        .print-preview-body .a4-page table.book-table td {
             font-size: 8.5pt !important;
             padding: 3pt 4pt !important;
             border: 1px solid #000 !important;
@@ -941,13 +816,13 @@
             line-height: 1.2 !important;
             color: #000 !important;
         }
-        .a4-page table.book-table td.left {
+        .print-preview-body .a4-page table.book-table td.left {
             text-align: left !important;
         }
-        .a4-page table.book-table td.right {
+        .print-preview-body .a4-page table.book-table td.right {
             text-align: right !important;
         }
-        .a4-page .closing-statement {
+        .print-preview-body .a4-page .closing-statement {
             margin-top: 10pt !important;
             padding: 8pt 12pt !important;
             background: #f9f9f9 !important;
@@ -956,32 +831,32 @@
             font-size: 9pt !important;
             line-height: 1.4 !important;
         }
-        .a4-page .closing-statement .closing-grid {
+        .print-preview-body .a4-page .closing-statement .closing-grid {
             max-width: 100% !important;
             grid-template-columns: auto auto !important;
             gap: 2pt 12pt !important;
             width: fit-content !important;
         }
-        .a4-page .closing-statement .closing-grid .item {
+        .print-preview-body .a4-page .closing-statement .closing-grid .item {
             display: contents !important;
         }
-        .a4-page .closing-statement .closing-grid .item span:first-child {
+        .print-preview-body .a4-page .closing-statement .closing-grid .item span:first-child {
             text-align: left !important;
         }
-        .a4-page .closing-statement .closing-grid .item span:last-child {
+        .print-preview-body .a4-page .closing-statement .closing-grid .item span:last-child {
             text-align: left !important;
         }
-        .a4-page .closing-statement .closing-grid .item.total {
+        .print-preview-body .a4-page .closing-statement .closing-grid .item.total {
             font-weight: 700 !important;
             border-top: 1px solid #000 !important;
             padding-top: 3pt !important;
             margin-top: 3pt !important;
         }
-        .a4-page .closing-statement .closing-grid .item.total span:first-child,
-        .a4-page .closing-statement .closing-grid .item.total span:last-child {
+        .print-preview-body .a4-page .closing-statement .closing-grid .item.total span:first-child,
+        .print-preview-body .a4-page .closing-statement .closing-grid .item.total span:last-child {
             font-weight: 700 !important;
         }
-        .a4-page .signature {
+        .print-preview-body .a4-page .signature {
             margin-top: 16pt !important;
             padding-top: 10pt !important;
             border-top: 1px solid #ccc !important;
@@ -989,7 +864,7 @@
             flex-direction: column !important;
             align-items: flex-end !important;
         }
-        .a4-page .signature .sign-grid {
+        .print-preview-body .a4-page .signature .sign-grid {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
             grid-template-rows: auto auto auto !important;
@@ -997,7 +872,7 @@
             width: 100% !important;
             max-width: 100% !important;
         }
-        .a4-page .signature .sign-grid .sign-place-date {
+        .print-preview-body .a4-page .signature .sign-grid .sign-place-date {
             font-size: 8pt !important;
             color: #555 !important;
             text-align: center !important;
@@ -1006,7 +881,7 @@
             grid-row: 1 !important;
             justify-self: center !important;
         }
-        .a4-page .signature .sign-grid .sign-label {
+        .print-preview-body .a4-page .signature .sign-grid .sign-label {
             font-size: 8pt !important;
             color: #555 !important;
             text-align: center !important;
@@ -1014,15 +889,15 @@
             font-weight: 400 !important;
             align-self: end !important;
         }
-        .a4-page .signature .sign-grid .sign-label-kepsek {
+        .print-preview-body .a4-page .signature .sign-grid .sign-label-kepsek {
             grid-column: 1 !important;
             grid-row: 2 !important;
         }
-        .a4-page .signature .sign-grid .sign-label-bendahara {
+        .print-preview-body .a4-page .signature .sign-grid .sign-label-bendahara {
             grid-column: 2 !important;
             grid-row: 2 !important;
         }
-        .a4-page .signature .sign-grid .sign-name {
+        .print-preview-body .a4-page .signature .sign-grid .sign-name {
             font-weight: 700 !important;
             font-size: 10pt !important;
             text-align: center !important;
@@ -1034,26 +909,27 @@
             padding-top: 0 !important;
             margin-top: 32pt !important;
         }
-        .a4-page .signature .sign-grid .sign-name-kepsek {
+        .print-preview-body .a4-page .signature .sign-grid .sign-name-kepsek {
             grid-column: 1 !important;
             grid-row: 3 !important;
         }
-        .a4-page .signature .sign-grid .sign-name-bendahara {
+        .print-preview-body .a4-page .signature .sign-grid .sign-name-bendahara {
             grid-column: 2 !important;
             grid-row: 3 !important;
         }
-        .a4-page * {
+        .print-preview-body .a4-page * {
             margin-top: 0 !important;
             margin-bottom: 0 !important;
         }
-        .a4-page .book-header {
+        .print-preview-body .a4-page .book-header {
             margin-bottom: 6pt !important;
         }
-        .a4-page .book-meta {
+        .print-preview-body .a4-page .book-meta {
             margin-bottom: 6pt !important;
         }
 
-        .a4-page .col-resizer {
+        /* Resizer di preview */
+        .print-preview-body .a4-page .col-resizer {
             position: absolute;
             top: 0;
             right: -4px;
@@ -1064,36 +940,36 @@
             background: transparent;
             transition: background 0.15s ease;
         }
-        .a4-page .col-resizer:hover,
-        .a4-page .col-resizer.active {
+        .print-preview-body .a4-page .col-resizer:hover,
+        .print-preview-body .a4-page .col-resizer.active {
             background: #0a2e5c;
             opacity: 0.25;
         }
-        .a4-page .col-resizer.active {
+        .print-preview-body .a4-page .col-resizer.active {
             opacity: 0.5;
         }
 
         @media (max-width: 860px) {
-            .a4-page {
+            .print-preview-body .a4-page {
                 width: 100%;
                 min-height: auto;
                 padding: 1cm !important;
             }
-            .a4-page .book-meta {
+            .print-preview-body .a4-page .book-meta {
                 grid-template-columns: auto 1fr !important;
             }
         }
         @media (max-width: 600px) {
-            .a4-page .book-meta {
+            .print-preview-body .a4-page .book-meta {
                 grid-template-columns: auto 1fr !important;
             }
-            .a4-page .closing-statement .closing-grid {
+            .print-preview-body .a4-page .closing-statement .closing-grid {
                 grid-template-columns: auto auto !important;
             }
-            .a4-page .signature {
+            .print-preview-body .a4-page .signature {
                 align-items: center !important;
             }
-            .a4-page .signature .sign-grid {
+            .print-preview-body .a4-page .signature .sign-grid {
                 grid-template-columns: 1fr 1fr !important;
                 gap: 0 10pt !important;
             }
@@ -1124,7 +1000,9 @@
                 </div>
             </div>
             <div class="print-preview-body" id="printPreviewBody">
-                <!-- Halaman A4 akan ditempelkan di sini oleh JavaScript -->
+                <div class="a4-page" id="a4PreviewContent">
+                    <!-- akan diisi oleh JS -->
+                </div>
             </div>
         </div>
     </div>
@@ -1254,7 +1132,6 @@
 
     <!-- ─── Tab Content: Buku Tunai ─── -->
     <div class="tab-content" id="tab-buku-tunai">
-        <!-- (konten sama seperti versi sebelumnya, tidak saya tulis ulang untuk menghemat ruang) -->
         <div class="filter-row">
             <label>Bulan:</label>
             <select id="bulanSelectTunai">
@@ -1276,27 +1153,387 @@
             <button class="btn-primary" id="loadDataBtnTunai" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
             <button class="btn-primary" id="printBtnTunai" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
         </div>
-        <!-- ... sisanya sama -->
+
+        <div id="bukuTunaiContent">
+            <div class="book-header">
+                <h2>BUKU KAS PEMBANTU TUNAI</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulanTunai">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahunTunai">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMetaTunai">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnTunai">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahTunai">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="tunaiTable">
+                    <thead>
+                        <tr>
+                            <th style="width:80px;">TANGGAL</th>
+                            <th style="width:100px;">KODE KEGIATAN</th>
+                            <th style="width:100px;">KODE REKENING</th>
+                            <th style="width:100px;">NO. BUKTI</th>
+                            <th style="width:200px;">URAIAN</th>
+                            <th style="width:120px;">PENERIMAAN</th>
+                            <th style="width:120px;">PENGELUARAN</th>
+                            <th style="width:120px;">SALDO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tunaiTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="closing-statement" id="closingStatementTunai">
+                <div style="font-size:13px;margin-bottom:8px;">
+                    Pada hari ini <span id="closingHariTunai">-</span>, tanggal <span id="closingTanggalTunai">-</span> bulan <span id="closingBulanTunai">-</span> Tahun <span id="closingTahunTunai">-</span> Buku Kas Tunai ditutup dengan keadaan/posisi buku sebagai berikut :
+                </div>
+                <div class="closing-grid">
+                    <div class="item"><span>Saldo Buku Kas Tunai</span> <span id="saldoTunaiFinal">Rp 0</span></div>
+                </div>
+
+                <div class="signature">
+                    <div class="sign-grid">
+                        <div class="sign-place-date">Kec. Bola, <span id="signTanggalTunai">-</span></div>
+                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                        <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                        <div class="sign-name sign-name-kepsek" id="signKepsekTunai">-</div>
+                        <div class="sign-name sign-name-bendahara" id="signBendaharaTunai">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ─── Tab Content: Buku Bank ─── -->
     <div class="tab-content" id="tab-buku-bank">
-        <!-- ... -->
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelectBank">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelectBank"></select>
+            <button class="btn-primary" id="loadDataBtnBank" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
+            <button class="btn-primary" id="printBtnBank" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
+        </div>
+
+        <div id="bukuBankContent">
+            <div class="book-header">
+                <h2>BUKU BANK</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulanBank">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahunBank">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMetaBank">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnBank">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahBank">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="bankTable">
+                    <thead>
+                        <tr>
+                            <th style="width:80px;">TANGGAL</th>
+                            <th style="width:100px;">KODE KEGIATAN</th>
+                            <th style="width:100px;">KODE REKENING</th>
+                            <th style="width:100px;">NO. BUKTI</th>
+                            <th style="width:200px;">URAIAN</th>
+                            <th style="width:120px;">PENERIMAAN</th>
+                            <th style="width:120px;">PENGELUARAN</th>
+                            <th style="width:120px;">SALDO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bankTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="closing-statement" id="closingStatementBank">
+                <div style="font-size:13px;margin-bottom:8px;">
+                    Pada hari ini <span id="closingHariBank">-</span>, tanggal <span id="closingTanggalBank">-</span> bulan <span id="closingBulanBank">-</span> Tahun <span id="closingTahunBank">-</span>, Buku Bank ditutup dengan keadaan/posisi buku sebagai berikut:
+                </div>
+                <div class="closing-grid">
+                    <div class="item"><span>Saldo Bank</span> <span id="saldoBankFinal">Rp 0</span></div>
+                </div>
+
+                <div class="signature">
+                    <div class="sign-grid">
+                        <div class="sign-place-date">Kec. Bola, <span id="signTanggalBank">-</span></div>
+                        <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                        <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                        <div class="sign-name sign-name-kepsek" id="signKepsekBank">-</div>
+                        <div class="sign-name sign-name-bendahara" id="signBendaharaBank">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ─── Tab Content: Buku Pajak ─── -->
     <div class="tab-content" id="tab-buku-pajak">
-        <!-- ... -->
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelectPajak">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelectPajak"></select>
+            <button class="btn-primary" id="loadDataBtnPajak" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
+            <button class="btn-primary" id="printBtnPajak" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
+        </div>
+
+        <div id="bukuPajakContent">
+            <div class="book-header">
+                <h2>BUKU PEMBANTU PAJAK</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulanPajak">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahunPajak">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMetaPajak">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnPajak">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahPajak">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="pajakTable">
+                    <thead>
+                        <tr>
+                            <th style="width:80px;">TANGGAL</th>
+                            <th style="width:100px;">NO.KODE</th>
+                            <th style="width:200px;">URAIAN</th>
+                            <th style="width:100px;">PPN</th>
+                            <th style="width:100px;">PPh 21</th>
+                            <th style="width:100px;">PPh 23</th>
+                            <th style="width:100px;">PPh 4</th>
+                            <th style="width:100px;">SSPD</th>
+                            <th style="width:150px;">PENGELUARAN / KREDIT</th>
+                            <th style="width:150px;">SALDO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pajakTableBody">
+                        <tr>
+                            <td colspan="10" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tanda tangan (tanpa closing statement) -->
+            <div class="signature">
+                <div class="sign-grid">
+                    <div class="sign-place-date">Kec. Bola, <span id="signTanggalPajak">-</span></div>
+                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                    <div class="sign-name sign-name-kepsek" id="signKepsekPajak">-</div>
+                    <div class="sign-name sign-name-bendahara" id="signBendaharaPajak">-</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ─── Tab Content: Buku Utang ─── -->
     <div class="tab-content" id="tab-buku-utang">
-        <!-- ... -->
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelectUtang">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelectUtang"></select>
+            <button class="btn-primary" id="printBtnUtang" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
+        </div>
+
+        <div id="bukuUtangContent">
+            <div class="book-header">
+                <h2>BUKU PEMBANTU UTANG</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulanUtang">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahunUtang">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMetaUtang">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnUtang">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahUtang">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="utangTable">
+                    <thead>
+                        <tr>
+                            <th style="width:100px;">TANGGAL</th>
+                            <th style="width:100px;">NO. KODE</th>
+                            <th style="width:120px;">NO. FAKTUR</th>
+                            <th style="width:200px;">URAIAN</th>
+                            <th style="width:200px;">NAMA KREDITUR / TOKO</th>
+                            <th style="width:150px;">JUMLAH</th>
+                        </tr>
+                    </thead>
+                    <tbody id="utangTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada data utang.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tanda tangan -->
+            <div class="signature">
+                <div class="sign-grid">
+                    <div class="sign-place-date">Kec. Bola, <span id="signTanggalUtang">-</span></div>
+                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                    <div class="sign-name sign-name-kepsek" id="signKepsekUtang">-</div>
+                    <div class="sign-name sign-name-bendahara" id="signBendaharaUtang">-</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ─── Tab Content: ROB ─── -->
     <div class="tab-content" id="tab-rob">
-        <!-- ... -->
+        <div class="filter-row">
+            <label>Bulan:</label>
+            <select id="bulanSelectRob">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+            <label>Tahun:</label>
+            <select id="tahunSelectRob"></select>
+            <button class="btn-primary" id="loadDataBtnRob" style="padding:6px 16px;font-size:13px;">Tampilkan</button>
+            <button class="btn-primary" id="printBtnRob" style="padding:6px 16px;font-size:13px;background:#1a7a3a;">🖨️ Cetak / PDF</button>
+        </div>
+
+        <div id="bukuRobContent">
+            <div class="book-header">
+                <h2>RINCIAN OBJEK BELANJA (ROB)</h2>
+                <div class="sub-info">
+                    Bulan: <span id="displayBulanRob">Januari</span>
+                    <span>|</span> Tahun: <span id="displayTahunRob">2025</span>
+                </div>
+            </div>
+
+            <div class="book-meta" id="bookMetaRob">
+                <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value" id="metaNpsnRob">-</span></div>
+                <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value" id="metaSekolahRob">-</span></div>
+                <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="book-table" id="robTable">
+                    <thead>
+                        <tr>
+                            <th style="width:100px;">TANGGAL</th>
+                            <th style="width:100px;">NO. BKU</th>
+                            <th style="width:250px;">URAIAN</th>
+                            <th style="width:150px;">REALISASI</th>
+                            <th style="width:150px;">JUMLAH</th>
+                            <th style="width:150px;">SISA ANGGARAN</th>
+                        </tr>
+                    </thead>
+                    <tbody id="robTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align:center;padding:30px 0;color:#8aa0b8;">Belum ada data. Silakan pilih bulan dan tahun, lalu klik Tampilkan.</td>
+                        </tr>
+                    </tbody>
+                    <tfoot id="robTableFoot">
+                        <tr class="total-row">
+                            <td colspan="3" style="text-align:right;font-weight:600;">Jumlah</td>
+                            <td id="robTotalRealisasi" style="text-align:right;font-weight:600;">Rp 0</td>
+                            <td id="robTotalJumlah" style="text-align:right;font-weight:600;">Rp 0</td>
+                            <td id="robTotalSisa" style="text-align:right;font-weight:600;">Rp 0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- Tanda tangan -->
+            <div class="signature">
+                <div class="sign-grid">
+                    <div class="sign-place-date">Kec. Bola, <span id="signTanggalRob">-</span></div>
+                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                    <div class="sign-name sign-name-kepsek" id="signKepsekRob">-</div>
+                    <div class="sign-name sign-name-bendahara" id="signBendaharaRob">-</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1548,7 +1785,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 8. Load settings
+        // 8. Load settings (update semua meta)
         // ─────────────────────────────────────────────
         function loadSettings() {
             const docId = `${sessionJenjang}_${sessionTahun}`;
@@ -1573,31 +1810,37 @@
                     const kepala = settingsData.kepalaSekolah || '-';
                     const bendahara = settingsData.bendahara || '-';
 
+                    // Kas
                     metaNpsn.textContent = npsn;
                     metaSekolah.textContent = namaSekolah;
                     signKepsek.textContent = kepala;
                     signBendahara.textContent = bendahara;
 
+                    // Tunai
                     metaNpsnTunai.textContent = npsn;
                     metaSekolahTunai.textContent = namaSekolah;
                     signKepsekTunai.textContent = kepala;
                     signBendaharaTunai.textContent = bendahara;
 
+                    // Bank
                     metaNpsnBank.textContent = npsn;
                     metaSekolahBank.textContent = namaSekolah;
                     signKepsekBank.textContent = kepala;
                     signBendaharaBank.textContent = bendahara;
 
+                    // Pajak
                     metaNpsnPajak.textContent = npsn;
                     metaSekolahPajak.textContent = namaSekolah;
                     signKepsekPajak.textContent = kepala;
                     signBendaharaPajak.textContent = bendahara;
 
+                    // Utang
                     metaNpsnUtang.textContent = npsn;
                     metaSekolahUtang.textContent = namaSekolah;
                     signKepsekUtang.textContent = kepala;
                     signBendaharaUtang.textContent = bendahara;
 
+                    // ROB
                     metaNpsnRob.textContent = npsn;
                     metaSekolahRob.textContent = namaSekolah;
                     signKepsekRob.textContent = kepala;
@@ -1608,7 +1851,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 9. Fetch transaksi dari Firestore, urutkan berdasarkan 'no'
+        // 9. Fungsi bantu untuk ambil transaksi dari Firestore + URUTKAN BERDASARKAN 'no'
         // ─────────────────────────────────────────────
         async function fetchTransaksi() {
             const snapshot = await db.collection(COLLECTION)
@@ -1625,17 +1868,19 @@
                 if (d.no === undefined) d.no = '';
                 transaksi.push(d);
             });
-            // Urutkan berdasarkan 'no' (angka)
+
+            // ⭐ URUTKAN berdasarkan 'no' (angka) dari terkecil ke terbesar
             transaksi.sort((a, b) => {
                 const noA = parseInt(a.no) || 0;
                 const noB = parseInt(b.no) || 0;
                 return noA - noB;
             });
+
             return transaksi;
         }
 
         // ─────────────────────────────────────────────
-        // 10. buildSaldoTransaksi (tidak diubah)
+        // 10. Hitung saldo kumulatif untuk Buku Kas & Bank (dengan anggaran)
         // ─────────────────────────────────────────────
         function buildSaldoTransaksi(transaksiRaw, bulan, tahun, jenisFilter = null, includeAnggaran = false) {
             const prev = getPreviousMonth(bulan, tahun);
@@ -1699,6 +1944,7 @@
             }
 
             const result = [];
+            // Baris saldo bulan lalu
             result.push({
                 tanggal: '',
                 kodeKegiatan: '',
@@ -1799,11 +2045,12 @@
                     item.saldo = saldoKumulatif;
                 }
             });
+
             return result;
         }
 
         // ─────────────────────────────────────────────
-        // 11. Load Buku Kas (dan rendering)
+        // 11. Load Buku Kas
         // ─────────────────────────────────────────────
         async function loadKasData() {
             const bulan = bulanSelect.value;
@@ -2190,7 +2437,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 16. Load ROB (sama seperti versi sebelumnya, disingkat)
+        // 16. Load ROB (Rincian Objek Belanja) - DIPERBAIKI dengan saldo kumulatif
         // ─────────────────────────────────────────────
         async function loadRobData() {
             const bulan = bulanSelectRob.value;
@@ -2202,6 +2449,7 @@
             const prev = getPreviousMonth(bulan, tahun);
             const prevMonthName = getMonthName(prev.month);
 
+            // Fungsi untuk mengecek apakah tanggal masuk dalam periode tertentu
             function isInMonth(tgl, targetMonth, targetYear) {
                 if (!tgl) return false;
                 let dateParts = null;
@@ -2216,6 +2464,7 @@
                 return (month === targetMonth && year === targetYear);
             }
 
+            // Fungsi untuk mengecek apakah tanggal masuk dalam periode sampai bulan tertentu
             function isInOrBeforeMonth(tgl, targetMonth, targetYear) {
                 if (!tgl) return false;
                 let dateParts = null;
@@ -2232,12 +2481,17 @@
                 return false;
             }
 
+            // ===== HITUNG SALDO KUMULATIF SAMPAI AKHIR BULAN SEBELUMNYA =====
             let saldoKumulatif = 0;
+
+            // Ambil semua transaksi (selain pajak) dari awal sampai akhir bulan sebelumnya
             const transaksiSampaiBulanLalu = [];
+
             raw.forEach(item => {
                 const tgl = item.tglPembayaran;
                 if (!tgl) return;
-                if (item.jenisBerisi === 'Pajak') return;
+                if (item.jenisBerisi === 'Pajak') return; // Pajak tidak masuk ROB
+
                 if (isInOrBeforeMonth(tgl, prev.month, prev.year)) {
                     transaksiSampaiBulanLalu.push({
                         tanggal: tgl,
@@ -2248,6 +2502,7 @@
                 }
             });
 
+            // Tambahkan anggaran yang masuk sampai bulan lalu
             const tgl1 = settingsData.tanggalPemasukan1 || '';
             const tgl2 = settingsData.tanggalPemasukan2 || '';
             const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
@@ -2270,7 +2525,10 @@
                 });
             }
 
+            // Urutkan berdasarkan tanggal
             transaksiSampaiBulanLalu.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
+
+            // Hitung saldo kumulatif sampai akhir bulan sebelumnya
             transaksiSampaiBulanLalu.forEach(item => {
                 if (item.debetKredit === 'Debet') {
                     saldoKumulatif += item.jumlah;
@@ -2279,7 +2537,10 @@
                 }
             });
 
+            // ===== BANGUN DATA ROB UNTUK BULAN INI =====
             const robRows = [];
+
+            // Baris 1: Saldo Bulan Lalu (menggunakan saldo kumulatif)
             robRows.push({
                 tanggal: '',
                 noBku: '',
@@ -2291,11 +2552,15 @@
             });
 
             let sisaAnggaran = saldoKumulatif;
+
+            // Kumpulkan semua transaksi bulan ini (selain pajak) + anggaran masuk
             const transaksiBulanIni = [];
+
             raw.forEach(item => {
                 const tgl = item.tglPembayaran;
                 if (!tgl) return;
                 if (item.jenisBerisi === 'Pajak') return;
+
                 if (isInMonth(tgl, bulan, tahun)) {
                     const jumlah = parseFloat(item.jumlahHarga) || 0;
                     const debetKredit = item.debetKredit || 'Kredit';
@@ -2310,6 +2575,7 @@
                 }
             });
 
+            // Tambahkan anggaran masuk bulan ini (jika ada)
             if (isInMonth(tgl1, bulan, tahun) && anggaran1 > 0) {
                 transaksiBulanIni.push({
                     tanggal: tgl1,
@@ -2331,17 +2597,25 @@
                 });
             }
 
+            // Urutkan berdasarkan tanggal
             transaksiBulanIni.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
-            let totalRealisasi = 0,
-                totalJumlah = 0;
+
+            // Proses setiap transaksi bulan ini
+            let totalRealisasi = 0;
+            let totalJumlah = 0;
+
             transaksiBulanIni.forEach(item => {
                 const realisasi = item.jumlah;
                 const debetKredit = item.debetKredit;
+
+                // ROB: realisasi = jumlah transaksi
+                // Sisa anggaran = sisa sebelumnya + pemasukan - pengeluaran
                 if (debetKredit === 'Debet') {
                     sisaAnggaran += realisasi;
                 } else {
                     sisaAnggaran -= realisasi;
                 }
+
                 robRows.push({
                     tanggal: item.tanggal,
                     noBku: item.noBku,
@@ -2351,24 +2625,31 @@
                     sisaAnggaran: sisaAnggaran,
                     isSaldoAwal: false
                 });
+
                 totalRealisasi += realisasi;
                 totalJumlah += realisasi;
             });
 
             allRobData = robRows;
             renderRobTable(robRows, totalRealisasi, totalJumlah, sisaAnggaran);
+
             const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
             signTanggalRob.textContent = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
         }
 
         function renderRobTable(data, totalRealisasi, totalJumlah, sisaAkhir) {
             if (data.length === 0 || (data.length === 1 && data[0].isSaldoAwal && data[0].sisaAnggaran === 0)) {
-                robTableBody.innerHTML =
-                    `<tr><td colspan="6" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada transaksi untuk bulan ini.</td></tr>`;
+                robTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align:center;padding:30px 0;color:#8aa0b8;">Tidak ada transaksi untuk bulan ini.</td>
+                        </tr>
+                    `;
                 robTableFoot.style.display = 'none';
                 return;
             }
+
             robTableFoot.style.display = 'table-footer-group';
+
             let html = '';
             data.forEach((item) => {
                 const tanggalFormatted = formatDateToDDMMYY(item.tanggal);
@@ -2385,6 +2666,7 @@
                         `;
             });
             robTableBody.innerHTML = html;
+
             robTotalRealisasi.textContent = formatRupiah(totalRealisasi);
             robTotalJumlah.textContent = formatRupiah(totalJumlah);
             robTotalSisa.textContent = formatRupiah(sisaAkhir);
@@ -2410,7 +2692,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 18. Build A4 preview HTML (fungsi-fungsi build)
+        // 18. Build A4 preview
         // ─────────────────────────────────────────────
         function buildA4PreviewKas() {
             const bulan = bulanSelect.value;
@@ -2507,176 +2789,441 @@
                     `;
         }
 
-        // (buildA4PreviewTunai, buildA4PreviewBank, buildA4PreviewPajak, buildA4PreviewUtang, buildA4PreviewRob)
-        // Saya tidak menulis ulang semua di sini karena akan sangat panjang, tetapi strukturnya sama.
-        // Anda dapat menyalin dari versi sebelumnya atau mengikuti pola di atas.
-        // Untuk keperluan demonstrasi, saya asumsikan sudah ada di file Anda.
-
-        // ─────────────────────────────────────────────
-        // 19. Pagination function
-        // ─────────────────────────────────────────────
-        function paginateContent(htmlString) {
-            const container = document.createElement('div');
-            container.style.cssText =
-                'position: absolute; left: -9999px; top: -9999px; width: 210mm; padding: 10mm; box-sizing: border-box; background: white; font-family: "Inter", sans-serif;';
-            document.body.appendChild(container);
-            container.innerHTML = htmlString;
-
-            const header = container.querySelector('.book-header');
-            const meta = container.querySelector('.book-meta');
-            const table = container.querySelector('table.book-table');
-            const closing = container.querySelector('.closing-statement');
-            const signature = container.querySelector('.signature');
-
-            if (!table) {
-                document.body.removeChild(container);
-                return [htmlString];
+        function buildA4PreviewTunai() {
+            const bulan = bulanSelectTunai.value;
+            const tahun = tahunSelectTunai.value;
+            const bulanNama = getMonthName(bulan);
+            let tableRows = '';
+            if (allTunaiData.length === 0) {
+                tableRows =
+                    `<tr><td colspan="8" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada data.</td></tr>`;
+            } else {
+                allTunaiData.forEach(item => {
+                    const tgl = formatDateToDDMMYY(item.tanggal);
+                    const penerimaan = item.penerimaan || 0;
+                    const pengeluaran = item.pengeluaran || 0;
+                    const saldo = item.saldo || 0;
+                    const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
+                    tableRows += `
+                                <tr style="${isBold ? 'font-weight:600;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${item.kodeKegiatan || ''}</td>
+                                    <td>${item.kodeRekening || ''}</td>
+                                    <td>${item.noBukti || ''}</td>
+                                    <td class="left">${item.uraian || ''}</td>
+                                    <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                                    <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                                    <td class="right">${formatRupiah(saldo)}</td>
+                                </tr>
+                            `;
+                });
             }
 
-            const thead = table.querySelector('thead');
-            const tbody = table.querySelector('tbody');
-            const tfoot = table.querySelector('tfoot');
-            const rows = tbody ? tbody.querySelectorAll('tr') : [];
+            const npsn = settingsData.npsn || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+            const kepalaSekolah = settingsData.kepalaSekolah || '-';
+            const bendahara = settingsData.bendahara || '-';
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
-            const pageHeightPx = 297 * 3.779527;
-            const paddingPx = 10 * 3.779527 * 2;
-            const maxContentHeight = pageHeightPx - paddingPx;
+            let saldoAkhir = 0;
+            if (allTunaiData.length > 0) saldoAkhir = allTunaiData[allTunaiData.length - 1].saldo || 0;
 
-            const pages = [];
-            const rowsArray = Array.from(rows);
+            return `
+                        <div class="book-header">
+                            <h2>BUKU KAS PEMBANTU TUNAI</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
+                        </div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">TANGGAL</th>
+                                        <th style="width:100px;">KODE KEGIATAN</th>
+                                        <th style="width:100px;">KODE REKENING</th>
+                                        <th style="width:100px;">NO. BUKTI</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:120px;">PENERIMAAN</th>
+                                        <th style="width:120px;">PENGELUARAN</th>
+                                        <th style="width:120px;">SALDO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                            </table>
+                        </div>
+                        <div class="closing-statement">
+                            <div style="font-size:13px;margin-bottom:8px;">
+                                Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Kas Tunai ditutup dengan keadaan/posisi buku sebagai berikut:
+                            </div>
+                            <div class="closing-grid">
+                                <div class="item"><span>Saldo Buku Kas Tunai</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                            </div>
+                            <div class="signature">
+                                <div class="sign-grid">
+                                    <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                    <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                    <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+        }
 
-            if (rowsArray.length === 0) {
-                document.body.removeChild(container);
-                return [htmlString];
+        function buildA4PreviewBank() {
+            const bulan = bulanSelectBank.value;
+            const tahun = tahunSelectBank.value;
+            const bulanNama = getMonthName(bulan);
+            let tableRows = '';
+            if (allBankData.length === 0) {
+                tableRows =
+                    `<tr><td colspan="8" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada data.</td></tr>`;
+            } else {
+                allBankData.forEach(item => {
+                    const tgl = formatDateToDDMMYY(item.tanggal);
+                    const penerimaan = item.penerimaan || 0;
+                    const pengeluaran = item.pengeluaran || 0;
+                    const saldo = item.saldo || 0;
+                    const isBold = item.isSaldoAwal || item.jenis === 'pemasukan';
+                    tableRows += `
+                                <tr style="${isBold ? 'font-weight:600;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${item.kodeKegiatan || ''}</td>
+                                    <td>${item.kodeRekening || ''}</td>
+                                    <td>${item.noBukti || ''}</td>
+                                    <td class="left">${item.uraian || ''}</td>
+                                    <td class="right">${penerimaan > 0 ? formatRupiah(penerimaan) : ''}</td>
+                                    <td class="right">${pengeluaran > 0 ? formatRupiah(pengeluaran) : ''}</td>
+                                    <td class="right">${formatRupiah(saldo)}</td>
+                                </tr>
+                            `;
+                });
             }
 
-            function buildPage(rowIndexStart, rowIndexEnd, isLastPage) {
-                const pageDiv = document.createElement('div');
-                pageDiv.style.cssText =
-                    'width: 210mm; padding: 10mm; box-sizing: border-box; background: white; font-family: "Inter", sans-serif;';
+            const npsn = settingsData.npsn || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+            const kepalaSekolah = settingsData.kepalaSekolah || '-';
+            const bendahara = settingsData.bendahara || '-';
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
-                if (rowIndexStart === 0) {
-                    if (header) pageDiv.appendChild(header.cloneNode(true));
-                    if (meta) pageDiv.appendChild(meta.cloneNode(true));
-                }
+            let saldoAkhir = 0;
+            if (allBankData.length > 0) saldoAkhir = allBankData[allBankData.length - 1].saldo || 0;
 
-                const newTable = document.createElement('table');
-                newTable.className = 'book-table';
-                if (thead) {
-                    const newThead = thead.cloneNode(true);
-                    newThead.querySelectorAll('.col-resizer').forEach(el => el.remove());
-                    newTable.appendChild(newThead);
-                }
-                const newTbody = document.createElement('tbody');
-                for (let i = rowIndexStart; i <= rowIndexEnd && i < rowsArray.length; i++) {
-                    const rowClone = rowsArray[i].cloneNode(true);
-                    newTbody.appendChild(rowClone);
-                }
-                newTable.appendChild(newTbody);
-                if (tfoot && isLastPage) {
-                    const newTfoot = tfoot.cloneNode(true);
-                    newTable.appendChild(newTfoot);
-                }
-                pageDiv.appendChild(newTable);
+            return `
+                        <div class="book-header">
+                            <h2>BUKU BANK</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
+                        </div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">TANGGAL</th>
+                                        <th style="width:100px;">KODE KEGIATAN</th>
+                                        <th style="width:100px;">KODE REKENING</th>
+                                        <th style="width:100px;">NO. BUKTI</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:120px;">PENERIMAAN</th>
+                                        <th style="width:120px;">PENGELUARAN</th>
+                                        <th style="width:120px;">SALDO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                            </table>
+                        </div>
+                        <div class="closing-statement">
+                            <div style="font-size:13px;margin-bottom:8px;">
+                                Pada hari ini ${getDayName(signDate)}, tanggal ${signDate.getDate()} bulan ${getMonthName(String(bulan))} Tahun ${tahun}, Buku Bank ditutup dengan keadaan/posisi buku sebagai berikut:
+                            </div>
+                            <div class="closing-grid">
+                                <div class="item"><span>Saldo Bank</span> <span>${formatRupiah(saldoAkhir)}</span></div>
+                            </div>
+                            <div class="signature">
+                                <div class="sign-grid">
+                                    <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                    <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                    <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                    <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                    <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+        }
 
-                if (isLastPage) {
-                    if (closing) pageDiv.appendChild(closing.cloneNode(true));
-                    if (signature) pageDiv.appendChild(signature.cloneNode(true));
-                }
-                return pageDiv.innerHTML;
+        function buildA4PreviewPajak() {
+            const bulan = bulanSelectPajak.value;
+            const tahun = tahunSelectPajak.value;
+            const bulanNama = getMonthName(bulan);
+
+            let tableRows = '';
+            if (allPajakData.length === 0) {
+                tableRows =
+                    `<tr><td colspan="10" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada transaksi pajak.</td></tr>`;
+            } else {
+                allPajakData.forEach(item => {
+                    const tgl = formatDateToDDMMYY(item.tanggal);
+                    const isSaldoAwal = item.isSaldoAwal || false;
+                    tableRows += `
+                                <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${item.kode}</td>
+                                    <td class="left">${item.uraian}</td>
+                                    <td class="right">${formatRupiah(item.ppn)}</td>
+                                    <td class="right">${formatRupiah(item.pph21)}</td>
+                                    <td class="right">${formatRupiah(item.pph23)}</td>
+                                    <td class="right">${formatRupiah(item.pph4)}</td>
+                                    <td class="right">${formatRupiah(item.sspd)}</td>
+                                    <td class="right">${formatRupiah(item.pengeluaran)}</td>
+                                    <td class="right">${formatRupiah(item.saldo)}</td>
+                                </tr>
+                            `;
+                });
             }
 
-            function measureHeight(html) {
-                const tmp = document.createElement('div');
-                tmp.style.cssText =
-                    'position: absolute; left: -9999px; top: -9999px; width: 210mm; padding: 10mm; box-sizing: border-box; background: white; font-family: "Inter", sans-serif;';
-                document.body.appendChild(tmp);
-                tmp.innerHTML = html;
-                const height = tmp.offsetHeight;
-                document.body.removeChild(tmp);
-                return height;
-            }
+            const npsn = settingsData.npsn || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+            const kepalaSekolah = settingsData.kepalaSekolah || '-';
+            const bendahara = settingsData.bendahara || '-';
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
-            let currentStart = 0;
-            const totalRows = rowsArray.length;
+            return `
+                        <div class="book-header">
+                            <h2>BUKU PEMBANTU PAJAK</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
+                        </div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">TANGGAL</th>
+                                        <th style="width:100px;">NO.KODE</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:100px;">PPN</th>
+                                        <th style="width:100px;">PPh 21</th>
+                                        <th style="width:100px;">PPh 23</th>
+                                        <th style="width:100px;">PPh 4</th>
+                                        <th style="width:100px;">SSPD</th>
+                                        <th style="width:150px;">PENGELUARAN / KREDIT</th>
+                                        <th style="width:150px;">SALDO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                            </table>
+                        </div>
+                        <div class="signature">
+                            <div class="sign-grid">
+                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                            </div>
+                        </div>
+                    `;
+        }
 
-            while (currentStart < totalRows) {
-                let end = currentStart;
-                let lastValidEnd = currentStart;
-                let isLastPage = false;
+        function buildA4PreviewUtang() {
+            const bulan = bulanSelectUtang.value;
+            const tahun = tahunSelectUtang.value;
+            const bulanNama = getMonthName(bulan);
 
-                while (end < totalRows) {
-                    const html = buildPage(currentStart, end, false);
-                    const h = measureHeight(html);
-                    if (h <= maxContentHeight) {
-                        lastValidEnd = end;
-                        end++;
-                    } else {
-                        break;
+            const npsn = settingsData.npsn || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+            const kepalaSekolah = settingsData.kepalaSekolah || '-';
+            const bendahara = settingsData.bendahara || '-';
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            return `
+                        <div class="book-header">
+                            <h2>BUKU PEMBANTU UTANG</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
+                        </div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:100px;">TANGGAL</th>
+                                        <th style="width:100px;">NO. KODE</th>
+                                        <th style="width:120px;">NO. FAKTUR</th>
+                                        <th style="width:200px;">URAIAN</th>
+                                        <th style="width:200px;">NAMA KREDITUR / TOKO</th>
+                                        <th style="width:150px;">JUMLAH</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" style="text-align:center;padding:30px 0;color:#888;font-size:9pt;">Tidak ada data utang.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="signature">
+                            <div class="sign-grid">
+                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        function buildA4PreviewRob() {
+            const bulan = bulanSelectRob.value;
+            const tahun = tahunSelectRob.value;
+            const bulanNama = getMonthName(bulan);
+
+            let tableRows = '';
+            let totalRealisasi = 0;
+            let totalJumlah = 0;
+            let sisaAkhir = 0;
+
+            if (allRobData.length === 0) {
+                tableRows =
+                    `<tr><td colspan="6" style="text-align:center;padding:12pt 0;color:#888;font-size:9pt;">Tidak ada transaksi.</td></tr>`;
+            } else {
+                allRobData.forEach((item, index) => {
+                    const tgl = formatDateToDDMMYY(item.tanggal);
+                    const isSaldoAwal = item.isSaldoAwal || false;
+                    if (!isSaldoAwal) {
+                        totalRealisasi += item.realisasi || 0;
+                        totalJumlah += item.jumlah || 0;
                     }
-                }
-
-                if (lastValidEnd < currentStart) {
-                    lastValidEnd = currentStart;
-                }
-
-                if (lastValidEnd >= totalRows - 1) {
-                    isLastPage = true;
-                }
-
-                const pageHtml = buildPage(currentStart, lastValidEnd, isLastPage);
-                pages.push(pageHtml);
-                currentStart = lastValidEnd + 1;
+                    if (index === allRobData.length - 1) {
+                        sisaAkhir = item.sisaAnggaran || 0;
+                    }
+                    tableRows += `
+                                <tr style="${isSaldoAwal ? 'font-weight:600;background:#f9f9f9;' : ''}">
+                                    <td>${tgl}</td>
+                                    <td>${item.noBku || ''}</td>
+                                    <td class="left">${item.uraian || ''}</td>
+                                    <td class="right">${formatRupiah(item.realisasi || 0)}</td>
+                                    <td class="right">${formatRupiah(item.jumlah || 0)}</td>
+                                    <td class="right">${formatRupiah(item.sisaAnggaran || 0)}</td>
+                                </tr>
+                            `;
+                });
             }
 
-            document.body.removeChild(container);
-            if (pages.length === 0) return [htmlString];
-            return pages;
+            const npsn = settingsData.npsn || '-';
+            const namaSekolah = sessionJenjang + ' Nurmilad Boarding School';
+            const kepalaSekolah = settingsData.kepalaSekolah || '-';
+            const bendahara = settingsData.bendahara || '-';
+            const signDate = new Date(parseInt(tahun), parseInt(bulan), 0);
+            const signDateStr = signDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            return `
+                        <div class="book-header">
+                            <h2>RINCIAN OBJEK BELANJA (ROB)</h2>
+                            <div class="sub-info">Bulan: ${bulanNama} | Tahun: ${tahun}</div>
+                        </div>
+                        <div class="book-meta">
+                            <div class="meta-row"><span class="meta-label">NPSN :</span><span class="meta-value">${npsn}</span></div>
+                            <div class="meta-row"><span class="meta-label">Nama Sekolah :</span><span class="meta-value">${namaSekolah}</span></div>
+                            <div class="meta-row"><span class="meta-label">Desa / Kec :</span><span class="meta-value">Lempong / Bola</span></div>
+                            <div class="meta-row"><span class="meta-label">Kabupaten :</span><span class="meta-value">Wajo</span></div>
+                            <div class="meta-row"><span class="meta-label">Provinsi :</span><span class="meta-value">Sulawesi Selatan</span></div>
+                            <div class="meta-row"><span class="meta-label">Sumber Dana :</span><span class="meta-value">BOS Reguler</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="book-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:100px;">TANGGAL</th>
+                                        <th style="width:100px;">NO. BKU</th>
+                                        <th style="width:250px;">URAIAN</th>
+                                        <th style="width:150px;">REALISASI</th>
+                                        <th style="width:150px;">JUMLAH</th>
+                                        <th style="width:150px;">SISA ANGGARAN</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                                <tfoot>
+                                    <tr class="total-row">
+                                        <td colspan="3" style="text-align:right;font-weight:600;">Jumlah</td>
+                                        <td style="text-align:right;font-weight:600;">${formatRupiah(totalRealisasi)}</td>
+                                        <td style="text-align:right;font-weight:600;">${formatRupiah(totalJumlah)}</td>
+                                        <td style="text-align:right;font-weight:600;">${formatRupiah(sisaAkhir)}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="signature">
+                            <div class="sign-grid">
+                                <div class="sign-place-date">Kec. Bola, ${signDateStr}</div>
+                                <div class="sign-label sign-label-kepsek">Kepala Sekolah</div>
+                                <div class="sign-label sign-label-bendahara">Bendahara BOS</div>
+                                <div class="sign-name sign-name-kepsek">${kepalaSekolah}</div>
+                                <div class="sign-name sign-name-bendahara">${bendahara}</div>
+                            </div>
+                        </div>
+                    `;
         }
 
         // ─────────────────────────────────────────────
-        // 20. Show print preview dengan pagination
+        // 19. Show print preview
         // ─────────────────────────────────────────────
-        window.showPrintPreview = function(type) {
-            let rawHtml = '';
-            if (type === 'kas') rawHtml = buildA4PreviewKas();
-            else if (type === 'tunai') rawHtml = buildA4PreviewTunai();
-            else if (type === 'bank') rawHtml = buildA4PreviewBank();
-            else if (type === 'pajak') rawHtml = buildA4PreviewPajak();
-            else if (type === 'utang') rawHtml = buildA4PreviewUtang();
-            else if (type === 'rob') rawHtml = buildA4PreviewRob();
+        function showPrintPreview(type) {
+            a4PreviewContent.innerHTML = '';
+            let content = '';
+            if (type === 'kas') content = buildA4PreviewKas();
+            else if (type === 'tunai') content = buildA4PreviewTunai();
+            else if (type === 'bank') content = buildA4PreviewBank();
+            else if (type === 'pajak') content = buildA4PreviewPajak();
+            else if (type === 'utang') content = buildA4PreviewUtang();
+            else if (type === 'rob') content = buildA4PreviewRob();
             else return;
-
-            const pages = paginateContent(rawHtml);
-            const previewBody = document.getElementById('printPreviewBody');
-            previewBody.innerHTML = '';
-            pages.forEach((pageHtml, index) => {
-                const pageDiv = document.createElement('div');
-                pageDiv.className = 'a4-page';
-                pageDiv.setAttribute('data-page', index + 1);
-                pageDiv.innerHTML = pageHtml;
-                previewBody.appendChild(pageDiv);
-            });
-
+            a4PreviewContent.innerHTML = content;
             printPreviewOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
             setTimeout(() => initPreviewResizers(), 100);
-        };
+        }
+
+        function closePrintPreview() {
+            printPreviewOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
         // ─────────────────────────────────────────────
-        // 21. Print function
-        // ─────────────────────────────────────────────
-        window.doPrint = function() {
-            const toolbar = document.querySelector('.print-preview-toolbar');
-            if (toolbar) toolbar.style.display = 'none';
-            window.print();
-            setTimeout(() => {
-                if (toolbar) toolbar.style.display = 'flex';
-            }, 500);
-        };
-
-        // ─────────────────────────────────────────────
-        // 22. Resizer & other functions (sama seperti sebelumnya)
+        // 20. Resize kolom preview
         // ─────────────────────────────────────────────
         let previewColumnWidths = {};
 
@@ -2695,52 +3242,64 @@
         }
 
         function initPreviewResizers() {
-            const pages = document.querySelectorAll('.a4-page');
-            pages.forEach(page => {
-                const table = page.querySelector('table.book-table');
-                if (!table) return;
-                const headers = table.querySelectorAll('thead th');
-                headers.forEach(th => {
-                    const colKey = th.textContent.trim();
-                    const oldResizer = th.querySelector('.col-resizer');
-                    if (oldResizer) oldResizer.remove();
-                    const resizer = document.createElement('span');
-                    resizer.className = 'col-resizer';
-                    resizer.dataset.col = colKey;
-                    th.style.position = 'relative';
-                    th.appendChild(resizer);
-                    if (previewColumnWidths[colKey]) {
-                        th.style.width = previewColumnWidths[colKey] + 'px';
-                        th.style.minWidth = previewColumnWidths[colKey] + 'px';
-                    }
-                    resizer.addEventListener('mousedown', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const startX = e.clientX;
-                        const startWidth = th.offsetWidth;
-                        document.body.classList.add('dragging-active');
-                        const onMouseMove = (ev) => {
-                            const diff = ev.clientX - startX;
-                            const newWidth = Math.max(40, startWidth + diff);
-                            th.style.width = newWidth + 'px';
-                            th.style.minWidth = newWidth + 'px';
-                            previewColumnWidths[colKey] = newWidth;
-                            savePreviewColumnWidths();
-                        };
-                        const onMouseUp = () => {
-                            document.body.classList.remove('dragging-active');
-                            document.removeEventListener('mousemove', onMouseMove);
-                            document.removeEventListener('mouseup', onMouseUp);
-                        };
-                        document.addEventListener('mousemove', onMouseMove);
-                        document.addEventListener('mouseup', onMouseUp);
-                    });
+            const table = document.querySelector('#a4PreviewContent table.book-table');
+            if (!table) return;
+            const headers = table.querySelectorAll('thead th');
+            headers.forEach(th => {
+                const colKey = th.textContent.trim();
+                const oldResizer = th.querySelector('.col-resizer');
+                if (oldResizer) oldResizer.remove();
+                const resizer = document.createElement('span');
+                resizer.className = 'col-resizer';
+                resizer.dataset.col = colKey;
+                th.style.position = 'relative';
+                th.appendChild(resizer);
+                if (previewColumnWidths[colKey]) {
+                    th.style.width = previewColumnWidths[colKey] + 'px';
+                    th.style.minWidth = previewColumnWidths[colKey] + 'px';
+                }
+                resizer.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const startX = e.clientX;
+                    const startWidth = th.offsetWidth;
+                    document.body.classList.add('dragging-active');
+                    const onMouseMove = (ev) => {
+                        const diff = ev.clientX - startX;
+                        const newWidth = Math.max(40, startWidth + diff);
+                        th.style.width = newWidth + 'px';
+                        th.style.minWidth = newWidth + 'px';
+                        previewColumnWidths[colKey] = newWidth;
+                        savePreviewColumnWidths();
+                    };
+                    const onMouseUp = () => {
+                        document.body.classList.remove('dragging-active');
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+                    };
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
                 });
             });
         }
 
         // ─────────────────────────────────────────────
-        // 23. Event listeners
+        // 21. Print / PDF
+        // ─────────────────────────────────────────────
+        function doPrint() {
+            // Sembunyikan toolbar preview saat print
+            const toolbar = document.querySelector('.print-preview-toolbar');
+            if (toolbar) toolbar.style.display = 'none';
+            // Panggil print
+            window.print();
+            // Tampilkan kembali toolbar setelah print (bisa setelah timeout)
+            setTimeout(() => {
+                if (toolbar) toolbar.style.display = 'flex';
+            }, 500);
+        }
+
+        // ─────────────────────────────────────────────
+        // 22. Event listeners
         // ─────────────────────────────────────────────
         loadDataBtn.addEventListener('click', loadKasData);
         loadDataBtnTunai.addEventListener('click', loadTunaiData);
@@ -2754,7 +3313,7 @@
                 return;
             }
             loadPreviewColumnWidths();
-            window.showPrintPreview('kas');
+            showPrintPreview('kas');
         });
 
         printBtnTunai.addEventListener('click', () => {
@@ -2763,7 +3322,7 @@
                 return;
             }
             loadPreviewColumnWidths();
-            window.showPrintPreview('tunai');
+            showPrintPreview('tunai');
         });
 
         printBtnBank.addEventListener('click', () => {
@@ -2772,7 +3331,7 @@
                 return;
             }
             loadPreviewColumnWidths();
-            window.showPrintPreview('bank');
+            showPrintPreview('bank');
         });
 
         printBtnPajak.addEventListener('click', () => {
@@ -2781,12 +3340,12 @@
                 return;
             }
             loadPreviewColumnWidths();
-            window.showPrintPreview('pajak');
+            showPrintPreview('pajak');
         });
 
         printBtnUtang.addEventListener('click', () => {
             loadPreviewColumnWidths();
-            window.showPrintPreview('utang');
+            showPrintPreview('utang');
         });
 
         printBtnRob.addEventListener('click', () => {
@@ -2796,27 +3355,18 @@
                 return;
             }
             loadPreviewColumnWidths();
-            window.showPrintPreview('rob');
+            showPrintPreview('rob');
         });
 
-        closePreviewBtn.addEventListener('click', () => {
-            printPreviewOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
+        closePreviewBtn.addEventListener('click', closePrintPreview);
         printPreviewOverlay.addEventListener('click', (e) => {
-            if (e.target === printPreviewOverlay) {
-                printPreviewOverlay.classList.remove('active');
-                document.body.style.overflow = '';
-            }
+            if (e.target === printPreviewOverlay) closePrintPreview();
         });
-
-        confirmPrintBtn.addEventListener('click', window.doPrint);
+        confirmPrintBtn.addEventListener('click', doPrint);
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && printPreviewOverlay.classList.contains('active')) {
-                printPreviewOverlay.classList.remove('active');
-                document.body.style.overflow = '';
+                closePrintPreview();
             }
         });
 
@@ -2830,7 +3380,7 @@
         });
 
         // ─────────────────────────────────────────────
-        // 24. Init
+        // 23. Init
         // ─────────────────────────────────────────────
         loadSettings();
         const now = new Date();
@@ -2851,9 +3401,8 @@
             loadRobData();
         }, 500);
 
-        console.log('📋 BOS-NBS · Buku dengan pagination A4 siap');
-        console.log('✅ Preview multi-halaman dengan background abu-abu');
-        console.log('✅ Print identik dengan preview');
+        console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank, Pajak, Utang, ROB) siap');
+        console.log('✅ Urutan data berdasarkan nomor urut (No) dari terkecil ke terbesar');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
