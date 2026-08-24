@@ -2044,7 +2044,7 @@
         // ─────────────────────────────────────────────
         function buildSaldoTransaksi(transaksiRaw, bulan, tahun, jenisFilter = null, includeAnggaran = false) {
             const prev = getPreviousMonth(bulan, tahun);
-            const bulanLaluNama = getMonthName(prev.month);
+            const prevMonthName = getMonthName(prev.month);
 
             let filtered = transaksiRaw;
             if (jenisFilter) {
@@ -2104,12 +2104,13 @@
             }
 
             const result = [];
+            // Baris saldo bulan lalu
             result.push({
                 tanggal: '',
                 kodeKegiatan: '',
                 kodeRekening: '',
                 noBukti: '',
-                uraian: `Saldo Awal (${bulanLaluNama})`,
+                uraian: `Saldo Bulan Lalu (${prevMonthName} ${prev.year})`,
                 penerimaan: 0,
                 pengeluaran: 0,
                 saldo: saldoAkhirBulanLalu,
@@ -2438,6 +2439,7 @@
             const raw = await fetchTransaksi();
             const pajakRows = [];
             const prev = getPreviousMonth(bulan, tahun);
+            const prevMonthName = getMonthName(prev.month);
             let saldoAwal = 0;
 
             raw.forEach(item => {
@@ -2467,7 +2469,7 @@
             pajakRows.push({
                 tanggal: '',
                 kode: '',
-                uraian: `Saldo Awal (${getMonthName(prev.month)} ${prev.year})`,
+                uraian: `Saldo Bulan Lalu (${prevMonthName} ${prev.year})`,
                 ppn: 0,
                 pph21: 0,
                 pph23: 0,
@@ -2595,7 +2597,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 16. Load ROB (Rincian Objek Belanja) - DIPERBAIKI
+        // 16. Load ROB (Rincian Objek Belanja)
         // ─────────────────────────────────────────────
         async function loadRobData() {
             const bulan = bulanSelectRob.value;
@@ -2605,8 +2607,9 @@
 
             const raw = await fetchTransaksi();
             const prev = getPreviousMonth(bulan, tahun);
+            const prevMonthName = getMonthName(prev.month);
 
-            // Hitung saldo anggaran awal (dari bulan lalu)
+            // Hitung saldo anggaran awal (dari bulan lalu) menggunakan data yang sudah difilter
             let saldoAwal = 0;
 
             // Ambil tanggal pemasukan anggaran dari settings
@@ -2631,6 +2634,7 @@
             }
 
             // Hitung saldo awal dari transaksi bulan lalu (selain pajak) + anggaran bulan lalu
+            // Hanya hitung dari data Firestore, tidak menghitung ulang dari saldo sebelumnya
             raw.forEach(item => {
                 const tgl = item.tglPembayaran;
                 if (!tgl) return;
@@ -2654,11 +2658,11 @@
             // Bangun data ROB
             const robRows = [];
 
-            // Baris 1: Saldo Awal
+            // Baris 1: Saldo Bulan Lalu
             robRows.push({
                 tanggal: '',
                 noBku: '',
-                uraian: `Saldo Awal (${getMonthName(prev.month)} ${prev.year})`,
+                uraian: `Saldo Bulan Lalu (${prevMonthName} ${prev.year})`,
                 realisasi: 0,
                 jumlah: 0,
                 sisaAnggaran: saldoAwal,
