@@ -1159,6 +1159,8 @@
         const SETTINGS_COLLECTION = 'settings_bos';
         const COL_WIDTHS_KEY = 'bosnbs_col_widths';
         const HIDDEN_COLS_KEY = 'bosnbs_hidden_cols';
+        const SORT_KEY_KEY = 'bosnbs_sort_key';
+        const SORT_ASC_KEY = 'bosnbs_sort_asc';
 
         // ─────────────────────────────────────────────
         // 5.  DOM refs
@@ -1615,8 +1617,10 @@
                         cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
                     }
 
+                    // Khusus kolom 'no' kita set text-align center
+                    const styleCenter = (key === 'no') ? ' style="text-align:center;"' : '';
                     const readonlyClass = (isReadonly || extraReadonly) ? 'readonly' : '';
-                    html += `<td data-field="${key}" data-rowidx="${idx}" class="editable-cell ${readonlyClass}">${cellContent}</td>`;
+                    html += `<td data-field="${key}" data-rowidx="${idx}" class="editable-cell ${readonlyClass}"${styleCenter}>${cellContent}</td>`;
                 });
 
                 // Aksi
@@ -2037,8 +2041,33 @@
         });
 
         // ─────────────────────────────────────────────
-        // 27. Sort handlers
+        // 27. Sort handlers - simpan preferensi
         // ─────────────────────────────────────────────
+        function saveSortPreference() {
+            try {
+                localStorage.setItem(SORT_KEY_KEY, sortKey || '');
+                localStorage.setItem(SORT_ASC_KEY, JSON.stringify(sortAsc));
+            } catch (e) { /* ignore */ }
+        }
+
+        function loadSortPreference() {
+            try {
+                const key = localStorage.getItem(SORT_KEY_KEY);
+                const asc = localStorage.getItem(SORT_ASC_KEY);
+                if (key) {
+                    sortKey = key;
+                    sortAsc = asc ? JSON.parse(asc) : true;
+                } else {
+                    // default: sort by 'no' ascending
+                    sortKey = 'no';
+                    sortAsc = true;
+                }
+            } catch (e) {
+                sortKey = 'no';
+                sortAsc = true;
+            }
+        }
+
         function setupSortHandlers() {
             const headers = headerRow.querySelectorAll('th[data-sort]');
             headers.forEach(th => {
@@ -2059,6 +2088,7 @@
                 sortAsc = true;
             }
 
+            saveSortPreference();
             renderTable();
         }
 
@@ -2147,6 +2177,7 @@
 
         loadColumnWidths();
         loadHiddenColumns();
+        loadSortPreference();
 
         setTimeout(() => {
             initResizers();
@@ -2154,6 +2185,8 @@
             setupSortHandlers();
             updateColMenu();
             applyHiddenColumns();
+            // terapkan sortir awal
+            renderTable();
         }, 50);
 
         loadData();
@@ -2161,6 +2194,7 @@
         console.log('📋 BOS-NBS · Database siap');
         console.log('✅ Header sticky (freeze)');
         console.log('✅ Nomor urut input manual');
+        console.log('✅ Sortir tersimpan di localStorage');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
