@@ -2597,7 +2597,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // 16. Load ROB (Rincian Objek Belanja) - DIPERBAIKI TOTAL
+        // 16. Load ROB (Rincian Objek Belanja) - DIPERBAIKI dengan saldo kumulatif
         // ─────────────────────────────────────────────
         async function loadRobData() {
             const bulan = bulanSelectRob.value;
@@ -2624,45 +2624,60 @@
                 return (month === targetMonth && year === targetYear);
             }
 
-            // ===== HITUNG SALDO AWAL (BULAN LALU) =====
-            let saldoAwal = 0;
+            // Fungsi untuk mengecek apakah tanggal masuk dalam periode sampai bulan tertentu
+            function isInOrBeforeMonth(tgl, targetMonth, targetYear) {
+                if (!tgl) return false;
+                let dateParts = null;
+                if (tgl.includes('-')) dateParts = tgl.split('-');
+                else if (tgl.includes('/')) dateParts = tgl.split('/');
+                if (!dateParts || dateParts.length !== 3) return false;
+                let year, month;
+                if (dateParts[0].length === 4) { year = dateParts[0];
+                    month = dateParts[1]; } else { year = dateParts[2];
+                    month = dateParts[1]; }
+                month = month.padStart(2, '0');
+                if (parseInt(year) < parseInt(targetYear)) return true;
+                if (parseInt(year) === parseInt(targetYear) && parseInt(month) <= parseInt(targetMonth)) return true;
+                return false;
+            }
 
-            // Ambil semua transaksi dari bulan lalu (selain pajak)
-            const transaksiBulanLalu = [];
+            // ===== HITUNG SALDO KUMULATIF SAMPAI AKHIR BULAN SEBELUMNYA =====
+            let saldoKumulatif = 0;
+
+            // Ambil semua transaksi (selain pajak) dari awal sampai akhir bulan sebelumnya
+            const transaksiSampaiBulanLalu = [];
 
             raw.forEach(item => {
                 const tgl = item.tglPembayaran;
                 if (!tgl) return;
-                if (item.jenisBerisi === 'Pajak') return;
+                if (item.jenisBerisi === 'Pajak') return; // Pajak tidak masuk ROB
 
-                if (isInMonth(tgl, prev.month, prev.year)) {
-                    const jumlah = parseFloat(item.jumlahHarga) || 0;
-                    const debetKredit = item.debetKredit || 'Kredit';
-                    transaksiBulanLalu.push({
+                if (isInOrBeforeMonth(tgl, prev.month, prev.year)) {
+                    transaksiSampaiBulanLalu.push({
                         tanggal: tgl,
-                        jumlah: jumlah,
-                        debetKredit: debetKredit,
+                        jumlah: parseFloat(item.jumlahHarga) || 0,
+                        debetKredit: item.debetKredit || 'Kredit',
                         uraian: item.uraian || ''
                     });
                 }
             });
 
-            // Tambahkan anggaran yang masuk pada bulan lalu
+            // Tambahkan anggaran yang masuk sampai bulan lalu
             const tgl1 = settingsData.tanggalPemasukan1 || '';
             const tgl2 = settingsData.tanggalPemasukan2 || '';
             const anggaran1 = parseFloat(settingsData.anggaran1) || 0;
             const anggaran2 = parseFloat(settingsData.anggaran2) || 0;
 
-            if (isInMonth(tgl1, prev.month, prev.year) && anggaran1 > 0) {
-                transaksiBulanLalu.push({
+            if (isInOrBeforeMonth(tgl1, prev.month, prev.year) && anggaran1 > 0) {
+                transaksiSampaiBulanLalu.push({
                     tanggal: tgl1,
                     jumlah: anggaran1,
                     debetKredit: 'Debet',
                     uraian: 'Penerimaan Anggaran Tahap 1'
                 });
             }
-            if (isInMonth(tgl2, prev.month, prev.year) && anggaran2 > 0) {
-                transaksiBulanLalu.push({
+            if (isInOrBeforeMonth(tgl2, prev.month, prev.year) && anggaran2 > 0) {
+                transaksiSampaiBulanLalu.push({
                     tanggal: tgl2,
                     jumlah: anggaran2,
                     debetKredit: 'Debet',
@@ -2671,32 +2686,32 @@
             }
 
             // Urutkan berdasarkan tanggal
-            transaksiBulanLalu.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
+            transaksiSampaiBulanLalu.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
 
-            // Hitung saldo akhir bulan lalu
-            transaksiBulanLalu.forEach(item => {
+            // Hitung saldo kumulatif sampai akhir bulan sebelumnya
+            transaksiSampaiBulanLalu.forEach(item => {
                 if (item.debetKredit === 'Debet') {
-                    saldoAwal += item.jumlah;
+                    saldoKumulatif += item.jumlah;
                 } else {
-                    saldoAwal -= item.jumlah;
+                    saldoKumulatif -= item.jumlah;
                 }
             });
 
-            // ===== BANGUN DATA ROB =====
+            // ===== BANGUN DATA ROB UNTUK BULAN INI =====
             const robRows = [];
 
-            // Baris 1: Saldo Bulan Lalu
+            // Baris 1: Saldo Bulan Lalu (menggunakan saldo kumulatif)
             robRows.push({
                 tanggal: '',
                 noBku: '',
                 uraian: `Saldo Bulan Lalu (${prevMonthName} ${prev.year})`,
                 realisasi: 0,
                 jumlah: 0,
-                sisaAnggaran: saldoAwal,
+                sisaAnggaran: saldoKumulatif,
                 isSaldoAwal: true
             });
 
-            let sisaAnggaran = saldoAwal;
+            let sisaAnggaran = saldoKumulatif;
 
             // Kumpulkan semua transaksi bulan ini (selain pajak) + anggaran masuk
             const transaksiBulanIni = [];
@@ -2745,7 +2760,7 @@
             // Urutkan berdasarkan tanggal
             transaksiBulanIni.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
 
-            // Proses setiap transaksi
+            // Proses setiap transaksi bulan ini
             let totalRealisasi = 0;
             let totalJumlah = 0;
 
@@ -3549,7 +3564,7 @@
         }, 500);
 
         console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank, Pajak, Utang, ROB) siap');
-        console.log('📋 ROB: Saldo awal diambil dari saldo bulan sebelumnya (dihitung dari transaksi bulan lalu)');
+        console.log('📋 ROB: Saldo kumulatif berantai dari bulan sebelumnya');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
