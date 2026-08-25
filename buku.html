@@ -3268,7 +3268,7 @@
         }
 
         // ─────────────────────────────────────────────────────────────────────────────
-        // 19. Pagination & Preview – DIPERBAIKI agar halaman terisi penuh
+        // 19. Pagination & Preview – DIPERBAIKI dengan toleransi agar halaman terisi penuh
         // ─────────────────────────────────────────────────────────────────────────────
         function paginateContent(htmlString) {
             // Buat elemen sementara dengan gaya yang sama persis dengan .a4-page
@@ -3333,6 +3333,7 @@
             const pageHeightPx = 297 * 3.779527; // 297mm dalam px
             const paddingPx = 10 * 3.779527 * 2; // 20mm padding
             const maxContentHeight = pageHeightPx - paddingPx;
+            const TOLERANCE = 5; // toleransi 5px agar halaman terisi penuh
 
             const pages = [];
             const rowsArray = Array.from(rows);
@@ -3412,7 +3413,8 @@
                 while (end < totalRows) {
                     const html = buildPage(currentStart, end, false);
                     const h = measureHeight(html);
-                    if (h <= maxContentHeight) {
+                    // Tambahkan toleransi agar baris terakhir bisa masuk jika hampir penuh
+                    if (h <= maxContentHeight + TOLERANCE) {
                         lastValidEnd = end;
                         end++;
                     } else {
@@ -3420,10 +3422,12 @@
                     }
                 }
 
+                // Jika tidak ada baris yang muat (satu baris terlalu tinggi), paksa satu baris
                 if (lastValidEnd < currentStart) {
                     lastValidEnd = currentStart;
                 }
 
+                // Cek apakah ini halaman terakhir
                 if (lastValidEnd >= totalRows - 1) {
                     isLastPage = true;
                 }
