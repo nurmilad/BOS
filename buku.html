@@ -3268,7 +3268,7 @@
         }
 
         // ─────────────────────────────────────────────────────────────────────────────
-        // 19. Pagination & Preview – DIPERBAIKI dengan toleransi agar halaman terisi penuh
+        // 19. PAGINATION – DIPERBAIKI dengan scrollHeight untuk pengukuran akurat
         // ─────────────────────────────────────────────────────────────────────────────
         function paginateContent(htmlString) {
             // Buat elemen sementara dengan gaya yang sama persis dengan .a4-page
@@ -3286,15 +3286,13 @@
                     `;
             document.body.appendChild(tmpContainer);
 
-            // Fungsi untuk mengukur tinggi HTML
+            // Fungsi untuk mengukur tinggi konten menggunakan scrollHeight
             function measureHeight(html) {
                 tmpContainer.innerHTML = html;
-                // Pastikan tabel menggunakan table-layout: fixed dan lebar 100%
                 const table = tmpContainer.querySelector('table.book-table');
                 if (table) {
                     table.style.tableLayout = 'fixed';
                     table.style.width = '100%';
-                    // Terapkan lebar kolom jika ada di previewColumnWidths
                     const ths = table.querySelectorAll('thead th');
                     ths.forEach(th => {
                         const colKey = th.textContent.trim();
@@ -3304,7 +3302,8 @@
                         }
                     });
                 }
-                return tmpContainer.offsetHeight;
+                // scrollHeight mengembalikan tinggi total konten termasuk padding
+                return tmpContainer.scrollHeight;
             }
 
             // Salin HTML ke container utama untuk parsing
@@ -3330,10 +3329,9 @@
             const tfoot = table.querySelector('tfoot');
             const rows = tbody ? tbody.querySelectorAll('tr') : [];
 
-            const pageHeightPx = 297 * 3.779527; // 297mm dalam px
-            const paddingPx = 10 * 3.779527 * 2; // 20mm padding
-            const maxContentHeight = pageHeightPx - paddingPx;
-            const TOLERANCE = 5; // toleransi 5px agar halaman terisi penuh
+            // Tinggi total halaman A4 dalam px (termasuk padding)
+            const pageHeightPx = 297 * 3.779527; // 297mm
+            const TOLERANCE = 3;
 
             const pages = [];
             const rowsArray = Array.from(rows);
@@ -3368,7 +3366,6 @@
                 if (thead) {
                     const newThead = thead.cloneNode(true);
                     newThead.querySelectorAll('.col-resizer').forEach(el => el.remove());
-                    // Terapkan lebar kolom
                     const ths = newThead.querySelectorAll('th');
                     ths.forEach(th => {
                         const colKey = th.textContent.trim();
@@ -3413,8 +3410,7 @@
                 while (end < totalRows) {
                     const html = buildPage(currentStart, end, false);
                     const h = measureHeight(html);
-                    // Tambahkan toleransi agar baris terakhir bisa masuk jika hampir penuh
-                    if (h <= maxContentHeight + TOLERANCE) {
+                    if (h <= pageHeightPx + TOLERANCE) {
                         lastValidEnd = end;
                         end++;
                     } else {
@@ -3422,12 +3418,10 @@
                     }
                 }
 
-                // Jika tidak ada baris yang muat (satu baris terlalu tinggi), paksa satu baris
                 if (lastValidEnd < currentStart) {
                     lastValidEnd = currentStart;
                 }
 
-                // Cek apakah ini halaman terakhir
                 if (lastValidEnd >= totalRows - 1) {
                     isLastPage = true;
                 }
@@ -3468,7 +3462,6 @@
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
 
-            // Inisialisasi resizer untuk setiap halaman
             setTimeout(() => initPreviewResizers(), 100);
         }
 
@@ -3528,7 +3521,6 @@
                             th.style.minWidth = newWidth + 'px';
                             previewColumnWidths[colKey] = newWidth;
                             savePreviewColumnWidths();
-                            // Perbarui semua halaman agar kolomnya sama
                             document.querySelectorAll('.a4-page').forEach(p => {
                                 const t = p.querySelector('table.book-table');
                                 if (t) {
@@ -3675,7 +3667,7 @@
         console.log('📋 BOS-NBS · Semua buku (Kas, Tunai, Bank, Pajak, Utang, ROB) siap');
         console.log('✅ Urutan data berdasarkan nomor urut (No) dari terkecil ke terbesar');
         console.log('✅ Preview multi-halaman dengan background abu-abu');
-        console.log('✅ Setiap halaman akan terisi penuh sebelum ke halaman berikutnya');
+        console.log('✅ Setiap halaman terisi penuh sebelum ke halaman berikutnya');
         console.log('✅ Print identik dengan preview');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
