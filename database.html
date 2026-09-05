@@ -1299,7 +1299,6 @@
                 } else if (actionsTd) {
                     actionsTd.classList.remove('hidden-col');
                 }
-                // Kolom 'no' sekarang juga memiliki data-field, jadi tidak perlu khusus
             });
             updateColMenu();
         }
@@ -1501,7 +1500,7 @@
                 if (key === 'no') row[key] = '';
                 else if (key === 'debetKredit') row[key] = 'Kredit';
                 else if (key === 'jenisBerisi') row[key] = 'Tunai';
-                else if (key === 'jenisPajak') row[key] = 'PPN';
+                else if (key === 'jenisPajak') row[key] = ''; // default kosong, karena jenisBerisi bukan Pajak
                 else if (key === 'siplah') row[key] = 'Siplah';
                 else if (key === 'jenisBelanja') row[key] = 'Pegawai';
                 else if (key === 'tahap') row[key] = 'Tahap 1';
@@ -1583,12 +1582,16 @@
                     if (key === 'actions') return; // aksi ditangani terpisah
 
                     const colType = COLUMN_TYPES[key];
-                    const val = item[key] !== undefined ? item[key] : '';
+                    let val = item[key] !== undefined ? item[key] : '';
                     const isReadonly = colType && colType.readonly;
 
+                    // Tentukan apakah kolom jenisPajak readonly (jika jenisBerisi bukan Pajak)
                     let extraReadonly = false;
                     if (key === 'jenisPajak' && item.jenisBerisi !== 'Pajak') {
                         extraReadonly = true;
+                        // Jika bukan Pajak, pastikan nilai kosong agar tidak menampilkan data lama
+                        val = '';
+                        item[key] = ''; // bersihkan data
                     }
 
                     let displayVal = val;
@@ -1617,7 +1620,6 @@
                         cellContent = `<span class="cell-value${isEmpty ? ' empty' : ''}">${displayText || '—'}</span>`;
                     }
 
-                    // Khusus kolom 'no' kita set text-align center
                     const styleCenter = (key === 'no') ? ' style="text-align:center;"' : '';
                     const readonlyClass = (isReadonly || extraReadonly) ? 'readonly' : '';
                     html += `<td data-field="${key}" data-rowidx="${idx}" class="editable-cell ${readonlyClass}"${styleCenter}>${cellContent}</td>`;
@@ -1760,6 +1762,21 @@
                     const target = displayData[rowIdx];
                     const realIdx = allData.findIndex(d => d._id === target._id);
                     if (realIdx !== -1) {
+                        // --- Perbaikan: jika field adalah jenisBerisi, atur jenisPajak sesuai ---
+                        if (field === 'jenisBerisi') {
+                            if (newVal === 'Pajak') {
+                                // Jika menjadi Pajak, set default jenisPajak ke 'PPN'
+                                if (!allData[realIdx]['jenisPajak'] || allData[realIdx]['jenisPajak'] === '') {
+                                    allData[realIdx]['jenisPajak'] = 'PPN';
+                                }
+                            } else {
+                                // Jika bukan Pajak, kosongkan jenisPajak dan field terkait pajak
+                                allData[realIdx]['jenisPajak'] = '';
+                                allData[realIdx]['persenPajak'] = 0;
+                                allData[realIdx]['jmlPajak'] = 0;
+                            }
+                        }
+
                         allData[realIdx][field] = newVal;
 
                         if (field === 'kodeKegiatan') {
@@ -1937,9 +1954,15 @@
                         if (data.no === undefined) data.no = '';
                         if (data.debetKredit === undefined) data.debetKredit = 'Kredit';
                         if (data.jenisBerisi === undefined) data.jenisBerisi = 'Tunai';
-                        if (data.jenisPajak === undefined) data.jenisPajak = 'PPN';
+                        if (data.jenisPajak === undefined) data.jenisPajak = '';
                         if (data.persenPajak === undefined) data.persenPajak = 0;
                         if (data.jmlPajak === undefined) data.jmlPajak = 0;
+                        // Jika jenisBerisi bukan Pajak, pastikan jenisPajak kosong
+                        if (data.jenisBerisi !== 'Pajak') {
+                            data.jenisPajak = '';
+                            data.persenPajak = 0;
+                            data.jmlPajak = 0;
+                        }
                         COLUMN_KEYS_ALL.forEach(key => {
                             if (data[key] === undefined) data[key] = '';
                         });
@@ -2185,7 +2208,6 @@
             setupSortHandlers();
             updateColMenu();
             applyHiddenColumns();
-            // terapkan sortir awal
             renderTable();
         }, 50);
 
@@ -2195,6 +2217,7 @@
         console.log('✅ Header sticky (freeze)');
         console.log('✅ Nomor urut input manual');
         console.log('✅ Sortir tersimpan di localStorage');
+        console.log('✅ Kolom Jenis Pajak hanya aktif jika Jenis Buku = Pajak');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
 
