@@ -3268,7 +3268,7 @@
         }
 
         // ─────────────────────────────────────────────────────────────────────────────
-        // 19. PAGINATION – DIPERBAIKI dengan scrollHeight untuk pengukuran akurat
+        // 19. PAGINATION – DIPERBAIKI dengan scrollHeight dan pastikan tanda tangan hanya sekali
         // ─────────────────────────────────────────────────────────────────────────────
         function paginateContent(htmlString) {
             // Buat elemen sementara dengan gaya yang sama persis dengan .a4-page
@@ -3302,7 +3302,6 @@
                         }
                     });
                 }
-                // scrollHeight mengembalikan tinggi total konten termasuk padding
                 return tmpContainer.scrollHeight;
             }
 
@@ -3391,6 +3390,7 @@
 
                 pageDiv.appendChild(newTable);
 
+                // ⭐ HANYA TAMBAHKAN closing DAN signature DI HALAMAN TERAKHIR
                 if (isLastPage) {
                     if (closing) pageDiv.appendChild(closing.cloneNode(true));
                     if (signature) pageDiv.appendChild(signature.cloneNode(true));
@@ -3668,6 +3668,7 @@
         console.log('✅ Urutan data berdasarkan nomor urut (No) dari terkecil ke terbesar');
         console.log('✅ Preview multi-halaman dengan background abu-abu');
         console.log('✅ Setiap halaman terisi penuh sebelum ke halaman berikutnya');
+        console.log('✅ Tanda tangan hanya muncul sekali di halaman terakhir');
         console.log('✅ Print identik dengan preview');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
