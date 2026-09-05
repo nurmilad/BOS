@@ -3268,7 +3268,7 @@
         }
 
         // ─────────────────────────────────────────────────────────────────────────────
-        // 19. PAGINATION – DIPERBAIKI dengan scrollHeight dan pastikan tanda tangan hanya sekali
+        // 19. PAGINATION – DIPERBAIKI: hanya tambahkan closing jika ada, signature jika tidak ada closing
         // ─────────────────────────────────────────────────────────────────────────────
         function paginateContent(htmlString) {
             // Buat elemen sementara dengan gaya yang sama persis dengan .a4-page
@@ -3390,10 +3390,15 @@
 
                 pageDiv.appendChild(newTable);
 
-                // ⭐ HANYA TAMBAHKAN closing DAN signature DI HALAMAN TERAKHIR
+                // ⭐ PERBAIKAN: HANYA TAMBAHKAN closing ATAU signature, tidak keduanya
                 if (isLastPage) {
-                    if (closing) pageDiv.appendChild(closing.cloneNode(true));
-                    if (signature) pageDiv.appendChild(signature.cloneNode(true));
+                    if (closing) {
+                        // Jika ada closing (sudah berisi signature), tambahkan closing saja
+                        pageDiv.appendChild(closing.cloneNode(true));
+                    } else if (signature) {
+                        // Jika tidak ada closing, tambahkan signature saja
+                        pageDiv.appendChild(signature.cloneNode(true));
+                    }
                 }
 
                 return pageDiv.innerHTML;
@@ -3668,7 +3673,7 @@
         console.log('✅ Urutan data berdasarkan nomor urut (No) dari terkecil ke terbesar');
         console.log('✅ Preview multi-halaman dengan background abu-abu');
         console.log('✅ Setiap halaman terisi penuh sebelum ke halaman berikutnya');
-        console.log('✅ Tanda tangan hanya muncul sekali di halaman terakhir');
+        console.log('✅ Tanda tangan hanya muncul sekali di halaman terakhir (tidak dobel)');
         console.log('✅ Print identik dengan preview');
         console.log(`ℹ️  Session: ${sessionJenjang} · ${sessionTahun}`);
     </script>
